@@ -352,6 +352,14 @@ Copy-Item -Recurse -Force "PATH\TO\codebase-orient-skill\skills\codebase-orient\
 
 ### macOS/Linux
 
+From the target repo, run:
+
+```bash
+/path/to/codebase-orient-skill/scripts/install-project.sh
+```
+
+Or manually:
+
 ```bash
 mkdir -p ./.claude/skills/codebase-orient
 cp -R /path/to/codebase-orient-skill/skills/codebase-orient/* ./.claude/skills/codebase-orient/
