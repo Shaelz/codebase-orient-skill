@@ -1,8 +1,8 @@
 # Codebase Orient Skill
 
-A Claude Code skill for turning “scan this repo” into a repeatable codebase orientation workflow.
+A Claude Code skill for turning "scan this repo" into a repeatable codebase orientation workflow.
 
-Instead of asking Claude to vaguely “understand the project,” this skill guides Claude to build and maintain a small orientation layer:
+Instead of asking Claude to vaguely "understand the project," this skill guides Claude to build and maintain a small orientation layer:
 
 - a codebase map
 - a change-surface map
@@ -22,7 +22,7 @@ The goal is simple:
 
 It asks Claude to:
 
-1. Read high-signal files first.
+1. Read high-signal files first (project instructions, docs, config).
 2. Identify the framework, entrypoints, routes, models, services, UI surfaces, tests, and deployment/config files.
 3. Create or refresh repo-local orientation docs.
 4. Mark uncertainty explicitly.
@@ -31,18 +31,24 @@ It asks Claude to:
 
 It is useful before:
 
-- audits
-- refactors
-- new features
+- refactors or architecture changes
 - unfamiliar-area edits
-- architecture planning
-- risky edits
-- route/page changes
-- admin UI changes
-- data model/schema changes
-- import/workflow/job changes
-- test architecture changes
-- deployment/config changes
+- data model or schema changes
+- deployment or config changes
+- any task where source-of-truth drift or hidden risks would matter
+
+---
+
+## Scope and cost
+
+This skill is not a full static analysis tool. It reads selectively, not exhaustively.
+
+- On small repos, it may read a modest number of high-signal files.
+- On large repos, it should focus on relevant surfaces rather than reading everything.
+- First orientation takes more time than a refresh of existing docs.
+- Dry-run mode is useful if you want to review proposed changes before Claude writes anything.
+
+Orientation improves Claude's process, but it does not replace source verification. Claude should verify claims against the actual source before editing.
 
 ---
 
@@ -77,6 +83,28 @@ Typical sections:
 - important docs
 - known uncertainty
 
+#### Example excerpt
+
+```markdown
+## Runtime / framework
+- Framework: Next.js 14 (App Router) — Fact, full-source-read
+- Language: TypeScript — Fact, full-source-read
+- Package manager: pnpm — Fact, path-confirmed (pnpm-lock.yaml)
+
+## Entry points
+- Web app: app/layout.tsx — Fact, path-confirmed
+- API routes: app/api/** — Strong inference, inferred from implementation
+- Background jobs: jobs/ directory — Weak inference, no scheduler config found
+
+## Authentication
+- Auth provider: unclear — Unknown, needs inspection
+- Session storage: likely cookie-based — Weak inference, inferred from middleware
+
+## Known uncertainty
+- Whether jobs/ is actively used or legacy — Unknown
+- Whether app/api/admin routes are gated by middleware — Unknown
+```
+
 ### `CHANGE_SURFACES.md`
 
 A practical lookup map for future agents.
@@ -95,6 +123,39 @@ If changing tests, inspect these files first.
 A list of real uncertainties found during inspection.
 
 The skill tries not to invent concerns. Open questions should be useful, grounded, and actionable.
+
+---
+
+## How orientation works (normal mode)
+
+During orientation, Claude follows this sequence:
+
+1. **Reads project instructions and docs first** — CLAUDE.md, README, any existing docs/ai files.
+2. **Checks framework, config, and entrypoints** — package.json, tsconfig, Dockerfile, CI files, root config.
+3. **Maps routes, models, services, UI surfaces, tests, and deployment** — in enough depth to understand the shape, not every implementation detail.
+4. **Creates or refreshes the docs/ai files** — CODEBASE_MAP.md, CHANGE_SURFACES.md, OPEN_QUESTIONS.md.
+5. **Resolves blocking unknowns when safe** — reads additional files to resolve high-impact uncertainties before stopping.
+6. **Reports hidden risks and remaining uncertainty** — source-of-truth drift, confidence gaps, anything that would affect a safe edit.
+
+Claude should not edit source code, run refactors, or make commits during orientation.
+
+---
+
+## Dry-run / report-only mode
+
+Use this when you want Claude to inspect but not write.
+
+Example prompts:
+
+```text
+Run codebase-orient in dry-run mode.
+```
+
+```text
+Use codebase-orient, but report proposed docs changes before writing anything.
+```
+
+In dry-run mode, Claude should inspect and report, but not update files without approval.
 
 ---
 
@@ -118,7 +179,7 @@ It also encourages Claude to distinguish how a claim was verified:
 - behavior-verified-by-test
 - unknown
 
-This matters because “file exists” is not the same as “behavior verified.”
+This matters because "file exists" is not the same as "behavior verified."
 
 ---
 
@@ -148,58 +209,76 @@ When this happens, Claude should report:
 
 ---
 
-## Normal mode vs dry-run mode
+## Known limitations and failure modes
 
-### Normal mode
-
-Default behavior.
-
-Claude may:
-
-- read the minimum necessary files
-- resolve blocking uncertainty
-- update `docs/ai` orientation files
-- proceed until the repo is mapped enough for the requested task
-
-### Dry-run / report-only mode
-
-Use this when you want Claude to inspect but not write.
-
-Example prompts:
-
-```text
-Run codebase-orient in dry-run mode.
-```
-
-```text
-Use codebase-orient, but report proposed docs changes before writing anything.
-```
-
-In dry-run mode, Claude should inspect and report, but not update files without approval.
+- **Monorepos** — orientation may need to be scoped to a sub-package. Running against the entire monorepo at once can produce shallow results.
+- **Repos with no docs** — expect more Unknown labels. The skill cannot infer what is not there.
+- **Generated output mixed with source** — this can confuse source-of-truth detection. Flag generated directories explicitly in CLAUDE.md if possible.
+- **Auto-invocation is not guaranteed** — Claude may invoke this skill automatically when it recognizes an orientation request, but direct invocation is the reliable path.
+- **Orientation improves process, not correctness** — Claude should still verify claims against the actual source before editing.
 
 ---
 
-## Invocation reliability
+## Invocation
 
-Claude may automatically use this skill when your request clearly matches the skill description, such as when you ask it to orient, scan, understand, review, audit, or plan changes in a codebase.
-
-However, automatic invocation is model-driven and not guaranteed.
-
-For reliable use, invoke it directly:
+For reliable use, invoke the skill directly:
 
 ```text
 /codebase-orient
 ```
 
-or explicitly say:
+Or explicitly say:
 
 ```text
 Use codebase-orient first, then help me plan this change.
 ```
 
-Recommended habit:
+Claude may invoke this skill automatically when your request matches the skill description (orient, scan, understand, audit, plan changes). This is not guaranteed — use direct invocation when it matters.
 
-Use the skill directly at the start of a new repo, before large refactors, before unfamiliar-area work, and before tasks where source-of-truth drift or architecture uncertainty would matter.
+---
+
+## Example usage
+
+### Normal mode
+
+```text
+/codebase-orient
+```
+
+Or:
+
+```text
+Use codebase-orient first, then plan a safe refactor of the routing and layout structure. Do not edit yet.
+```
+
+### Dry-run mode
+
+```text
+Run codebase-orient in dry-run mode. Report proposed docs/ai changes before writing anything.
+```
+
+---
+
+## Security and review note
+
+Skills are instructions that affect how Claude behaves.
+
+Before installing any skill from GitHub:
+
+1. Read the `SKILL.md`.
+2. Check what files it tells Claude to modify.
+3. Check whether it asks Claude to run commands.
+4. Check whether it touches global, local, generated, or runtime files.
+5. Do not install skills you do not understand.
+
+This skill is designed to be conservative:
+
+- no source-code edits during orientation
+- no refactors during orientation
+- no commits during orientation
+- confidence labels for claims
+- explicit hidden-risk reporting
+- source-of-truth drift detection
 
 ---
 
@@ -332,63 +411,6 @@ Read and follow .claude/skills/codebase-orient/SKILL.md before planning this cha
 
 ---
 
-## Example usage
-
-### First orientation pass
-
-```text
-/codebase-orient
-```
-
-or:
-
-```text
-Use codebase-orient to orient yourself to this repo before suggesting changes.
-```
-
-### Before a refactor
-
-```text
-Use codebase-orient first, then plan a safe refactor of the routing and layout structure. Do not edit yet.
-```
-
-### Before a design/admin UI pass
-
-```text
-Use codebase-orient first, then identify the relevant UI, styling, and component change surfaces.
-```
-
-### Dry-run mode
-
-```text
-Run codebase-orient in dry-run mode. Report proposed docs/ai changes before writing anything.
-```
-
----
-
-## Security and review note
-
-Skills are instructions that affect how Claude behaves.
-
-Before installing any skill from GitHub:
-
-1. Read the `SKILL.md`.
-2. Check what files it tells Claude to modify.
-3. Check whether it asks Claude to run commands.
-4. Check whether it touches global, local, generated, or runtime files.
-5. Do not install skills you do not understand.
-
-This skill is designed to be conservative:
-
-- no source-code edits during orientation
-- no refactors during orientation
-- no commits during orientation
-- confidence labels for claims
-- explicit hidden-risk reporting
-- source-of-truth drift detection
-
----
-
 ## Claude.ai / Claude Code / API note
 
 Claude surfaces may handle skills differently.
@@ -438,23 +460,6 @@ docs/ai/OPEN_QUESTIONS.md
 ```
 
 Do not remove these docs if your project has started relying on them.
-
----
-
-## Versioning
-
-Current version: `0.1.0`
-
-Initial public version:
-
-- codebase orientation workflow
-- architecture map generation
-- change-surface map generation
-- open-question tracking
-- confidence labels
-- hidden-risk reporting
-- source-of-truth drift detection
-- normal mode and dry-run mode
 
 ---
 
