@@ -58,19 +58,44 @@ Distinguish how a claim was established:
 
 Execute in this order:
 
-1. Project instruction files such as `CLAUDE.md`, `AGENTS.md`, and `README.md`, if present — product purpose, agent rules, project conventions
+1. Project instruction files such as `CLAUDE.md`, `AGENTS.md`, and `README.md`, if present — product purpose, agent rules, project conventions.
+   - Extract high-impact factual claims about architecture, routes, deployment, tests, and source-of-truth files.
+   - Verify those claims against source code before relying on them. Focus on claims that would affect future edits; do not audit every sentence.
+   - If an instruction doc is stale or misleading compared to what the source shows, record the drift in `OPEN_QUESTIONS.md` under the hidden-risk reporting rule.
 2. Project manifest (e.g., `package.json`, `pyproject.toml`, `Cargo.toml`) — deps, scripts, build/test commands
 3. Build and config files (e.g., framework config, bundler config) — adapter, build config
-4. Entry points and routing layer — all pages, controllers, or API routes
-5. Core business logic — domain types, models, scoring, report logic
-6. Server-side services — auth, db/schema, email, external integrations
-7. UI/presentation layer — components, views, templates
-8. Internationalisation or copy files — locale files
-9. Request lifecycle / middleware — hooks, interceptors, middleware
-10. Database layer — migrations, schema snapshots
-11. Tests — test structure and coverage shape
-12. Documentation — existing docs, verification matrices
-13. Known uncertainty
+4. `scripts/` directory, if present — may contain manually-run tooling not represented in package scripts or CI
+5. Entry points and routing layer — all pages, controllers, or API routes
+6. Core business logic — domain types, models, scoring, report logic
+7. Server-side services — auth, db/schema, email, external integrations
+8. UI/presentation layer — components, views, templates
+9. Internationalisation or copy files — locale files
+10. Request lifecycle / middleware — hooks, interceptors, middleware
+11. Database layer — migrations, schema snapshots
+12. Tests — test structure and coverage shape
+13. Documentation — existing docs, verification matrices
+14. Known uncertainty
+
+## Framework-specific probes
+
+Apply these probes in addition to the generic discovery order when the relevant framework is detected.
+
+### SvelteKit
+
+- Glob `src/routes/**/+page.svelte` to enumerate all routes. Each `+page.svelte` file is a route candidate; check subdirectories, not only the top-level `src/routes/+page.svelte`.
+- The standard app shell template is `src/app.html`.
+- Check `src/routes/**/+layout.svelte`, `+server.ts`, and `+page.server.ts` files for shared layout and server-side logic.
+- Adapter choice in `svelte.config.js` determines deployment target — confirm before making deployment-related claims.
+
+## Read-depth heuristic
+
+Do not read every large CSS, config, or generated file by default.
+
+- **Full read** — files that directly affect the requested task (entry points, routing, auth, schema, build config, the file to be edited).
+- **Partial read or path-confirmation only** — secondary surfaces such as large style sheets, vendored code, generated output, or config files not relevant to the task. If you only confirm a file's path or read a portion, say so explicitly in the report using the _path existence confirmed_ or partial-read labels defined under Confidence labels.
+- **Skip** — files that are clearly out of scope (e.g., binary assets, lock files, test snapshots) unless a specific question makes them relevant.
+
+When in doubt, prefer confirming existence first and reading fully only if a claim requires it.
 
 ## Output files
 
