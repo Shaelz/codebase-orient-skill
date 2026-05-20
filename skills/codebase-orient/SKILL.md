@@ -54,11 +54,11 @@ Distinguish how a claim was established:
 
 ## Discovery order
 
-> **Customization required:** Replace the entries below with the actual file paths and folders relevant to your project. The order matters — read context-setting files first before diving into implementation details.
+> **Customization note:** The discovery order below is intentionally broad and works across most project shapes without editing. You can tune the file paths and order for a specific project, but this is optional — not required before first use.
 
 Execute in this order:
 
-1. `AGENTS.md` and `README.md` — product purpose, agent rules
+1. Project instruction files such as `CLAUDE.md`, `AGENTS.md`, and `README.md`, if present — product purpose, agent rules, project conventions
 2. Project manifest (e.g., `package.json`, `pyproject.toml`, `Cargo.toml`) — deps, scripts, build/test commands
 3. Build and config files (e.g., framework config, bundler config) — adapter, build config
 4. Entry points and routing layer — all pages, controllers, or API routes

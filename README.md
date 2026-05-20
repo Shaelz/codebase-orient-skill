@@ -64,6 +64,8 @@ docs/ai/OPEN_QUESTIONS.md
 .claude/skills/codebase-orient/SKILL.md
 ```
 
+The skill works out of the box without editing. `SKILL.md` ships with a broad, generic discovery order that covers most project shapes. You can tune that order for your specific project later, but customization is optional — not required before first use.
+
 ### `CODEBASE_MAP.md`
 
 A high-level architecture map of the project.
@@ -290,6 +292,8 @@ There are two common install styles:
 
 1. personal install, available across your Claude Code projects
 2. project-local install, committed or used inside one repo
+
+The `scripts/` directory contains install helpers for both styles. They refuse to overwrite an existing install unless you pass `-Force` (PowerShell) or `--force` (bash), so they are safe to run on a machine where the skill may already be present. The manual commands below are shown for transparency — either approach works.
 
 ---
 
