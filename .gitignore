@@ -4,3 +4,9 @@ Thumbs.db
 *.log
 *.zip
 *.skill
+
+# Local Codex install artifact - project-local installs into this source repo for testing
+.agents/
+
+# Generated orientation cache - self-orientation output is non-canonical in this source repo
+docs/ai/

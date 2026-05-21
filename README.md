@@ -335,6 +335,10 @@ There are two common install styles for `codebase-orient`:
 
 The `scripts/` directory contains install helpers for both styles and both tools. They refuse to overwrite an existing install unless you pass `-Force` (PowerShell) or `--force` (bash), so they are safe to run on a machine where the skill may already be present.
 
+> **Install refresh semantics:** `-Force` / `--force` is an overlay install — it copies source files over the target but does not remove files that were in a previous install and have since been removed from the source package. For a clean exact-sync reinstall, delete the target directory first, then run the script without `-Force`.
+
+For project-local installs, run the script from your project root — the scripts install relative to the current working directory and do not verify it is a repository root.
+
 ---
 
 ## Claude Code: user-level install
@@ -368,7 +372,7 @@ Or manually:
 
 ```bash
 mkdir -p "$HOME/.claude/skills/codebase-orient"
-cp -R ./skills/codebase-orient/* "$HOME/.claude/skills/codebase-orient/"
+cp -r ./skills/codebase-orient/. "$HOME/.claude/skills/codebase-orient/"
 ```
 
 Then restart Claude Code if needed and try:
@@ -406,7 +410,7 @@ Or manually:
 
 ```bash
 mkdir -p ./.claude/skills/codebase-orient
-cp -R /path/to/codebase-orient-skill/skills/codebase-orient/* ./.claude/skills/codebase-orient/
+cp -r /path/to/codebase-orient-skill/skills/codebase-orient/. ./.claude/skills/codebase-orient/
 ```
 
 Then in Claude Code:
@@ -464,6 +468,8 @@ After installing, restart or reload Codex if it is currently running, then invok
 ```text
 Use codebase-orient to orient yourself to this repo.
 ```
+
+> **Codex lifecycle note:** Codex project-local installs get the generic `codebase-orient` skill. Two features are Claude Code only and are not available for Codex: (1) the bootstrap skill (`install-codebase-orient`), which runs a first-pass orientation and writes a project-local skill file; and (2) post-orientation project-local specialization, where the skill auto-updates `.claude/skills/codebase-orient/SKILL.md` with repo-specific discovery paths. For Codex, install via the scripts above and invoke the skill explicitly.
 
 ---
 

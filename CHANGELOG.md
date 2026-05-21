@@ -1,5 +1,33 @@
 # Changelog
 
+## Unreleased
+
+v1 contract cleanup based on skeptical second-opinion audit.
+
+**Artifact policy — `.gitignore`:**
+
+- Add `.agents/` to `.gitignore`: Codex project-local install artifacts in this source repo are local runtime artifacts and should not be tracked.
+- Add `docs/ai/` to `.gitignore`: generated self-orientation cache is non-canonical in this source repo and should not be tracked.
+
+**Install refresh semantics — `README.md`:**
+
+- Document that `-Force` / `--force` is an overlay install: source files are copied over the target, but files removed from the source package since the last install are not pruned from the installed target.
+- Add delete-first workaround note for clean exact-sync reinstalls.
+
+**Project-local CWD contract — `README.md`:**
+
+- Add explicit note that project-local install scripts use the current working directory as the install root and do not verify it is a repository root.
+
+**Codex lifecycle parity — `README.md`:**
+
+- Add callout after Codex project-local install section: bootstrap skill and post-orientation project-local specialization are Claude Code only features; Codex project-local installs get the generic skill and require explicit invocation.
+
+**Manual copy example alignment — `README.md`:**
+
+- Change bash manual copy examples from `cp -R .../\*` to `cp -r .../. ` to match script semantics (includes hidden files; currently harmless since the package has none, but examples now match exactly).
+
+---
+
 ## 0.3.0 — 2026-05-21
 
 Consolidates post-v0.2.0 work into a tagged release. The orientation behavior additions recorded in the v0.2.1 development entry (instruction-layer topology, CHANGE_SURFACES mapping guidance, agent handoff summary) are included under this tag — v0.2.1 was a named development checkpoint that was never separately tagged.
