@@ -50,7 +50,7 @@ This skill is not a full static analysis tool. It reads selectively, not exhaust
 
 Orientation improves Claude's process, but it does not replace source verification. Claude should verify claims against the actual source before editing.
 
-`docs/ai/` acts as an orientation cache. A fresh cache reduces repeated repo-discovery token cost across sessions. Use the skill when that cost is likely to amortize — before broad work, at the start of a new session, or before agent handoff. Skip it for tiny single-file known edits.
+`docs/ai/` acts as an orientation cache. A fresh cache reduces repeated repo-discovery token cost across sessions. Use the skill when that cost is likely to amortize - before broad work, at the start of a new session, or before agent handoff. Skip it for tiny single-file known edits.
 
 ---
 
@@ -71,13 +71,13 @@ When installed into a project (via install scripts or the bootstrap skill), the 
 | Claude Code | `.claude/skills/codebase-orient/SKILL.md` |
 | Codex | `.agents/skills/codebase-orient/SKILL.md` |
 
-The source of truth is always `skills/codebase-orient/SKILL.md` in this repository. Installed copies are targets — not forks.
+The source of truth is always `skills/codebase-orient/SKILL.md` in this repository. Installed copies are targets - not forks.
 
-The skill works out of the box without editing. `SKILL.md` ships with a broad, generic discovery order that covers most project shapes. You can tune that order for your specific project later, but customization is optional — not required before first use.
+The skill works out of the box without editing. `SKILL.md` ships with a broad, generic discovery order that covers most project shapes. You can tune that order for your specific project later, but customization is optional - not required before first use.
 
 ### Local tuning after the first orientation pass
 
-The public skill is intentionally generic. After the first orientation pass, you may find that your project has important namespaces, service folders, admin surfaces, workflow directories, or other conventions that the generic probe list did not cover. The skill will propose updating the repo-local `SKILL.md` with those project-specific discovery paths. This is expected and useful — it makes future orientation passes faster and more accurate for that repo. It is not a fork failure. Concrete project-specific paths should stay in the repo-local skill and should not be submitted back to the public skill.
+The public skill is intentionally generic. After the first orientation pass, you may find that your project has important namespaces, service folders, admin surfaces, workflow directories, or other conventions that the generic probe list did not cover. The skill will propose updating the repo-local `SKILL.md` with those project-specific discovery paths. This is expected and useful - it makes future orientation passes faster and more accurate for that repo. It is not a fork failure. Concrete project-specific paths should stay in the repo-local skill and should not be submitted back to the public skill.
 
 ### `CODEBASE_MAP.md`
 
@@ -102,22 +102,22 @@ Typical sections:
 
 ```markdown
 ## Runtime / framework
-- Framework: Next.js 14 (App Router) — Fact, full-source-read
-- Language: TypeScript — Fact, full-source-read
-- Package manager: pnpm — Fact, path-confirmed (pnpm-lock.yaml)
+- Framework: Next.js 14 (App Router) - Fact, full-source-read
+- Language: TypeScript - Fact, full-source-read
+- Package manager: pnpm - Fact, path-confirmed (pnpm-lock.yaml)
 
 ## Entry points
-- Web app: app/layout.tsx — Fact, path-confirmed
-- API routes: app/api/** — Strong inference, inferred from implementation
-- Background jobs: jobs/ directory — Weak inference, no scheduler config found
+- Web app: app/layout.tsx - Fact, path-confirmed
+- API routes: app/api/**: Strong inference, inferred from implementation
+- Background jobs: jobs/ directory - Weak inference, no scheduler config found
 
 ## Authentication
-- Auth provider: unclear — Unknown, needs inspection
-- Session storage: likely cookie-based — Weak inference, inferred from middleware
+- Auth provider: unclear - Unknown, needs inspection
+- Session storage: likely cookie-based - Weak inference, inferred from middleware
 
 ## Known uncertainty
-- Whether jobs/ is actively used or legacy — Unknown
-- Whether app/api/admin routes are gated by middleware — Unknown
+- Whether jobs/ is actively used or legacy - Unknown
+- Whether app/api/admin routes are gated by middleware - Unknown
 ```
 
 ### `CHANGE_SURFACES.md`
@@ -145,12 +145,12 @@ The skill tries not to invent concerns. Open questions should be useful, grounde
 
 During orientation, Claude follows this sequence:
 
-1. **Reads project instructions and docs first** — CLAUDE.md / AGENTS.md, README, any existing docs/ai files.
-2. **Checks framework, config, and entrypoints** — package.json, tsconfig, Dockerfile, CI files, root config.
-3. **Maps routes, models, services, UI surfaces, tests, and deployment** — in enough depth to understand the shape, not every implementation detail.
-4. **Creates or refreshes the docs/ai files** — CODEBASE_MAP.md, CHANGE_SURFACES.md, OPEN_QUESTIONS.md.
-5. **Resolves blocking unknowns when safe** — reads additional files to resolve high-impact uncertainties before stopping.
-6. **Reports hidden risks and remaining uncertainty** — source-of-truth drift, confidence gaps, anything that would affect a safe edit.
+1. **Reads project instructions and docs first**: CLAUDE.md / AGENTS.md, README, any existing docs/ai files.
+2. **Checks framework, config, and entrypoints**: package.json, tsconfig, Dockerfile, CI files, root config.
+3. **Maps routes, models, services, UI surfaces, tests, and deployment**: in enough depth to understand the shape, not every implementation detail.
+4. **Creates or refreshes the docs/ai files**: CODEBASE_MAP.md, CHANGE_SURFACES.md, OPEN_QUESTIONS.md.
+5. **Resolves blocking unknowns when safe**: reads additional files to resolve high-impact uncertainties before stopping.
+6. **Reports hidden risks and remaining uncertainty**: source-of-truth drift, confidence gaps, anything that would affect a safe edit.
 
 Claude should not edit source code, run refactors, or make commits during orientation.
 
@@ -226,11 +226,11 @@ When this happens, Claude should report:
 
 ## Known limitations and failure modes
 
-- **Monorepos** — orientation may need to be scoped to a sub-package. Running against the entire monorepo at once can produce shallow results.
-- **Repos with no docs** — expect more Unknown labels. The skill cannot infer what is not there.
-- **Generated output mixed with source** — this can confuse source-of-truth detection. Flag generated directories explicitly in CLAUDE.md (or AGENTS.md for Codex) if possible.
-- **Auto-invocation is not guaranteed** — models may invoke this skill automatically when they recognize an orientation request, but explicit invocation is the reliable path. This applies to both Claude Code and Codex.
-- **Orientation improves process, not correctness** — the model should still verify claims against the actual source before editing.
+- **Monorepos**: orientation may need to be scoped to a sub-package. Running against the entire monorepo at once can produce shallow results.
+- **Repos with no docs**: expect more Unknown labels. The skill cannot infer what is not there.
+- **Generated output mixed with source**: this can confuse source-of-truth detection. Flag generated directories explicitly in CLAUDE.md (or AGENTS.md for Codex) if possible.
+- **Auto-invocation is not guaranteed**: models may invoke this skill automatically when they recognize an orientation request, but explicit invocation is the reliable path. This applies to both Claude Code and Codex.
+- **Orientation improves process, not correctness**: the model should still verify claims against the actual source before editing.
 
 ---
 
@@ -238,13 +238,13 @@ When this happens, Claude should report:
 
 Auto/implicit invocation is model-driven and not guaranteed in either Claude Code or Codex. Explicit invocation is the reliable path.
 
-**Claude Code** — invoke the skill directly:
+**Claude Code**: invoke the skill directly:
 
 ```text
 /codebase-orient
 ```
 
-**Codex** — slash commands are not supported; invoke explicitly:
+**Codex**: slash commands are not supported; invoke explicitly:
 
 ```text
 Use codebase-orient to orient yourself to this repo before planning this change.
@@ -303,8 +303,8 @@ This skill is designed to be conservative:
 
 | Skill source | Purpose | Tools |
 |---|---|---|
-| `skills/codebase-orient/` | The orientation skill — installs to `.claude/skills/` (Claude Code) or `.agents/skills/` (Codex) | Claude Code, Codex |
-| `skills/install-codebase-orient/` | Bootstrap skill — runs a first-pass orientation and creates the project-local orientation layer | Claude Code only |
+| `skills/codebase-orient/` | The orientation skill - installs to `.claude/skills/` (Claude Code) or `.agents/skills/` (Codex) | Claude Code, Codex |
+| `skills/install-codebase-orient/` | Bootstrap skill - runs a first-pass orientation and creates the project-local orientation layer | Claude Code only |
 
 `skills/codebase-orient/SKILL.md` is the single canonical source for the orientation skill. Installed copies are targets, not forks. `skills/install-codebase-orient/SKILL.md` is versioned here as tracked source; install it with `scripts/install-bootstrap-user.ps1` / `scripts/install-bootstrap-user.sh`.
 
@@ -317,7 +317,7 @@ This skill is designed to be conservative:
 | Claude Code | `~/.claude/skills/codebase-orient/` | `.claude/skills/codebase-orient/` |
 | Codex | `~/.agents/skills/codebase-orient/` | `.agents/skills/codebase-orient/` |
 
-There is one `SKILL.md` source — the install scripts copy it to whichever path your tool reads.
+There is one `SKILL.md` source - the install scripts copy it to whichever path your tool reads.
 
 ---
 
@@ -330,14 +330,14 @@ There is one `SKILL.md` source — the install scripts copy it to whichever path
 
 There are two common install styles for `codebase-orient`:
 
-1. **User-level install** — available across all your projects in that tool.
-2. **Project-local install** — available only inside a specific repo.
+1. **User-level install**: available across all your projects in that tool.
+2. **Project-local install**: available only inside a specific repo.
 
 The `scripts/` directory contains install helpers for both styles and both tools. They refuse to overwrite an existing install unless you pass `-Force` (PowerShell) or `--force` (bash), so they are safe to run on a machine where the skill may already be present.
 
-> **Install refresh semantics:** `-Force` / `--force` is an overlay install — it copies source files over the target but does not remove files that were in a previous install and have since been removed from the source package. For a clean exact-sync reinstall, delete the target directory first, then run the script without `-Force`.
+> **Install refresh semantics:** `-Force` / `--force` is an overlay install - it copies source files over the target but does not remove files that were in a previous install and have since been removed from the source package. For a clean exact-sync reinstall, delete the target directory first, then run the script without `-Force`.
 
-For project-local installs, run the script from your project root — the scripts install relative to the current working directory and do not verify it is a repository root.
+For project-local installs, run the script from your project root - the scripts install relative to the current working directory and do not verify it is a repository root.
 
 ---
 
@@ -475,7 +475,7 @@ Use codebase-orient to orient yourself to this repo.
 
 ## Bootstrap skill: user-level install (Claude Code only)
 
-`skills/install-codebase-orient/` is the **bootstrap skill** — a different skill from `codebase-orient`. It runs a first-pass orientation and generates a project-local `codebase-orient` skill inside the target repo. It is Claude Code only; there are no Codex or project-local install scripts for it.
+`skills/install-codebase-orient/` is the **bootstrap skill**: a different skill from `codebase-orient`. It runs a first-pass orientation and generates a project-local `codebase-orient` skill inside the target repo. It is Claude Code only; there are no Codex or project-local install scripts for it.
 
 To install the bootstrap skill at the Claude Code user level:
 
@@ -505,21 +505,21 @@ The bootstrap skill will orient Claude to that project and generate `docs/ai/` a
 
 ## Project-instruction snippet (AGENTS.md / CLAUDE.md)
 
-You can improve automatic invocation odds by adding a short trigger hint to your project's instruction file. Automatic invocation is model-driven and not guaranteed — this snippet makes the intention explicit to the model without requiring a slash command every time.
+You can improve automatic invocation odds by adding a short trigger hint to your project's instruction file. Automatic invocation is model-driven and not guaranteed - this snippet makes the intention explicit to the model without requiring a slash command every time.
 
-**For Codex** — add to `AGENTS.md`:
+**For Codex**: add to `AGENTS.md`:
 
 ```markdown
 When starting in this repo, before broad changes, before agent handoff, or when docs/ai/ may be stale, consider using the codebase-orient skill before implementation. Do not invoke it for tiny local edits where targeted reads are cheaper.
 ```
 
-**For Claude Code** — add to `CLAUDE.md`:
+**For Claude Code**: add to `CLAUDE.md`:
 
 ```markdown
 When starting in this repo, before broad changes, before agent handoff, or when docs/ai/ may be stale, consider using the /codebase-orient skill before implementation. Do not invoke it for tiny local edits where targeted reads are cheaper.
 ```
 
-This is optional. The skill works on demand without any instruction-file reference. Adding this snippet does not guarantee automatic invocation — it makes the trigger condition clear to the model so it can choose appropriately.
+This is optional. The skill works on demand without any instruction-file reference. Adding this snippet does not guarantee automatic invocation - it makes the trigger condition clear to the model so it can choose appropriately.
 
 ---
 
@@ -585,7 +585,7 @@ After installing, invoke the skill explicitly:
 Use codebase-orient to orient yourself to this repo.
 ```
 
-If Codex does not appear to pick up the skill, restart or reload the session — Codex may not detect new skill files without a session refresh.
+If Codex does not appear to pick up the skill, restart or reload the session - Codex may not detect new skill files without a session refresh.
 
 ---
 
@@ -663,9 +663,13 @@ Do not remove these docs if your project has started relying on them.
 
 ## Development notes
 
-Installer scripts (`.ps1`, `.sh`) must use **ASCII-only characters** in terminal output strings (`Write-Host`, `echo`). Em dashes, curly quotes, ellipsis, and other non-ASCII punctuation encode as multi-byte UTF-8 sequences that render as mojibake (`â€"`) in PowerShell 5.1 and Windows terminals running code page 1252.
+**ASCII punctuation convention:** All tracked repo-maintenance text uses ASCII punctuation only. This includes SKILL.md files, README, CHANGELOG, scripts, and any prompt snippets or release notes.
 
-Rule: if it appears in a `Write-Host` or `echo` string, use ASCII punctuation only. Prose in README and SKILL.md can use normal Unicode punctuation — only terminal output is constrained.
+Forbidden: em dash, en dash, curly quotes, ellipsis, non-breaking spaces, and Unicode math symbols such as <= and >=.
+
+SKILL.md files are read by Claude/Codex as style templates. Smart punctuation in SKILL.md bleeds into generated orientation docs (`CODEBASE_MAP.md`, `CHANGE_SURFACES.md`, `OPEN_QUESTIONS.md`), which land in user repos and may render as mojibake in Windows terminals on code page 1252.
+
+Run `scripts/check-ascii-punctuation.ps1` (or `scripts/check-ascii-punctuation.sh`) before release or broad text changes to catch regressions.
 
 ---
 

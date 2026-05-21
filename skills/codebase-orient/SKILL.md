@@ -54,7 +54,7 @@ Do not save tokens by skipping orientation and then guessing at structure. If br
 
 ## Normal mode vs dry-run mode
 
-**Normal mode** (default — use when the user does not specify):
+**Normal mode** (default - use when the user does not specify):
 
 - Resolve small task-relevant uncertainties automatically by reading source files
 - Apply `docs/ai/` updates without requesting approval
@@ -70,51 +70,51 @@ If mode is not specified, default to Normal mode.
 
 ## Confidence labels
 
-- **Fact** — directly verified in code or docs
-- **Strong inference** — supported by multiple files
-- **Weak inference** — plausible but not confirmed
-- **Unknown** — needs more inspection before editing
+- **Fact**: directly verified in code or docs
+- **Strong inference**: supported by multiple files
+- **Weak inference**: plausible but not confirmed
+- **Unknown**: needs more inspection before editing
 
 Distinguish how a claim was established:
 
-- _independently verified from source/config_ — claim checked against the actual source or config file, not taken from docs
-- _inherited from existing docs_ — claim taken from CLAUDE.md, README, or other documentation without independent verification
-- _inherited then verified_ — claim originated in docs and was subsequently confirmed against source
-- _path existence confirmed_ — file found but not read
-- _partial read_ — portion of the file inspected; may not capture full context
-- _full source read_ — complete file content inspected
-- _inferred from implementation_ — deduced from how code behaves, not explicitly stated
-- _inferred from comments/tests/fixtures_ — sourced from non-authoritative context; treat as Strong inference at best
-- _behavior verified by test_ — confirmed by passing test execution
-- _unknown_ — basis not established; do not present as Fact
+- _independently verified from source/config_: claim checked against the actual source or config file, not taken from docs
+- _inherited from existing docs_: claim taken from CLAUDE.md, README, or other documentation without independent verification
+- _inherited then verified_: claim originated in docs and was subsequently confirmed against source
+- _path existence confirmed_: file found but not read
+- _partial read_: portion of the file inspected; may not capture full context
+- _full source read_: complete file content inspected
+- _inferred from implementation_: deduced from how code behaves, not explicitly stated
+- _inferred from comments/tests/fixtures_: sourced from non-authoritative context; treat as Strong inference at best
+- _behavior verified by test_: confirmed by passing test execution
+- _unknown_: basis not established; do not present as Fact
 
 In final reports and orientation docs, label each non-trivial claim with one of the above origins so readers can judge which claims need re-verification before acting on them.
 
 ## Discovery order
 
-> **Customization note:** The discovery order below is intentionally broad and works across most project shapes without editing. You can tune the file paths and order for a specific project, but this is optional — not required before first use.
+> **Customization note:** The discovery order below is intentionally broad and works across most project shapes without editing. You can tune the file paths and order for a specific project, but this is optional - not required before first use.
 
 Execute in this order:
 
-1. Project instruction files such as `CLAUDE.md`, `AGENTS.md`, and `README.md`, if present — product purpose, agent rules, project conventions.
+1. Project instruction files such as `CLAUDE.md`, `AGENTS.md`, and `README.md`, if present - product purpose, agent rules, project conventions.
    - Treat these documents as helpful hypotheses, not authoritative truth.
    - Extract high-impact factual claims about architecture, routes, deployment, tests, and source-of-truth files.
    - Verify those claims against source code before relying on them. Focus on claims that would affect future edits; do not audit every sentence.
    - Do not copy claims from these docs into `CODEBASE_MAP.md` without labeling whether they are _independently verified from source/config_ or _inherited from existing docs_.
    - If an instruction doc is stale or misleading compared to what the source shows, record the drift in `OPEN_QUESTIONS.md` under the hidden-risk reporting rule and label it as documentation drift.
    - Map the instruction-layer topology: note which instruction files are present (e.g., `CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`) and at which scope (project-local vs user-level). Record this in `CODEBASE_MAP.md`; it helps future agents know which rules apply.
-2. Project manifest (e.g., `package.json`, `pyproject.toml`, `Cargo.toml`) — deps, scripts, build/test commands
-3. Build and config files (e.g., framework config, bundler config) — adapter, build config
-4. `scripts/` directory, if present — may contain manually-run tooling not represented in package scripts or CI
-5. Entry points and routing layer — all pages, controllers, or API routes
-6. Core business logic — domain types, models, scoring, report logic
-7. Server-side services — auth, db/schema, email, external integrations
-8. UI/presentation layer — components, views, templates
-9. Internationalisation or copy files — locale files
-10. Request lifecycle / middleware — hooks, interceptors, middleware
-11. Database layer — migrations, schema snapshots
-12. Tests — test structure and coverage shape
-13. Documentation — existing docs, verification matrices
+2. Project manifest (e.g., `package.json`, `pyproject.toml`, `Cargo.toml`) - deps, scripts, build/test commands
+3. Build and config files (e.g., framework config, bundler config) - adapter, build config
+4. `scripts/` directory, if present - may contain manually-run tooling not represented in package scripts or CI
+5. Entry points and routing layer - all pages, controllers, or API routes
+6. Core business logic - domain types, models, scoring, report logic
+7. Server-side services - auth, db/schema, email, external integrations
+8. UI/presentation layer - components, views, templates
+9. Internationalisation or copy files - locale files
+10. Request lifecycle / middleware - hooks, interceptors, middleware
+11. Database layer - migrations, schema snapshots
+12. Tests - test structure and coverage shape
+13. Documentation - existing docs, verification matrices
 14. Known uncertainty
 
 ## Framework-specific probes
@@ -125,16 +125,16 @@ Apply these probes in addition to the generic discovery order when the relevant 
 
 Glob the following file patterns when a SvelteKit project is detected:
 
-- `src/routes/**/+page.svelte` — UI route pages; each file is a route candidate; check subdirectories, not only the top-level `src/routes/+page.svelte`
-- `src/routes/**/+page.server.ts` — server-side data loading, form actions, and route-level access control
-- `src/routes/**/+layout.svelte` — shared layout shells
-- `src/routes/**/+layout.server.ts` — server-side load functions for layout-level auth, session, or data
-- `src/routes/**/+server.ts` — API endpoints and server-only request handlers
+- `src/routes/**/+page.svelte`: UI route pages; each file is a route candidate; check subdirectories, not only the top-level `src/routes/+page.svelte`
+- `src/routes/**/+page.server.ts`: server-side data loading, form actions, and route-level access control
+- `src/routes/**/+layout.svelte`: shared layout shells
+- `src/routes/**/+layout.server.ts`: server-side load functions for layout-level auth, session, or data
+- `src/routes/**/+server.ts`: API endpoints and server-only request handlers
 
 Server-side route files (`+page.server.ts`, `+layout.server.ts`, `+server.ts`) are critical for understanding auth, data loading, form actions, API endpoints, and route-level access control. Do not skip them when mapping routes or change surfaces.
 
 - The standard app shell template is `src/app.html`.
-- Adapter choice in `svelte.config.js` determines deployment target — confirm before making deployment-related claims.
+- Adapter choice in `svelte.config.js` determines deployment target - confirm before making deployment-related claims.
 
 ## CI/deployment precision rule
 
@@ -143,7 +143,7 @@ When reading CI or deployment workflow files, preserve operationally relevant de
 Capture and report:
 
 - concurrency group name (which runs compete with each other)
-- `cancel-in-progress` behavior — if `true`, say "newer runs cancel in-progress runs of the same group", not merely "prevents parallel deploys"
+- `cancel-in-progress` behavior - if `true`, say "newer runs cancel in-progress runs of the same group", not merely "prevents parallel deploys"
 - `fail-fast` behavior
 - deploy artifact paths
 - release naming format including any timestamp or hash components
@@ -158,15 +158,15 @@ Label CI/deployment claims with _independently verified from source/config_ when
 
 Do not read every large CSS, config, or generated file by default.
 
-- **Full read** — files that directly affect the requested task (entry points, routing, auth, schema, build config, the file to be edited).
-- **Partial read or path-confirmation only** — secondary surfaces such as large style sheets, vendored code, generated output, or config files not relevant to the task. If you only confirm a file's path or read a portion, say so explicitly in the report using the _path existence confirmed_ or partial-read labels defined under Confidence labels.
-- **Skip** — files that are clearly out of scope (e.g., binary assets, lock files, test snapshots) unless a specific question makes them relevant.
+- **Full read**: files that directly affect the requested task (entry points, routing, auth, schema, build config, the file to be edited).
+- **Partial read or path-confirmation only**: secondary surfaces such as large style sheets, vendored code, generated output, or config files not relevant to the task. If you only confirm a file's path or read a portion, say so explicitly in the report using the _path existence confirmed_ or partial-read labels defined under Confidence labels.
+- **Skip**: files that are clearly out of scope (e.g., binary assets, lock files, test snapshots) unless a specific question makes them relevant.
 
 When in doubt, prefer confirming existence first and reading fully only if a claim requires it.
 
 ### Path existence vs content read
 
-Path existence alone is sufficient for low-risk inventory claims — confirming a directory structure, listing file counts, or noting that a config file is present.
+Path existence alone is sufficient for low-risk inventory claims - confirming a directory structure, listing file counts, or noting that a config file is present.
 
 Read the actual file content when the claim affects behavior, architecture, risk, commands, deployment, auth, routing, or change surfaces. Do not label a claim as _independently verified from source/config_ based on path existence alone when the file is cheap to inspect and its content would materially affect the map.
 
@@ -229,20 +229,20 @@ Before staging, format all created/updated files if the project has a discoverab
 
 When populating `docs/ai/CHANGE_SURFACES.md`, include entries for these change types in addition to the standard surfaces (routes, styling, schema, tests, config):
 
-- **Auth/admin/operator UX changes** — admin panels, operator dashboards, internal tooling surfaces; note any accessibility requirements or WCAG targets found in source or docs
-- **Deployment-sensitive changes** — flag files whose changes should prompt a smoke check after deploy; note likely smoke-check entry points (e.g., login page, health endpoint, main route)
-- **Docs-impact changes** — for each major subsystem, note which project docs need updating alongside code changes (e.g., "changes to the auth flow should also update `docs/auth.md`")
+- **Auth/admin/operator UX changes**: admin panels, operator dashboards, internal tooling surfaces; note any accessibility requirements or WCAG targets found in source or docs
+- **Deployment-sensitive changes**: flag files whose changes should prompt a smoke check after deploy; note likely smoke-check entry points (e.g., login page, health endpoint, main route)
+- **Docs-impact changes**: for each major subsystem, note which project docs need updating alongside code changes (e.g., "changes to the auth flow should also update `docs/auth.md`")
 
-Do not create separate `docs/ai/` files for smoke-check lists or handoff notes — record them inline in `CHANGE_SURFACES.md`.
+Do not create separate `docs/ai/` files for smoke-check lists or handoff notes - record them inline in `CHANGE_SURFACES.md`.
 
 ## No-date-only-churn rule
 
 Do not rewrite a generated `docs/ai/` file solely to update a date, timestamp, or freshness marker.
 
 - If a file has no substantive content changes after verification, leave it unchanged.
-- Report it as **verified current** in the orientation report — not as "refreshed" or "updated".
+- Report it as **verified current** in the orientation report - not as "refreshed" or "updated".
 - Only update the `Last refreshed:` date when file content changes for a substantive reason.
-- If the project has an existing documented convention requiring date refreshes on every orientation pass, follow that convention — but only if it is explicitly documented in `CLAUDE.md`, `AGENTS.md`, or project docs.
+- If the project has an existing documented convention requiring date refreshes on every orientation pass, follow that convention - but only if it is explicitly documented in `CLAUDE.md`, `AGENTS.md`, or project docs.
 
 ## Staleness and update rule
 
@@ -257,7 +257,7 @@ The three `docs/ai/` files must remain coherent with each other. After any updat
 - **Resolved questions**: if `OPEN_QUESTIONS.md` marks a question resolved, remove or update any stale "unknown" or "needs investigation" language in `CODEBASE_MAP.md` and `CHANGE_SURFACES.md` that referred to the same item.
 - **New change surfaces**: if a change surface is added to `CHANGE_SURFACES.md`, check whether `CODEBASE_MAP.md` should mention the associated area or file.
 - **New map uncertainty**: if a claim in `CODEBASE_MAP.md` becomes uncertain, check whether the corresponding open question exists in `OPEN_QUESTIONS.md`; add or update it if not.
-- **Contradictions**: do not let one file say "unknown" or "unresolved" while another says "resolved" or "confirmed" — unless the distinction is explicitly explained.
+- **Contradictions**: do not let one file say "unknown" or "unresolved" while another says "resolved" or "confirmed" - unless the distinction is explicitly explained.
 
 Apply this as a final consistency pass after refreshing any of the three files.
 
@@ -265,13 +265,13 @@ Apply this as a final consistency pass after refreshing any of the three files.
 
 Before finishing orientation, classify every unresolved open question as one of:
 
-- **Blocking** — must resolve before safe work on the current task (e.g., unknown auth behavior before touching auth, unknown API shape before touching that route)
-- **Relevant but non-blocking** — useful context for the task but work can proceed without it
-- **Background** — not needed for the current task at all
+- **Blocking**: must resolve before safe work on the current task (e.g., unknown auth behavior before touching auth, unknown API shape before touching that route)
+- **Relevant but non-blocking**: useful context for the task but work can proceed without it
+- **Background**: not needed for the current task at all
 
 Then apply these rules:
 
-1. **Automatically resolve Blocking questions** by reading the minimum necessary files — unless the user explicitly requested dry-run or report-only mode.
+1. **Automatically resolve Blocking questions** by reading the minimum necessary files - unless the user explicitly requested dry-run or report-only mode.
 2. **Apply docs/ai updates without asking first** when only docs/ai files need to change. Do not prompt for approval on small documentation corrections unless the user asked for it.
 3. **Do not stop to prompt the user** for permission to resolve small documentation uncertainties. Use judgment and proceed safely within the hard rules.
 4. **Stop and hand off** only when:
@@ -286,11 +286,11 @@ For Relevant-but-non-blocking and Background questions: record them in `OPEN_QUE
 
 The final orientation report must distinguish between docs that changed and docs that did not. Label each `docs/ai/` file with one of:
 
-- **Created** — file did not exist; was created this pass
-- **Substantively updated** — content changed; `Last refreshed` date updated
-- **Verified current / unchanged** — content inspected and confirmed accurate; file not rewritten
-- **Proposed only** — dry-run mode; change proposed but not written
-- **Skipped** — file not inspected this pass; state why
+- **Created**: file did not exist; was created this pass
+- **Substantively updated**: content changed; `Last refreshed` date updated
+- **Verified current / unchanged**: content inspected and confirmed accurate; file not rewritten
+- **Proposed only**: dry-run mode; change proposed but not written
+- **Skipped**: file not inspected this pass; state why
 
 Do not label a file as "updated" or "refreshed" if only its date changed. A file with no substantive changes must be reported as **verified current / unchanged**.
 
@@ -298,10 +298,10 @@ Do not label a file as "updated" or "refreshed" if only its date changed. A file
 
 When orientation is requested before an agent handoff, append a compact **Handoff summary** block to the orientation report:
 
-- **Snapshot** — 3–5 key facts: framework, entry point, auth mechanism, deploy target, test approach
-- **Blocking open questions** — anything that must resolve before safe work begins
-- **Critical change surfaces** — top 3–5 surfaces most likely affected by the incoming work
-- **Recommended first action** — what the receiving agent should do first
+- **Snapshot**: 3-5 key facts: framework, entry point, auth mechanism, deploy target, test approach
+- **Blocking open questions**: anything that must resolve before safe work begins
+- **Critical change surfaces**: top 3-5 surfaces most likely affected by the incoming work
+- **Recommended first action**: what the receiving agent should do first
 
 Keep it under 150 words. Do not create a separate `docs/ai/` file for it.
 
@@ -317,7 +317,7 @@ Before writing the local specialization:
 
 Do not backport concrete project-specific paths to the public skill unless they are broadly reusable across many projects.
 
-The project-specific paths added here are the thin, customisable layer of the repo-local skill. The canonical rules above are the stable layer that applies across all repos. Keep them visually separated — project-specific additions belong at the end of the file, clearly marked as project-local.
+The project-specific paths added here are the thin, customisable layer of the repo-local skill. The canonical rules above are the stable layer that applies across all repos. Keep them visually separated - project-specific additions belong at the end of the file, clearly marked as project-local.
 
 Examples of paths that qualify for local specialization:
 - framework-adjacent service namespaces
