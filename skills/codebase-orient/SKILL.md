@@ -221,6 +221,27 @@ For Relevant-but-non-blocking and Background questions: record them in `OPEN_QUE
 
 If mode is not specified, default to Normal mode.
 
+## Project-local specialization rule
+
+After the first orientation pass, if the repo has important project-specific namespaces, service folders, command groups, admin surfaces, workflow directories, generated-output locations, or deployment conventions that were not in the generic probe list, update the repo-local skill (`SKILL.md`) with those project-specific discovery paths.
+
+Before writing the local specialization:
+- Verify each proposed path exists with a glob or read.
+- Briefly state why each path matters (e.g., "domain workflow folder", "admin resource directory").
+
+Do not backport concrete project-specific paths to the public skill unless they are broadly reusable across many projects.
+
+Examples of paths that qualify for local specialization:
+- framework-adjacent service namespaces
+- custom domain workflow folders
+- admin page or resource directories
+- manually-run tooling directories
+- import/export pipeline directories
+- deployment or release directories
+- generated asset conventions
+
+If the skill is running in dry-run/report-only mode, report the proposed local specialization but do not write it.
+
 ## Hidden-risk reporting rule
 
 Be concise by default, but go deeper when depth changes the decision.

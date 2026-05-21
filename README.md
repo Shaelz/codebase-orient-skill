@@ -66,6 +66,10 @@ docs/ai/OPEN_QUESTIONS.md
 
 The skill works out of the box without editing. `SKILL.md` ships with a broad, generic discovery order that covers most project shapes. You can tune that order for your specific project later, but customization is optional — not required before first use.
 
+### Local tuning after the first orientation pass
+
+The public skill is intentionally generic. After the first orientation pass, you may find that your project has important namespaces, service folders, admin surfaces, workflow directories, or other conventions that the generic probe list did not cover. The skill will propose updating the repo-local `SKILL.md` with those project-specific discovery paths. This is expected and useful — it makes future orientation passes faster and more accurate for that repo. It is not a fork failure. Concrete project-specific paths should stay in the repo-local skill and should not be submitted back to the public skill.
+
 ### `CODEBASE_MAP.md`
 
 A high-level architecture map of the project.
