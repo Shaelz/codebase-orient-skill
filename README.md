@@ -302,7 +302,7 @@ This skill is designed to be conservative:
 | Skill source | Purpose | Tools |
 |---|---|---|
 | `skills/codebase-orient/` | The orientation skill — installs to `.claude/skills/` (Claude Code) or `.agents/skills/` (Codex) | Claude Code, Codex |
-| `skills/install-codebase-orient/` | Bootstrap skill — runs a first-pass orientation and creates the project-local orientation layer | Claude Code only (no automated install scripts yet) |
+| `skills/install-codebase-orient/` | Bootstrap skill — runs a first-pass orientation and creates the project-local orientation layer | Claude Code only |
 
 `skills/codebase-orient/SKILL.md` is the single canonical source for the orientation skill. Installed copies are targets, not forks. `skills/install-codebase-orient/SKILL.md` is versioned here as tracked source; it is currently installed manually to the Claude Code user-level path.
 
@@ -457,6 +457,36 @@ After installing, restart or reload Codex if it is currently running, then invok
 ```text
 Use codebase-orient to orient yourself to this repo.
 ```
+
+---
+
+## Bootstrap skill: user-level install (Claude Code only)
+
+`skills/install-codebase-orient/` is the **bootstrap skill** — a different skill from `codebase-orient`. It runs a first-pass orientation and generates a project-local `codebase-orient` skill inside the target repo. It is Claude Code only; there are no Codex or project-local install scripts for it.
+
+To install the bootstrap skill at the Claude Code user level:
+
+### Windows PowerShell
+
+```powershell
+.\scripts\install-bootstrap-user.ps1
+```
+
+### macOS/Linux
+
+```bash
+./scripts/install-bootstrap-user.sh
+```
+
+After installing, restart Claude Code if it is running, then open any project and type:
+
+```text
+/install-codebase-orient
+```
+
+The bootstrap skill will orient Claude to that project and generate `docs/ai/` and `.claude/skills/codebase-orient/SKILL.md` inside it.
+
+> **Note:** For most users, installing the plain `codebase-orient` skill (via `install-user.ps1` / `install-user.sh`) is sufficient. The bootstrap skill is for users who want the orientation skill auto-generated inside projects on first use.
 
 ---
 

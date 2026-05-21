@@ -1,5 +1,11 @@
 # Changelog
 
+## 0.1.3
+
+- Added `scripts/install-bootstrap-user.ps1` and `scripts/install-bootstrap-user.sh` — user-level Claude Code install scripts for the `install-codebase-orient` bootstrap skill.
+- Updated README with bootstrap skill install instructions (user-level, Claude Code only).
+- No project-local bootstrap install scripts added; no Codex bootstrap install support added.
+
 ## 0.1.2
 
 - Added `skills/install-codebase-orient/SKILL.md` — tracked source for the Claude Code bootstrap skill. Bootstrap skill source is now versioned here but is not yet part of the automated install flow.
