@@ -1,15 +1,15 @@
 #!/usr/bin/env bash
-# install-user.sh — installs codebase-orient skill to the user-level Claude Code skills directory
+# install-codex-user.sh — installs codebase-orient skill to the user-level Codex skills directory
 #
 # Usage:
-#   ./scripts/install-user.sh
-#   ./scripts/install-user.sh --force
+#   ./scripts/install-codex-user.sh
+#   ./scripts/install-codex-user.sh --force
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$(cd "$SCRIPT_DIR/../skills/codebase-orient" && pwd)"
-DEST_DIR="$HOME/.claude/skills/codebase-orient"
+DEST_DIR="$HOME/.agents/skills/codebase-orient"
 
 FORCE=false
 for arg in "$@"; do
@@ -40,6 +40,8 @@ echo ""
 echo "Installation complete."
 echo ""
 echo "Verification:"
-echo "  1. Restart Claude Code if it is currently running."
-echo "  2. Open any project and type: /codebase-orient"
-echo "  3. The skill should activate and begin orienting Claude to the codebase."
+echo "  1. Restart or reload Codex if it is currently running — Codex may not"
+echo "     pick up new skills until the session is refreshed."
+echo "  2. Open any project and invoke the skill explicitly:"
+echo "       Use codebase-orient to orient yourself to this repo."
+echo "  3. The skill should activate and begin orienting Codex to the codebase."

@@ -1,17 +1,17 @@
 #!/usr/bin/env bash
-# install-project.sh — installs codebase-orient skill into the current project's .claude/skills directory
+# install-codex-project.sh — installs codebase-orient skill into the current project's .agents/skills directory
 #
 # Run this from the root of the project where you want to install the skill.
 #
 # Usage:
-#   ./path/to/install-project.sh
-#   ./path/to/install-project.sh --force
+#   ./path/to/install-codex-project.sh
+#   ./path/to/install-codex-project.sh --force
 
 set -euo pipefail
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 SOURCE_DIR="$(cd "$SCRIPT_DIR/../skills/codebase-orient" && pwd)"
-DEST_DIR="$(pwd)/.claude/skills/codebase-orient"
+DEST_DIR="$(pwd)/.agents/skills/codebase-orient"
 
 FORCE=false
 for arg in "$@"; do
@@ -41,18 +41,18 @@ echo "  Copied skill contents."
 echo ""
 echo "Installation complete."
 echo ""
-echo "Optional: to track only the skill file in git (not other .claude internals),"
+echo "Optional: to track only the skill file in git (not other .agents internals),"
 echo "add the following to your project .gitignore:"
 echo ""
-echo "  # Ignore all .claude internals except the skill"
-echo "  .claude/"
-echo "  !.claude/skills/"
-echo "  !.claude/skills/codebase-orient/"
-echo "  !.claude/skills/codebase-orient/SKILL.md"
-echo ""
-echo "Note: this script does not touch .claude/settings.local.json."
+echo "  # Ignore all .agents internals except the skill"
+echo "  .agents/"
+echo "  !.agents/skills/"
+echo "  !.agents/skills/codebase-orient/"
+echo "  !.agents/skills/codebase-orient/SKILL.md"
 echo ""
 echo "Verification:"
-echo "  1. Restart Claude Code if it is currently running."
-echo "  2. Open this project in Claude Code and type: /codebase-orient"
-echo "  3. The skill should activate and begin orienting Claude to the codebase."
+echo "  1. Restart or reload Codex if it is currently running — Codex may not"
+echo "     pick up new skills until the session is refreshed."
+echo "  2. Open this project in Codex and invoke the skill explicitly:"
+echo "       Use codebase-orient to orient yourself to this repo."
+echo "  3. The skill should activate and begin orienting Codex to the codebase."

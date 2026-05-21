@@ -1,8 +1,8 @@
 # Codebase Orient Skill
 
-A Claude Code skill for turning "scan this repo" into a repeatable codebase orientation workflow.
+An Agent Skill for **Claude Code** and **Codex** that turns "scan this repo" into a repeatable codebase orientation workflow.
 
-Instead of asking Claude to vaguely "understand the project," this skill guides Claude to build and maintain a small orientation layer:
+Instead of asking the model to vaguely "understand the project," this skill guides it to build and maintain a small orientation layer:
 
 - a codebase map
 - a change-surface map
@@ -57,12 +57,19 @@ Orientation improves Claude's process, but it does not replace source verificati
 When used in a project, the skill may create or update:
 
 ```text
-CLAUDE.md
 docs/ai/CODEBASE_MAP.md
 docs/ai/CHANGE_SURFACES.md
 docs/ai/OPEN_QUESTIONS.md
-.claude/skills/codebase-orient/SKILL.md
 ```
+
+And a repo-local copy of the skill file at the path your tool reads:
+
+| Tool | Repo-local skill path |
+|---|---|
+| Claude Code | `.claude/skills/codebase-orient/SKILL.md` |
+| Codex | `.agents/skills/codebase-orient/SKILL.md` |
+
+The source of truth is always `skills/codebase-orient/SKILL.md` in this repository. Installed copies are targets — not forks.
 
 The skill works out of the box without editing. `SKILL.md` ships with a broad, generic discovery order that covers most project shapes. You can tune that order for your specific project later, but customization is optional — not required before first use.
 
@@ -136,7 +143,7 @@ The skill tries not to invent concerns. Open questions should be useful, grounde
 
 During orientation, Claude follows this sequence:
 
-1. **Reads project instructions and docs first** — CLAUDE.md, README, any existing docs/ai files.
+1. **Reads project instructions and docs first** — CLAUDE.md / AGENTS.md, README, any existing docs/ai files.
 2. **Checks framework, config, and entrypoints** — package.json, tsconfig, Dockerfile, CI files, root config.
 3. **Maps routes, models, services, UI surfaces, tests, and deployment** — in enough depth to understand the shape, not every implementation detail.
 4. **Creates or refreshes the docs/ai files** — CODEBASE_MAP.md, CHANGE_SURFACES.md, OPEN_QUESTIONS.md.
@@ -219,27 +226,29 @@ When this happens, Claude should report:
 
 - **Monorepos** — orientation may need to be scoped to a sub-package. Running against the entire monorepo at once can produce shallow results.
 - **Repos with no docs** — expect more Unknown labels. The skill cannot infer what is not there.
-- **Generated output mixed with source** — this can confuse source-of-truth detection. Flag generated directories explicitly in CLAUDE.md if possible.
-- **Auto-invocation is not guaranteed** — Claude may invoke this skill automatically when it recognizes an orientation request, but direct invocation is the reliable path.
-- **Orientation improves process, not correctness** — Claude should still verify claims against the actual source before editing.
+- **Generated output mixed with source** — this can confuse source-of-truth detection. Flag generated directories explicitly in CLAUDE.md (or AGENTS.md for Codex) if possible.
+- **Auto-invocation is not guaranteed** — models may invoke this skill automatically when they recognize an orientation request, but explicit invocation is the reliable path. This applies to both Claude Code and Codex.
+- **Orientation improves process, not correctness** — the model should still verify claims against the actual source before editing.
 
 ---
 
 ## Invocation
 
-For reliable use, invoke the skill directly:
+Auto/implicit invocation is model-driven and not guaranteed in either Claude Code or Codex. Explicit invocation is the reliable path.
+
+**Claude Code** — invoke the skill directly:
 
 ```text
 /codebase-orient
 ```
 
-Or explicitly say:
+**Codex** — slash commands are not supported; invoke explicitly:
 
 ```text
-Use codebase-orient first, then help me plan this change.
+Use codebase-orient to orient yourself to this repo before planning this change.
 ```
 
-Claude may invoke this skill automatically when your request matches the skill description (orient, scan, understand, audit, plan changes). This is not guaranteed — use direct invocation when it matters.
+Both tools may invoke the skill automatically when a request matches the skill description (orient, scan, understand, audit, plan changes), but this cannot be relied on for critical work.
 
 ---
 
@@ -288,26 +297,37 @@ This skill is designed to be conservative:
 
 ---
 
-## Installation
+## Install paths
 
-This repository is intended for Claude Code.
+| Tool | User-level | Project-local |
+|---|---|---|
+| Claude Code | `~/.claude/skills/codebase-orient/` | `.claude/skills/codebase-orient/` |
+| Codex | `~/.agents/skills/codebase-orient/` | `.agents/skills/codebase-orient/` |
 
-There are two common install styles:
-
-1. personal install, available across your Claude Code projects
-2. project-local install, committed or used inside one repo
-
-The `scripts/` directory contains install helpers for both styles. They refuse to overwrite an existing install unless you pass `-Force` (PowerShell) or `--force` (bash), so they are safe to run on a machine where the skill may already be present. The manual commands below are shown for transparency — either approach works.
+There is one `SKILL.md` source — the install scripts copy it to whichever path your tool reads.
 
 ---
 
-## Option A: personal install
+## Installation
 
-Use this if you want the skill available across projects.
+There are two common install styles:
+
+1. **User-level install** — available across all your projects in that tool.
+2. **Project-local install** — available only inside a specific repo.
+
+The `scripts/` directory contains install helpers for both styles and both tools. They refuse to overwrite an existing install unless you pass `-Force` (PowerShell) or `--force` (bash), so they are safe to run on a machine where the skill may already be present.
+
+---
+
+## Claude Code: user-level install
 
 ### Windows PowerShell
 
-From this repo:
+```powershell
+.\scripts\install-user.ps1
+```
+
+Or manually:
 
 ```powershell
 New-Item -ItemType Directory -Force "$HOME\.claude\skills\codebase-orient" | Out-Null
@@ -322,7 +342,11 @@ Then restart Claude Code if needed and try:
 
 ### macOS/Linux
 
-From this repo:
+```bash
+./scripts/install-user.sh
+```
+
+Or manually:
 
 ```bash
 mkdir -p "$HOME/.claude/skills/codebase-orient"
@@ -337,17 +361,17 @@ Then restart Claude Code if needed and try:
 
 ---
 
-## Option B: project-local install
+## Claude Code: project-local install
 
-Use this if you want the skill available only inside a specific repo.
-
-From the target repo, copy the skill into:
-
-```text
-.claude/skills/codebase-orient/SKILL.md
-```
+From the root of the target repo:
 
 ### Windows PowerShell
+
+```powershell
+& "PATH\TO\codebase-orient-skill\scripts\install-project.ps1"
+```
+
+Or manually:
 
 ```powershell
 New-Item -ItemType Directory -Force ".\.claude\skills\codebase-orient" | Out-Null
@@ -355,8 +379,6 @@ Copy-Item -Recurse -Force "PATH\TO\codebase-orient-skill\skills\codebase-orient\
 ```
 
 ### macOS/Linux
-
-From the target repo, run:
 
 ```bash
 /path/to/codebase-orient-skill/scripts/install-project.sh
@@ -377,9 +399,71 @@ Then in Claude Code:
 
 ---
 
+## Codex: user-level install
+
+Codex reads user skills from `$HOME/.agents/skills/` (macOS/Linux) or `$HOME\.agents\skills\` (Windows).
+
+### Windows PowerShell
+
+```powershell
+.\scripts\install-codex-user.ps1
+```
+
+### macOS/Linux
+
+```bash
+./scripts/install-codex-user.sh
+```
+
+After installing, restart or reload Codex if it is currently running, then invoke the skill explicitly:
+
+```text
+Use codebase-orient to orient yourself to this repo.
+```
+
+---
+
+## Codex: project-local install
+
+Codex reads project skills from `.agents/skills/` in the repo root.
+
+From the root of the target repo:
+
+### Windows PowerShell
+
+```powershell
+& "PATH\TO\codebase-orient-skill\scripts\install-codex-project.ps1"
+```
+
+### macOS/Linux
+
+```bash
+/path/to/codebase-orient-skill/scripts/install-codex-project.sh
+```
+
+After installing, restart or reload Codex if it is currently running, then invoke the skill explicitly:
+
+```text
+Use codebase-orient to orient yourself to this repo.
+```
+
+---
+
+## AGENTS.md and persistent instructions (Codex)
+
+Codex reads `AGENTS.md` as a persistent instruction layer — the equivalent of `CLAUDE.md` in Claude Code. If you want Codex to apply this skill automatically on every session, you can reference it from your project's `AGENTS.md`:
+
+```markdown
+Before non-trivial work, use the codebase-orient skill to orient yourself to this repo.
+```
+
+This is optional. The skill can also be invoked on demand without any AGENTS.md reference.
+
+---
+
 ## Suggested `.gitignore` setup for project-local installs
 
-If you want to commit the readable skill source but keep local Claude settings private, use a selective ignore pattern:
+### Claude Code
 
 ```gitignore
 # Claude Code local/project config
@@ -395,17 +479,23 @@ If you want to commit the readable skill source but keep local Claude settings p
 .claude/skills/codebase-orient.skill
 ```
 
-This tracks:
+### Codex
 
-```text
-.claude/skills/codebase-orient/SKILL.md
+```gitignore
+# Codex local/project config
+.agents/*
+
+# Track shared project-local Codex skills intentionally
+!.agents/skills/
+!.agents/skills/codebase-orient/
+!.agents/skills/codebase-orient/SKILL.md
 ```
-
-but keeps local/private/generated files ignored.
 
 ---
 
 ## Verify installation
+
+### Claude Code
 
 After installing, ask Claude Code:
 
@@ -419,33 +509,39 @@ Then try:
 /codebase-orient
 ```
 
-If direct slash invocation does not work in your environment, you can still ask Claude to read the skill file explicitly:
+If direct slash invocation does not work in your environment, you can ask Claude to read the skill file explicitly:
 
 ```text
 Read and follow .claude/skills/codebase-orient/SKILL.md before planning this change.
 ```
 
+### Codex
+
+After installing, invoke the skill explicitly:
+
+```text
+Use codebase-orient to orient yourself to this repo.
+```
+
+If Codex does not appear to pick up the skill, restart or reload the session — Codex may not detect new skill files without a session refresh.
+
 ---
 
-## Claude.ai / Claude Code / API note
+## Claude.ai / Claude Code / Codex / API note
 
-Claude surfaces may handle skills differently.
+Each tool surface handles skills and context differently.
 
-This repo is primarily for Claude Code usage.
+- Claude Code reads skills from `.claude/skills/` (project) or `~/.claude/skills/` (user).
+- Codex reads skills from `.agents/skills/` (project) or `~/.agents/skills/` (user).
+- Claude.ai and raw API usage do not read either path automatically.
 
-A skill installed in Claude Code does not necessarily sync automatically to Claude.ai or API usage. Treat each environment separately and verify installation in the place where you plan to use it.
+Install into the environment where you plan to use the skill and verify in that environment. A skill installed for Claude Code does not carry over to Codex, and vice versa.
 
 ---
 
 ## Uninstall
 
-### Personal install
-
-Remove:
-
-```text
-~/.claude/skills/codebase-orient/
-```
+### Claude Code: user-level
 
 Windows PowerShell:
 
@@ -459,13 +555,37 @@ macOS/Linux:
 rm -rf "$HOME/.claude/skills/codebase-orient"
 ```
 
-### Project-local install
+### Claude Code: project-local
 
 Remove from the project:
 
 ```text
 .claude/skills/codebase-orient/
 ```
+
+### Codex: user-level
+
+Windows PowerShell:
+
+```powershell
+Remove-Item -Recurse -Force "$HOME\.agents\skills\codebase-orient"
+```
+
+macOS/Linux:
+
+```bash
+rm -rf "$HOME/.agents/skills/codebase-orient"
+```
+
+### Codex: project-local
+
+Remove from the project:
+
+```text
+.agents/skills/codebase-orient/
+```
+
+### Generated orientation docs (all tools)
 
 Optionally remove generated orientation docs:
 
