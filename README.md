@@ -324,7 +324,7 @@ There is one `SKILL.md` source — the install scripts copy it to whichever path
 **Which skill should I install?**
 
 - **Most users:** install `codebase-orient` (the sections immediately below). Use `/codebase-orient` to orient Claude to any project.
-- **Bootstrap users:** install `install-codebase-orient` if you want Claude to auto-generate a project-local `codebase-orient` skill file inside each repo on first use. See [Bootstrap skill: user-level install](#bootstrap-skill-user-level-install-claude-code-only) below.
+- **Bootstrap users:** install `install-codebase-orient` if you want Claude to run an orientation pass *and* write a project-local `codebase-orient` skill file into the repo (at `.claude/skills/codebase-orient/SKILL.md`). See [Bootstrap skill: user-level install](#bootstrap-skill-user-level-install-claude-code-only) below.
 
 There are two common install styles for `codebase-orient`:
 
@@ -491,7 +491,7 @@ After installing, restart Claude Code if it is running, then open any project an
 
 The bootstrap skill will orient Claude to that project and generate `docs/ai/` and `.claude/skills/codebase-orient/SKILL.md` inside it.
 
-> **Note:** For most users, installing the plain `codebase-orient` skill (via `install-user.ps1` / `install-user.sh`) is sufficient. The bootstrap skill is for users who want the orientation skill auto-generated inside projects on first use.
+> **Note:** For most users, installing the plain `codebase-orient` skill (via `install-user.ps1` / `install-user.sh`) is sufficient. The bootstrap skill is for users who also want a project-local `codebase-orient` skill file written into each repo's `.claude/skills/codebase-orient/SKILL.md` when they run orientation.
 
 ---
 
