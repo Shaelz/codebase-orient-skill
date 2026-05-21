@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+Invocation reliability and token-aware use improvements:
+
+- **Trigger-oriented skill description** — `codebase-orient` frontmatter `description` rewritten to be richer in trigger signals: new/unfamiliar repo, new session, before multi-file work, before refactor/planning/handoff, stale `docs/ai/`, unclear structure. Includes explicit trigger phrases (`scan`, `orient`, `survey`, `familiarize`, `before I start`, etc.) and explicit skip signal (tiny single-file known edits).
+- **When-to-use / when-to-skip guidance** — "When to use this skill" section split into explicit use cases and explicit skip cases. Replaces the previous flat bullet list of task types.
+- **Token-aware orientation cache guidance** — new "Token-aware use guidance" section explaining `docs/ai/` as an orientation cache: use when cost amortizes over broad work or sessions; skip for tiny known tasks; do not save tokens by guessing instead.
+- **Optional AGENTS.md / CLAUDE.md snippet** — README now includes recommended project-instruction snippet for both Codex (`AGENTS.md`) and Claude Code (`CLAUDE.md`). Marked optional; does not guarantee invocation; triggers when useful, suppresses when not needed.
+- **Bootstrap embedded template synced** — when-to-use/skip and token-aware guidance added to `skills/install-codebase-orient/SKILL.md` embedded downstream template. Also added "audit only" / "no writes" to dry-run triggers.
+- No installer behavior changes.
+
 Live-fire findings from no-wrapper `/codebase-orient` test applied.
 
 - **Normal/dry-run mode surfaced earlier** — moved to immediately after Hard rules, before discovery and output rules, so it is visible without scrolling through the full skill. Added "audit only" and "no writes" as recognized dry-run triggers.

@@ -1,6 +1,6 @@
 ---
 name: codebase-orient
-description: 'Orient Claude to the current codebase before non-trivial work. Use before audits, refactors, new features, route/page changes, schema changes, auth changes, i18n changes, test changes, deployment changes, or whenever the user says scan, understand, map, review, or orient the codebase.'
+description: 'Use to orient Claude before broad or unfamiliar repo work. Good triggers: new or unfamiliar repo, new session, before multi-file changes, refactors, planning, or agent handoff, after route/schema/auth/deploy/config changes, when docs/ai/ is missing or stale, when repo structure or change surfaces are unclear, when the agent would otherwise spend significant context rediscovering the codebase. Skip for tiny single-file known fixes. Produces docs/ai/CODEBASE_MAP.md, CHANGE_SURFACES.md, OPEN_QUESTIONS.md. Trigger phrases: scan, orient, understand, map, review, audit, survey, familiarize, plan changes, where is X, how does this work, before I start.'
 ---
 
 # Skill: codebase-orient
@@ -13,20 +13,36 @@ Orient Claude to the current state of this repo before non-trivial work. Produce
 
 ## When to use this skill
 
-Use before:
+### Use this skill when
 
-- audits and security reviews
-- refactors or architectural changes
-- adding new features
-- editing unfamiliar areas
-- architecture planning
-- route/page changes
-- data model or schema changes
-- auth or session changes
-- i18n/copy changes
-- test architecture changes
-- deployment or config changes
-- any time the user says "scan", "understand", "map", "review", or "orient"
+- Entering a new or unfamiliar repo
+- Starting a fresh session after meaningful time away from the repo
+- Before broad or multi-file implementation work
+- Before refactors, cleanups, architecture planning, or agent handoff
+- After structural changes: routes, schema, auth, deployment, config, or admin surfaces
+- When `docs/ai/` is missing, stale, incomplete, or internally inconsistent
+- When repo structure, change surfaces, deploy targets, auth behavior, admin routes, commands, or test shape are unclear
+- When the agent would otherwise spend significant context rediscovering what is already in or near `docs/ai/`
+- Any time the user says "scan", "orient", "understand", "map", "review", "audit", "survey", "familiarize", or "before I start"
+
+### Skip this skill when
+
+- Making a tiny, local, known edit to a single file
+- Fixing a one-file bug where the relevant file and the change are already clear
+- Making copy-only or string-only changes
+- The task is scoped tightly to files already verified in the current context
+- `docs/ai/` was just refreshed and the task is narrow enough not to need a full orientation pass
+
+## Token-aware use guidance
+
+`docs/ai/` is an orientation cache. A fresh cache reduces repeated repo-discovery token cost across sessions and agent handoffs.
+
+- **If `docs/ai/` is fresh and complete**: read it as context and proceed. Skip re-running orientation.
+- **If `docs/ai/` may be stale or is missing**: run the skill to refresh the cache. The upfront token cost amortizes across the work ahead.
+- **If the task is tiny and the target file is already known**: skip orientation. Use targeted reads instead.
+- **If the agent would spend many tokens rediscovering what `docs/ai/` already captures**: refresh it.
+
+Do not save tokens by skipping orientation and then guessing at structure. If broad repo discovery would otherwise be repeated or expensive, refresh the cache instead.
 
 ## Hard rules during orientation
 

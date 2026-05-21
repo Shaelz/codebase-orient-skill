@@ -50,6 +50,8 @@ This skill is not a full static analysis tool. It reads selectively, not exhaust
 
 Orientation improves Claude's process, but it does not replace source verification. Claude should verify claims against the actual source before editing.
 
+`docs/ai/` acts as an orientation cache. A fresh cache reduces repeated repo-discovery token cost across sessions. Use the skill when that cost is likely to amortize — before broad work, at the start of a new session, or before agent handoff. Skip it for tiny single-file known edits.
+
 ---
 
 ## What it creates in a repo
@@ -495,15 +497,23 @@ The bootstrap skill will orient Claude to that project and generate `docs/ai/` a
 
 ---
 
-## AGENTS.md and persistent instructions (Codex)
+## Project-instruction snippet (AGENTS.md / CLAUDE.md)
 
-Codex reads `AGENTS.md` as a persistent instruction layer — the equivalent of `CLAUDE.md` in Claude Code. If you want Codex to apply this skill automatically on every session, you can reference it from your project's `AGENTS.md`:
+You can improve automatic invocation odds by adding a short trigger hint to your project's instruction file. Automatic invocation is model-driven and not guaranteed — this snippet makes the intention explicit to the model without requiring a slash command every time.
+
+**For Codex** — add to `AGENTS.md`:
 
 ```markdown
-Before non-trivial work, use the codebase-orient skill to orient yourself to this repo.
+When starting in this repo, before broad changes, before agent handoff, or when docs/ai/ may be stale, consider using the codebase-orient skill before implementation. Do not invoke it for tiny local edits where targeted reads are cheaper.
 ```
 
-This is optional. The skill can also be invoked on demand without any AGENTS.md reference.
+**For Claude Code** — add to `CLAUDE.md`:
+
+```markdown
+When starting in this repo, before broad changes, before agent handoff, or when docs/ai/ may be stale, consider using the /codebase-orient skill before implementation. Do not invoke it for tiny local edits where targeted reads are cheaper.
+```
+
+This is optional. The skill works on demand without any instruction-file reference. Adding this snippet does not guarantee automatic invocation — it makes the trigger condition clear to the model so it can choose appropriately.
 
 ---
 

@@ -199,8 +199,38 @@ For Relevant-but-non-blocking and Background questions: record them in `OPEN_QUE
 ### Normal mode vs dry-run mode
 
 - **Normal mode** (default): resolve task-relevant uncertainties automatically, apply docs/ai updates without requesting approval, report what changed at the end.
-- **Dry-run / report-only mode**: inspect and collect proposed changes, report without writing, wait for explicit approval. Triggered by: "dry-run", "report only", "don't write", "propose changes first", or similar.
+- **Dry-run / report-only mode**: inspect and collect proposed changes, report without writing, wait for explicit approval. Triggered by: "dry-run", "report only", "don't write", "propose changes first", "audit only", "no writes", or similar.
 - If mode is not specified, default to Normal mode.
+
+### When to use this skill / when to skip it
+
+**Use this skill when:**
+
+- Entering a new or unfamiliar repo
+- Starting a fresh session after meaningful time away
+- Before broad or multi-file implementation work
+- Before refactors, cleanups, architecture planning, or agent handoff
+- After structural changes: routes, schema, auth, deployment, config, or admin surfaces
+- When `docs/ai/` is missing, stale, incomplete, or internally inconsistent
+- When repo structure, change surfaces, deploy targets, auth behavior, or test shape are unclear
+- When the agent would otherwise spend significant context rediscovering what `docs/ai/` already captures
+
+**Skip this skill when:**
+
+- Making a tiny, local, known edit to a single file
+- Fixing a one-file bug where the relevant file and change are already clear
+- Making copy-only or string-only changes
+- `docs/ai/` was just refreshed and the task is narrow enough not to need a full orientation pass
+
+### Token-aware use guidance
+
+`docs/ai/` is an orientation cache. A fresh cache reduces repeated repo-discovery token cost across sessions and agent handoffs.
+
+- **If `docs/ai/` is fresh and complete**: read it as context and proceed. Skip re-running orientation.
+- **If `docs/ai/` may be stale or is missing**: run orientation. The upfront token cost amortizes across the work ahead.
+- **If the task is tiny and the target file is known**: skip orientation. Use targeted reads instead.
+
+Do not save tokens by skipping orientation and then guessing at structure. If broad repo discovery would otherwise be repeated or expensive, refresh the cache instead.
 
 ### Confidence labels
 
