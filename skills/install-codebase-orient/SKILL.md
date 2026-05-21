@@ -377,6 +377,27 @@ The three `docs/ai/` files must remain coherent with each other. After any updat
 
 Apply this as a final consistency pass after refreshing any of the three files.
 
+### No-date-only-churn rule
+
+Do not rewrite a generated `docs/ai/` file solely to update a date, timestamp, or freshness marker.
+
+- If a file has no substantive content changes after verification, leave it unchanged.
+- Report it as **verified current** in the orientation report — not as "refreshed" or "updated".
+- Only update the `Last refreshed:` date when file content changes for a substantive reason.
+- If the project has an existing documented convention requiring date refreshes on every orientation pass, follow that convention — but only if it is explicitly documented in `CLAUDE.md`, `AGENTS.md`, or project docs.
+
+### Orientation report discipline
+
+Label each `docs/ai/` file in the final report with one of:
+
+- **Created** — file did not exist; was created this pass
+- **Substantively updated** — content changed; `Last refreshed` date updated
+- **Verified current / unchanged** — content inspected and confirmed accurate; file not rewritten
+- **Proposed only** — dry-run mode; change proposed but not written
+- **Skipped** — file not inspected this pass; state why
+
+Do not label a file as "updated" or "refreshed" if only its date changed.
+
 ### Project-local specialization rule
 
 After the first orientation pass, if the repo has important project-specific namespaces, service folders, command groups, admin surfaces, workflow directories, generated-output locations, or deployment conventions that were not in the generic probe list, update the repo-local Claude Code skill at `.claude/skills/codebase-orient/SKILL.md` with those project-specific discovery paths.

@@ -2,6 +2,13 @@
 
 ## Unreleased
 
+No-date-only-churn fix from second no-wrapper live-fire test:
+
+- **No-date-only-churn rule** — do not rewrite a `docs/ai/` file solely to bump the `Last refreshed` date. A verified-current doc is left unchanged. `Last refreshed` is updated only when content changes for a substantive reason.
+- **Orientation report discipline** — final report must label each `docs/ai/` file as: Created / Substantively updated / Verified current (unchanged) / Proposed only / Skipped. Reporting a date-only rewrite as "updated" is not allowed.
+- **Bootstrap embedded template synced** — both rules added to `skills/install-codebase-orient/SKILL.md`.
+- No installer behavior changes.
+
 Invocation reliability and token-aware use improvements:
 
 - **Trigger-oriented skill description** — `codebase-orient` frontmatter `description` rewritten to be richer in trigger signals: new/unfamiliar repo, new session, before multi-file work, before refactor/planning/handoff, stale `docs/ai/`, unclear structure. Includes explicit trigger phrases (`scan`, `orient`, `survey`, `familiarize`, `before I start`, etc.) and explicit skip signal (tiny single-file known edits).
