@@ -304,7 +304,7 @@ This skill is designed to be conservative:
 | `skills/codebase-orient/` | The orientation skill — installs to `.claude/skills/` (Claude Code) or `.agents/skills/` (Codex) | Claude Code, Codex |
 | `skills/install-codebase-orient/` | Bootstrap skill — runs a first-pass orientation and creates the project-local orientation layer | Claude Code only |
 
-`skills/codebase-orient/SKILL.md` is the single canonical source for the orientation skill. Installed copies are targets, not forks. `skills/install-codebase-orient/SKILL.md` is versioned here as tracked source; it is currently installed manually to the Claude Code user-level path.
+`skills/codebase-orient/SKILL.md` is the single canonical source for the orientation skill. Installed copies are targets, not forks. `skills/install-codebase-orient/SKILL.md` is versioned here as tracked source; install it with `scripts/install-bootstrap-user.ps1` / `scripts/install-bootstrap-user.sh`.
 
 ---
 
@@ -321,7 +321,12 @@ There is one `SKILL.md` source — the install scripts copy it to whichever path
 
 ## Installation
 
-There are two common install styles:
+**Which skill should I install?**
+
+- **Most users:** install `codebase-orient` (the sections immediately below). Use `/codebase-orient` to orient Claude to any project.
+- **Bootstrap users:** install `install-codebase-orient` if you want Claude to auto-generate a project-local `codebase-orient` skill file inside each repo on first use. See [Bootstrap skill: user-level install](#bootstrap-skill-user-level-install-claude-code-only) below.
+
+There are two common install styles for `codebase-orient`:
 
 1. **User-level install** — available across all your projects in that tool.
 2. **Project-local install** — available only inside a specific repo.

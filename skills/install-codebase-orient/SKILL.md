@@ -348,6 +348,12 @@ If the skill is running in dry-run/report-only mode, report the proposed local s
 
 ## Changelog
 
+### 0.1.1
+
+- User-level Claude Code install scripts added to the repo: `scripts/install-bootstrap-user.ps1` and `scripts/install-bootstrap-user.sh`.
+- README updated with bootstrap install instructions and "which skill?" guidance.
+- No project-local bootstrap install scripts. No Codex bootstrap install support.
+
 ### 0.1.0
 
 - Initial tracked version. Based on the installed `~/.claude/skills/install-codebase-orient/SKILL.md` at 2026-05-21, with three additions: `version` field in frontmatter, source callout block, and this changelog section.
