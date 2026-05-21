@@ -1,6 +1,6 @@
 ---
 name: install-codebase-orient
-version: "0.1.0"
+version: "0.2.2"
 description: "Install or refresh a project-local codebase orientation workflow in the current repo. Use when the user asks to set up codebase orientation, create a codebase map, scan the repo properly, make Claude understand this project, prepare this repo for future Claude sessions, bootstrap Claude for this repo, or orient Claude to this codebase."
 ---
 
@@ -42,6 +42,8 @@ Inside the current repository:
 
 This skill installs to the Claude Code project-local path. For Codex support (`.agents/skills/codebase-orient/`), use the Codex install scripts from the `codebase-orient-skill` repo.
 
+> **Generated cache, not canonical documentation:** The `docs/ai/` files are generated orientation aids — a cache of what Claude observed during inspection. Source code and project config remain authoritative. Treat `docs/ai/` as context, not ground truth.
+
 ## Hard rules
 
 - Do not modify application/source code during setup.
@@ -58,7 +60,7 @@ This skill installs to the Claude Code project-local path. For Codex support (`.
 If the docs/ai files already exist:
 - Refresh stale sections rather than rewriting from scratch.
 - Preserve useful existing content.
-- Add a `Last refreshed:` line at the top of each file.
+- Ensure each file has a `Last refreshed:` line; update the date only when content changes substantively — do not stamp today's date on a file whose content has not changed. See the no-date-only-churn rule in the embedded template below.
 - Only fully rewrite a doc if the architecture has significantly changed.
 
 ## Discovery order
@@ -81,11 +83,14 @@ Execute inspection in this order:
 
 ### SvelteKit / JS / TS
 
-- `src/routes/**/+page.svelte` — UI route pages
+- `src/routes/**/+page.svelte` — UI route pages; each file is a route candidate; check subdirectories, not only the top-level `src/routes/+page.svelte`
 - `src/routes/**/+page.server.ts` — server-side data loading, form actions, route-level access control
 - `src/routes/**/+layout.svelte` — shared layout shells
 - `src/routes/**/+layout.server.ts` — server-side load functions for layout-level auth, session, or data
 - `src/routes/**/+server.ts` — API endpoints and server-only request handlers
+
+Server-side route files (`+page.server.ts`, `+layout.server.ts`, `+server.ts`) are critical for understanding auth, data loading, form actions, API endpoints, and route-level access control. Do not skip them when mapping routes or change surfaces.
+
 - `src/lib/` — shared lib: components, server utilities, assessment logic, i18n
 - `src/app.html` — root HTML shell
 - `src/hooks.server.ts` — server-side request handling
@@ -432,6 +437,8 @@ Before writing the local specialization:
 
 Do not backport concrete project-specific paths to the public skill unless they are broadly reusable across many projects.
 
+The project-specific paths added here are the thin, customisable layer of the repo-local skill. The canonical rules in the sections above are the stable layer that applies across all repos. Keep these two layers visually separated — project-specific additions belong at the end of the file, clearly marked as project-local.
+
 Examples of paths that qualify for local specialization:
 
 - framework-adjacent service namespaces
@@ -447,6 +454,38 @@ If the skill is running in dry-run/report-only mode, report the proposed local s
 ---
 
 ## Changelog
+
+### 0.2.2 — 2026-05-21
+
+- Clarify authority boundaries: canonical skill vs bootstrap vs repo-local specialization vs generated docs/ai cache.
+- Added non-canonical cache framing note after "What this skill creates or refreshes" table.
+- Fixed `Last refreshed:` contradiction in idempotency rule — now explicitly defers to no-date-only-churn rule.
+- Added thin-overlay framing to project-local specialization rule in embedded template.
+- Added SvelteKit subdirectory note and critical server-side route files callout to bootstrap discovery probes, matching canonical skill.
+- No installer behavior changes.
+
+### 0.2.1 — 2026-05-21
+
+Embedded template synced with repo v0.2.1:
+- Instruction-layer topology note in discovery step 1.
+- CHANGE_SURFACES mapping guidance: auth/admin/operator UX, deployment-sensitive, docs-impact surface categories.
+- Agent handoff summary format in orientation report discipline.
+
+### 0.2.0 — 2026-05-21
+
+Embedded template synced with repo v0.2.0:
+- No-date-only-churn rule.
+- Orientation report discipline (Created / Substantively updated / Verified current / Proposed only / Skipped labels).
+- Cross-file consistency rule.
+- Normal/dry-run mode (moved earlier; added "audit only" / "no writes" triggers).
+- When-to-use / when-to-skip guidance.
+- Token-aware orientation cache guidance.
+- Read-depth heuristic: path-existence vs content-read subsection; small source-of-truth file read rule.
+- Cheap artifact glob rule.
+- Open question quality rule.
+- Project-local specialization rule (explicit `.claude/skills/codebase-orient/SKILL.md` path; Codex delegation noted).
+- Formatter fallback guidance.
+- Confidence labels: full 9 claim-origin distinctions.
 
 ### 0.1.1
 

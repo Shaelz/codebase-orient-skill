@@ -1,5 +1,19 @@
 # Changelog
 
+## Unreleased
+
+**`skills/install-codebase-orient/SKILL.md` only — no installer behavior changes.**
+
+- Clarify canonical skill vs bootstrap vs repo-local specialization vs generated `docs/ai/` cache authority boundaries.
+- Fix `Last refreshed:` contradiction in idempotency rule: now defers explicitly to the no-date-only-churn rule already embedded in the template.
+- Add generated-cache framing note after "What this skill creates or refreshes" table: `docs/ai/` files are orientation aids; source code and project config remain authoritative.
+- Add thin-overlay framing to project-local specialization rule in embedded template: project-specific paths are the thin customisable layer; canonical rules are the stable layer; keep them visually separated.
+- Add SvelteKit subdirectory note and critical server-side route files callout to bootstrap discovery probes, matching canonical skill.
+- Add internal changelog entries for v0.2.0 and v0.2.1 syncs (previously unrecorded).
+- Bump `install-codebase-orient` frontmatter version to `0.2.2`.
+
+---
+
 ## 0.2.1 — 2026-05-21
 
 Weaves orientation-core deep-research findings into the skill without adding new default docs files, hooks, or automation.
