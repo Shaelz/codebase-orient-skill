@@ -1,5 +1,16 @@
 # Changelog
 
+## Unreleased
+
+Add tracked v1.0 release plan.
+
+- Add `docs/V1_RELEASE_PLAN.md`: v1.0 definition, release criteria, test matrix, live-fire validation matrix, blockers, non-goals, known risks, definition of done, and next immediate step.
+- Add short link to the plan in README development notes.
+
+No skill or installer behavior changes.
+
+---
+
 ## 0.3.2 - 2026-05-22
 
 Normalize and enforce ASCII punctuation in tracked repo-maintenance text.

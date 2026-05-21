@@ -663,6 +663,8 @@ Do not remove these docs if your project has started relying on them.
 
 ## Development notes
 
+See `docs/V1_RELEASE_PLAN.md` for the path to v1.0.
+
 **ASCII punctuation convention:** All tracked repo-maintenance text uses ASCII punctuation only. This includes SKILL.md files, README, CHANGELOG, scripts, and any prompt snippets or release notes.
 
 Forbidden: em dash, en dash, curly quotes, ellipsis, non-breaking spaces, and Unicode math symbols such as <= and >=.
