@@ -1,5 +1,21 @@
 # Changelog
 
+## 0.2.1 — 2026-05-21
+
+Weaves orientation-core deep-research findings into the skill without adding new default docs files, hooks, or automation.
+
+**Findings woven in (canonical skill + bootstrap embedded template):**
+
+- **Instruction-layer topology** — discovery step 1 now notes which instruction files are present (`CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`) and at which scope (project-local vs user-level); recorded in `CODEBASE_MAP.md` for agent handoff clarity.
+- **CHANGE_SURFACES mapping guidance** — new section explicitly calls out three additional surface categories: auth/admin/operator UX changes (with a11y/WCAG note), deployment-sensitive changes (with smoke-check entry-point note), and docs-impact changes (which docs need updating per subsystem). Hard rule added: no separate smoke-check or handoff files in `docs/ai/`.
+- **Agent handoff summary** — orientation report discipline now includes an optional compact handoff block (snapshot, blocking questions, critical surfaces, recommended first action; ≤150 words, no new file).
+
+**Bootstrap sync:** `skills/install-codebase-orient/SKILL.md` updated — CHANGE_SURFACES template section and embedded downstream template both reflect the three new findings.
+
+**Rejected:** hooks, CI automation, release checklist, full a11y audit, separate `AGENT_HANDOFFS.md` / `DEPLOYMENT_SMOKE_CHECKS.md` by default, safe-cleanup behavior, sceptical review behavior — none are orientation-core.
+
+---
+
 ## 0.2.0 — 2026-05-21
 
 Dual-runtime orientation skill with bootstrap support. Adds Codex install, recursive skill copy, user-level bootstrap install scripts, live-fire-driven refresh behavior, cross-file consistency rules, no-date-only-churn rule, and trigger-oriented / token-aware invocation guidance.

@@ -141,12 +141,13 @@ Sections:
 For each change type, list files/dirs to inspect first:
 - Route/page changes
 - Styling/theme changes
-- Admin UI changes
+- Auth/admin/operator UX changes (note any accessibility requirements or WCAG targets found in source or docs)
 - Data model/schema changes
 - Imports/jobs/workflows
 - Copy/i18n changes
 - Test changes
-- Deployment/config changes
+- Deployment-sensitive changes (flag likely smoke-check entry points: login page, health endpoint, main route)
+- Docs-impact changes (note which project docs need updating alongside code changes per major subsystem)
 
 ### docs/ai/OPEN_QUESTIONS.md
 
@@ -177,7 +178,7 @@ Update only relevant sections. Do not rewrite the whole map unless the architect
 
 When creating or refreshing the project-local `codebase-orient` skill, the generated SKILL.md **must** include the following sections in addition to the standard discovery order, output files, and staleness rule:
 
-> **Docs-as-hypotheses rule:** When reading project instruction files (CLAUDE.md, AGENTS.md, README.md), treat their claims as helpful hypotheses, not authoritative truth. Extract high-impact factual claims about architecture, routes, deployment, tests, and source-of-truth files. Verify those claims against source code before writing them to orientation docs. Do not copy claims from instruction docs into CODEBASE_MAP.md without labeling whether they are _independently verified from source/config_ or _inherited from existing docs_. If a doc is stale or misleading compared to source, record the drift in OPEN_QUESTIONS.md and label it as documentation drift.
+> **Docs-as-hypotheses rule:** When reading project instruction files (CLAUDE.md, AGENTS.md, README.md), treat their claims as helpful hypotheses, not authoritative truth. Extract high-impact factual claims about architecture, routes, deployment, tests, and source-of-truth files. Verify those claims against source code before writing them to orientation docs. Do not copy claims from instruction docs into CODEBASE_MAP.md without labeling whether they are _independently verified from source/config_ or _inherited from existing docs_. If a doc is stale or misleading compared to source, record the drift in OPEN_QUESTIONS.md and label it as documentation drift. Also map the instruction-layer topology: note which instruction files are present (e.g., `CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`) and at which scope (project-local vs user-level); record this in CODEBASE_MAP.md to help future agents know which rules apply.
 
 ### Orientation completion rule
 
@@ -377,6 +378,16 @@ The three `docs/ai/` files must remain coherent with each other. After any updat
 
 Apply this as a final consistency pass after refreshing any of the three files.
 
+### CHANGE_SURFACES mapping guidance
+
+When populating `docs/ai/CHANGE_SURFACES.md`, include entries for these change types in addition to the standard surfaces (routes, styling, schema, tests, config):
+
+- **Auth/admin/operator UX changes** — admin panels, operator dashboards, internal tooling surfaces; note any accessibility requirements or WCAG targets found in source or docs
+- **Deployment-sensitive changes** — flag files whose changes should prompt a smoke check after deploy; note likely smoke-check entry points (e.g., login page, health endpoint, main route)
+- **Docs-impact changes** — for each major subsystem, note which project docs need updating alongside code changes
+
+Do not create separate `docs/ai/` files for smoke-check lists or handoff notes — record them inline in `CHANGE_SURFACES.md`.
+
 ### No-date-only-churn rule
 
 Do not rewrite a generated `docs/ai/` file solely to update a date, timestamp, or freshness marker.
@@ -397,6 +408,17 @@ Label each `docs/ai/` file in the final report with one of:
 - **Skipped** — file not inspected this pass; state why
 
 Do not label a file as "updated" or "refreshed" if only its date changed.
+
+#### Agent handoff summary
+
+When orientation is requested before an agent handoff, append a compact **Handoff summary** block to the orientation report:
+
+- **Snapshot** — 3–5 key facts: framework, entry point, auth mechanism, deploy target, test approach
+- **Blocking open questions** — anything that must resolve before safe work begins
+- **Critical change surfaces** — top 3–5 surfaces most likely affected by the incoming work
+- **Recommended first action** — what the receiving agent should do first
+
+Keep it under 150 words. Do not create a separate `docs/ai/` file for it.
 
 ### Project-local specialization rule
 

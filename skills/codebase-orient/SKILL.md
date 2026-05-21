@@ -102,6 +102,7 @@ Execute in this order:
    - Verify those claims against source code before relying on them. Focus on claims that would affect future edits; do not audit every sentence.
    - Do not copy claims from these docs into `CODEBASE_MAP.md` without labeling whether they are _independently verified from source/config_ or _inherited from existing docs_.
    - If an instruction doc is stale or misleading compared to what the source shows, record the drift in `OPEN_QUESTIONS.md` under the hidden-risk reporting rule and label it as documentation drift.
+   - Map the instruction-layer topology: note which instruction files are present (e.g., `CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`) and at which scope (project-local vs user-level). Record this in `CODEBASE_MAP.md`; it helps future agents know which rules apply.
 2. Project manifest (e.g., `package.json`, `pyproject.toml`, `Cargo.toml`) — deps, scripts, build/test commands
 3. Build and config files (e.g., framework config, bundler config) — adapter, build config
 4. `scripts/` directory, if present — may contain manually-run tooling not represented in package scripts or CI
@@ -224,6 +225,16 @@ Add or update `Last refreshed: <date>` at the top of each file **only when its c
 
 Before staging, format all created/updated files if the project has a discoverable formatter that covers Markdown (e.g., Prettier, markdownlint). If a formatter is missing, unavailable, not configured for Markdown, or its invocation would fail, skip formatting, note this clearly in the orientation report, and continue. Do not treat missing formatter support as an orientation failure.
 
+## CHANGE_SURFACES mapping guidance
+
+When populating `docs/ai/CHANGE_SURFACES.md`, include entries for these change types in addition to the standard surfaces (routes, styling, schema, tests, config):
+
+- **Auth/admin/operator UX changes** — admin panels, operator dashboards, internal tooling surfaces; note any accessibility requirements or WCAG targets found in source or docs
+- **Deployment-sensitive changes** — flag files whose changes should prompt a smoke check after deploy; note likely smoke-check entry points (e.g., login page, health endpoint, main route)
+- **Docs-impact changes** — for each major subsystem, note which project docs need updating alongside code changes (e.g., "changes to the auth flow should also update `docs/auth.md`")
+
+Do not create separate `docs/ai/` files for smoke-check lists or handoff notes — record them inline in `CHANGE_SURFACES.md`.
+
 ## No-date-only-churn rule
 
 Do not rewrite a generated `docs/ai/` file solely to update a date, timestamp, or freshness marker.
@@ -282,6 +293,17 @@ The final orientation report must distinguish between docs that changed and docs
 - **Skipped** — file not inspected this pass; state why
 
 Do not label a file as "updated" or "refreshed" if only its date changed. A file with no substantive changes must be reported as **verified current / unchanged**.
+
+### Agent handoff summary
+
+When orientation is requested before an agent handoff, append a compact **Handoff summary** block to the orientation report:
+
+- **Snapshot** — 3–5 key facts: framework, entry point, auth mechanism, deploy target, test approach
+- **Blocking open questions** — anything that must resolve before safe work begins
+- **Critical change surfaces** — top 3–5 surfaces most likely affected by the incoming work
+- **Recommended first action** — what the receiving agent should do first
+
+Keep it under 150 words. Do not create a separate `docs/ai/` file for it.
 
 ## Project-local specialization rule
 
