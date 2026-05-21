@@ -1,6 +1,10 @@
 # Changelog
 
-## Unreleased
+## 0.2.0 — 2026-05-21
+
+Dual-runtime orientation skill with bootstrap support. Adds Codex install, recursive skill copy, user-level bootstrap install scripts, live-fire-driven refresh behavior, cross-file consistency rules, no-date-only-churn rule, and trigger-oriented / token-aware invocation guidance.
+
+---
 
 No-date-only-churn fix from second no-wrapper live-fire test:
 

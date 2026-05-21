@@ -64,7 +64,7 @@ docs/ai/CHANGE_SURFACES.md
 docs/ai/OPEN_QUESTIONS.md
 ```
 
-And a repo-local copy of the skill file at the path your tool reads:
+When installed into a project (via install scripts or the bootstrap skill), the skill file lives at:
 
 | Tool | Repo-local skill path |
 |---|---|
