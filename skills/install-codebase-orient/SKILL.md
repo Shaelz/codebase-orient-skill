@@ -81,7 +81,11 @@ Execute inspection in this order:
 
 ### SvelteKit / JS / TS
 
-- `src/routes/` — route files, page servers, API endpoints
+- `src/routes/**/+page.svelte` — UI route pages
+- `src/routes/**/+page.server.ts` — server-side data loading, form actions, route-level access control
+- `src/routes/**/+layout.svelte` — shared layout shells
+- `src/routes/**/+layout.server.ts` — server-side load functions for layout-level auth, session, or data
+- `src/routes/**/+server.ts` — API endpoints and server-only request handlers
 - `src/lib/` — shared lib: components, server utilities, assessment logic, i18n
 - `src/app.html` — root HTML shell
 - `src/hooks.server.ts` — server-side request handling
@@ -149,6 +153,10 @@ For each change type, list files/dirs to inspect first:
 Group by: Architecture | Data/persistence | UI/admin | Tests | Deployment | Documentation drift
 
 Only list real uncertainties found during inspection. Do not invent concerns.
+
+## Formatting generated docs
+
+Before staging created or refreshed `docs/ai/` files, format them if the project has a discoverable formatter that covers Markdown (e.g., Prettier, markdownlint). If a formatter is missing, unavailable, not configured for Markdown, or its invocation would fail, skip formatting, note this in the orientation report, and continue. Do not treat missing formatter support as an orientation failure.
 
 ## Staleness rule
 
@@ -279,6 +287,12 @@ Do not read every large CSS, config, or generated file by default.
 
 When in doubt, prefer confirming existence first and reading fully only if a claim requires it.
 
+#### Path existence vs content read
+
+Path existence alone is sufficient for low-risk inventory claims — confirming a directory structure, listing file counts, or noting that a config file is present.
+
+Read the actual file content when the claim affects behavior, architecture, risk, commands, deployment, auth, routing, or change surfaces. Do not label a claim as _independently verified from source/config_ based on path existence alone when the file is cheap to inspect and its content would materially affect the map.
+
 #### Small source-of-truth file read rule
 
 If a small file appears to define vocabulary or source-of-truth tokens used throughout the project, read enough of it to verify the vocabulary rather than inheriting the vocabulary from docs.
@@ -322,9 +336,22 @@ Leave a question open only when resolving it would require:
 
 If a glob or small read can close the question, close it and label the basis.
 
+### Cross-file consistency rule
+
+The three `docs/ai/` files must remain coherent with each other. After any update, verify:
+
+- **Resolved questions**: if `OPEN_QUESTIONS.md` marks a question resolved, remove or update any stale "unknown" or "needs investigation" language in `CODEBASE_MAP.md` and `CHANGE_SURFACES.md` that referred to the same item.
+- **New change surfaces**: if a change surface is added to `CHANGE_SURFACES.md`, check whether `CODEBASE_MAP.md` should mention the associated area or file.
+- **New map uncertainty**: if a claim in `CODEBASE_MAP.md` becomes uncertain, check whether the corresponding open question exists in `OPEN_QUESTIONS.md`; add or update it if not.
+- **Contradictions**: do not let one file say "unknown" or "unresolved" while another says "resolved" or "confirmed" — unless the distinction is explicitly explained.
+
+Apply this as a final consistency pass after refreshing any of the three files.
+
 ### Project-local specialization rule
 
-After the first orientation pass, if the repo has important project-specific namespaces, service folders, command groups, admin surfaces, workflow directories, generated-output locations, or deployment conventions that were not in the generic probe list, update this repo-local skill (`SKILL.md`) with those project-specific discovery paths.
+After the first orientation pass, if the repo has important project-specific namespaces, service folders, command groups, admin surfaces, workflow directories, generated-output locations, or deployment conventions that were not in the generic probe list, update the repo-local Claude Code skill at `.claude/skills/codebase-orient/SKILL.md` with those project-specific discovery paths.
+
+This applies only when a repo-local skill exists at `.claude/skills/codebase-orient/SKILL.md` or is being generated during this session. If no such skill exists and the user has not requested skill installation, skip this step. Codex installs (`.agents/skills/codebase-orient/`) are handled by the source repo's install scripts, not by this rule.
 
 Before writing the local specialization:
 - Verify each proposed path exists with a glob or read.

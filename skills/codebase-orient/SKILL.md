@@ -36,6 +36,22 @@ Use before:
 - Verify claims against source code before writing them.
 - Mark every meaningful claim with a confidence label.
 
+## Normal mode vs dry-run mode
+
+**Normal mode** (default — use when the user does not specify):
+
+- Resolve small task-relevant uncertainties automatically by reading source files
+- Apply `docs/ai/` updates without requesting approval
+- Report what changed at the end
+
+**Dry-run / report-only mode** (use when the user says "dry-run", "report only", "don't write", "propose changes first", "audit only", "no writes", or similar):
+
+- Inspect and collect proposed changes
+- Report proposed edits to `docs/ai/` without writing them
+- Wait for explicit approval before writing
+
+If mode is not specified, default to Normal mode.
+
 ## Confidence labels
 
 - **Fact** — directly verified in code or docs
@@ -90,9 +106,17 @@ Apply these probes in addition to the generic discovery order when the relevant 
 
 ### SvelteKit
 
-- Glob `src/routes/**/+page.svelte` to enumerate all routes. Each `+page.svelte` file is a route candidate; check subdirectories, not only the top-level `src/routes/+page.svelte`.
+Glob the following file patterns when a SvelteKit project is detected:
+
+- `src/routes/**/+page.svelte` — UI route pages; each file is a route candidate; check subdirectories, not only the top-level `src/routes/+page.svelte`
+- `src/routes/**/+page.server.ts` — server-side data loading, form actions, and route-level access control
+- `src/routes/**/+layout.svelte` — shared layout shells
+- `src/routes/**/+layout.server.ts` — server-side load functions for layout-level auth, session, or data
+- `src/routes/**/+server.ts` — API endpoints and server-only request handlers
+
+Server-side route files (`+page.server.ts`, `+layout.server.ts`, `+server.ts`) are critical for understanding auth, data loading, form actions, API endpoints, and route-level access control. Do not skip them when mapping routes or change surfaces.
+
 - The standard app shell template is `src/app.html`.
-- Check `src/routes/**/+layout.svelte`, `+server.ts`, and `+page.server.ts` files for shared layout and server-side logic.
 - Adapter choice in `svelte.config.js` determines deployment target — confirm before making deployment-related claims.
 
 ## CI/deployment precision rule
@@ -122,6 +146,12 @@ Do not read every large CSS, config, or generated file by default.
 - **Skip** — files that are clearly out of scope (e.g., binary assets, lock files, test snapshots) unless a specific question makes them relevant.
 
 When in doubt, prefer confirming existence first and reading fully only if a claim requires it.
+
+### Path existence vs content read
+
+Path existence alone is sufficient for low-risk inventory claims — confirming a directory structure, listing file counts, or noting that a config file is present.
+
+Read the actual file content when the claim affects behavior, architecture, risk, commands, deployment, auth, routing, or change surfaces. Do not label a claim as _independently verified from source/config_ based on path existence alone when the file is cheap to inspect and its content would materially affect the map.
 
 ### Small source-of-truth file read rule
 
@@ -176,13 +206,24 @@ After orientation, create or refresh:
 
 Add `Last refreshed: <date>` at the top of each.
 
-Before staging, format all created/refreshed files according to your project's linting requirements (e.g., Prettier, markdownlint).
+Before staging, format all created/refreshed files if the project has a discoverable formatter that covers Markdown (e.g., Prettier, markdownlint). If a formatter is missing, unavailable, not configured for Markdown, or its invocation would fail, skip formatting, note this clearly in the orientation report, and continue. Do not treat missing formatter support as an orientation failure.
 
 ## Staleness and update rule
 
 The docs/ai files are orientation aids, not ground truth. Always verify against source code before editing.
 
 After any structural change, check whether the three docs/ai files need updates. Update only the relevant sections. Do not rewrite the whole map unless the architecture changed significantly.
+
+## Cross-file consistency rule
+
+The three `docs/ai/` files must remain coherent with each other. After any update, verify:
+
+- **Resolved questions**: if `OPEN_QUESTIONS.md` marks a question resolved, remove or update any stale "unknown" or "needs investigation" language in `CODEBASE_MAP.md` and `CHANGE_SURFACES.md` that referred to the same item.
+- **New change surfaces**: if a change surface is added to `CHANGE_SURFACES.md`, check whether `CODEBASE_MAP.md` should mention the associated area or file.
+- **New map uncertainty**: if a claim in `CODEBASE_MAP.md` becomes uncertain, check whether the corresponding open question exists in `OPEN_QUESTIONS.md`; add or update it if not.
+- **Contradictions**: do not let one file say "unknown" or "unresolved" while another says "resolved" or "confirmed" — unless the distinction is explicitly explained.
+
+Apply this as a final consistency pass after refreshing any of the three files.
 
 ## Orientation completion rule
 
@@ -205,25 +246,11 @@ Then apply these rules:
 
 For Relevant-but-non-blocking and Background questions: record them in `OPEN_QUESTIONS.md` with their classification and move on. Do not let them block the orientation report.
 
-## Normal mode vs dry-run mode
-
-**Normal mode** (default — use when the user does not specify):
-
-- Resolve small task-relevant uncertainties automatically by reading source files
-- Apply docs/ai updates without requesting approval
-- Report what changed at the end
-
-**Dry-run / report-only mode** (use when the user says "dry-run", "report only", "don't write", "propose changes first", or similar):
-
-- Inspect and collect proposed changes
-- Report proposed edits to docs/ai without writing them
-- Wait for explicit approval before writing
-
-If mode is not specified, default to Normal mode.
-
 ## Project-local specialization rule
 
-After the first orientation pass, if the repo has important project-specific namespaces, service folders, command groups, admin surfaces, workflow directories, generated-output locations, or deployment conventions that were not in the generic probe list, update the repo-local skill (`SKILL.md`) with those project-specific discovery paths.
+After the first orientation pass, if the repo has important project-specific namespaces, service folders, command groups, admin surfaces, workflow directories, generated-output locations, or deployment conventions that were not in the generic probe list, update the repo-local Claude Code skill at `.claude/skills/codebase-orient/SKILL.md` with those project-specific discovery paths.
+
+This applies only when a repo-local skill exists at `.claude/skills/codebase-orient/SKILL.md` or is being generated during this session. If no such skill exists and the user has not requested skill installation, skip this step. Codex installs (`.agents/skills/codebase-orient/`) are handled by the source repo's install scripts, not by this rule.
 
 Before writing the local specialization:
 - Verify each proposed path exists with a glob or read.

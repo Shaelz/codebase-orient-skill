@@ -1,5 +1,17 @@
 # Changelog
 
+## Unreleased
+
+Live-fire findings from no-wrapper `/codebase-orient` test applied.
+
+- **Normal/dry-run mode surfaced earlier** — moved to immediately after Hard rules, before discovery and output rules, so it is visible without scrolling through the full skill. Added "audit only" and "no writes" as recognized dry-run triggers.
+- **Cross-file consistency rule** — new rule requiring `CODEBASE_MAP.md`, `CHANGE_SURFACES.md`, and `OPEN_QUESTIONS.md` to remain coherent with each other. Covers resolved questions, new surfaces, new uncertainty, and direct contradictions. Applied to both canonical skill and bootstrap embedded template.
+- **SvelteKit route probing expanded** — server-side route files (`+page.server.ts`, `+layout.server.ts`, `+server.ts`) now listed explicitly alongside `+page.svelte` and `+layout.svelte` in the canonical skill and bootstrap discovery section. Note added that server-side files are critical for auth, data loading, form actions, and API endpoints.
+- **Formatter fallback guidance** — formatter guidance now explicitly handles the case where a formatter is missing, unavailable, or not configured for Markdown. Skip with a note; do not treat missing formatter support as an orientation failure.
+- **Read-depth clarification** — new "Path existence vs content read" subsection clarifies when path existence alone is sufficient (low-risk inventory claims) versus when actual file content must be read (claims affecting behavior, architecture, risk, auth, routing, or change surfaces). Applied to both canonical skill and bootstrap embedded template.
+- **Project-local specialization path made explicit** — target path `.claude/skills/codebase-orient/SKILL.md` now stated explicitly. Added note that this applies only when a repo-local Claude Code skill exists or is being generated, and that Codex installs are handled separately. Applied to both canonical skill and bootstrap embedded template.
+- **Bootstrap embedded template synced** — all six findings reflected in `skills/install-codebase-orient/SKILL.md`.
+
 ## 0.1.3
 
 - Added `scripts/install-bootstrap-user.ps1` and `scripts/install-bootstrap-user.sh` — user-level Claude Code install scripts for the `install-codebase-orient` bootstrap skill.
