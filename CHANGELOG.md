@@ -2,6 +2,12 @@
 
 ## Unreleased
 
+**`skills/codebase-orient/SKILL.md` — no installer behavior changes.**
+
+- Add thin-overlay framing sentence to project-local specialization rule: project-specific paths are the thin customisable layer; canonical rules are the stable layer; keep them visually separated. Matches the equivalent sentence added to the bootstrap embedded template in c75c675, closing the source/mirror inconsistency.
+
+---
+
 **`skills/install-codebase-orient/SKILL.md` only — no installer behavior changes.**
 
 - Clarify canonical skill vs bootstrap vs repo-local specialization vs generated `docs/ai/` cache authority boundaries.

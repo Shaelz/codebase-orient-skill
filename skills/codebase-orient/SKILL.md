@@ -317,6 +317,8 @@ Before writing the local specialization:
 
 Do not backport concrete project-specific paths to the public skill unless they are broadly reusable across many projects.
 
+The project-specific paths added here are the thin, customisable layer of the repo-local skill. The canonical rules above are the stable layer that applies across all repos. Keep them visually separated — project-specific additions belong at the end of the file, clearly marked as project-local.
+
 Examples of paths that qualify for local specialization:
 - framework-adjacent service namespaces
 - custom domain workflow folders
