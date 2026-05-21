@@ -455,6 +455,8 @@ If the skill is running in dry-run/report-only mode, report the proposed local s
 
 ## Changelog
 
+> **Version scheme note:** The version number in this file's frontmatter tracks the bootstrap skill's own content changes. It is independent from the repo release tag (repo is currently `v0.3.0`). The repo `CHANGELOG.md` records which repo release corresponds to which bootstrap skill version.
+
 ### 0.2.2 — 2026-05-21
 
 - Clarify authority boundaries: canonical skill vs bootstrap vs repo-local specialization vs generated docs/ai cache.
