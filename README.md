@@ -297,6 +297,17 @@ This skill is designed to be conservative:
 
 ---
 
+## Skills in this repo
+
+| Skill source | Purpose | Tools |
+|---|---|---|
+| `skills/codebase-orient/` | The orientation skill — installs to `.claude/skills/` (Claude Code) or `.agents/skills/` (Codex) | Claude Code, Codex |
+| `skills/install-codebase-orient/` | Bootstrap skill — runs a first-pass orientation and creates the project-local orientation layer | Claude Code only (no automated install scripts yet) |
+
+`skills/codebase-orient/SKILL.md` is the single canonical source for the orientation skill. Installed copies are targets, not forks. `skills/install-codebase-orient/SKILL.md` is versioned here as tracked source; it is currently installed manually to the Claude Code user-level path.
+
+---
+
 ## Install paths
 
 | Tool | User-level | Project-local |
