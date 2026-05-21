@@ -1,6 +1,6 @@
 # Changelog
 
-## Unreleased
+## 0.3.2 - 2026-05-22
 
 Normalize and enforce ASCII punctuation in tracked repo-maintenance text.
 
