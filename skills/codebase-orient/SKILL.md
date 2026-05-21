@@ -45,12 +45,18 @@ Use before:
 
 Distinguish how a claim was established:
 
+- _independently verified from source/config_ — claim checked against the actual source or config file, not taken from docs
+- _inherited from existing docs_ — claim taken from CLAUDE.md, README, or other documentation without independent verification
+- _inherited then verified_ — claim originated in docs and was subsequently confirmed against source
 - _path existence confirmed_ — file found but not read
+- _partial read_ — portion of the file inspected; may not capture full context
 - _full source read_ — complete file content inspected
 - _inferred from implementation_ — deduced from how code behaves, not explicitly stated
 - _inferred from comments/tests/fixtures_ — sourced from non-authoritative context; treat as Strong inference at best
 - _behavior verified by test_ — confirmed by passing test execution
 - _unknown_ — basis not established; do not present as Fact
+
+In final reports and orientation docs, label each non-trivial claim with one of the above origins so readers can judge which claims need re-verification before acting on them.
 
 ## Discovery order
 
@@ -59,9 +65,11 @@ Distinguish how a claim was established:
 Execute in this order:
 
 1. Project instruction files such as `CLAUDE.md`, `AGENTS.md`, and `README.md`, if present — product purpose, agent rules, project conventions.
+   - Treat these documents as helpful hypotheses, not authoritative truth.
    - Extract high-impact factual claims about architecture, routes, deployment, tests, and source-of-truth files.
    - Verify those claims against source code before relying on them. Focus on claims that would affect future edits; do not audit every sentence.
-   - If an instruction doc is stale or misleading compared to what the source shows, record the drift in `OPEN_QUESTIONS.md` under the hidden-risk reporting rule.
+   - Do not copy claims from these docs into `CODEBASE_MAP.md` without labeling whether they are _independently verified from source/config_ or _inherited from existing docs_.
+   - If an instruction doc is stale or misleading compared to what the source shows, record the drift in `OPEN_QUESTIONS.md` under the hidden-risk reporting rule and label it as documentation drift.
 2. Project manifest (e.g., `package.json`, `pyproject.toml`, `Cargo.toml`) — deps, scripts, build/test commands
 3. Build and config files (e.g., framework config, bundler config) — adapter, build config
 4. `scripts/` directory, if present — may contain manually-run tooling not represented in package scripts or CI
@@ -87,6 +95,24 @@ Apply these probes in addition to the generic discovery order when the relevant 
 - Check `src/routes/**/+layout.svelte`, `+server.ts`, and `+page.server.ts` files for shared layout and server-side logic.
 - Adapter choice in `svelte.config.js` determines deployment target — confirm before making deployment-related claims.
 
+## CI/deployment precision rule
+
+When reading CI or deployment workflow files, preserve operationally relevant detail. Do not round down specifics into vague summaries.
+
+Capture and report:
+
+- concurrency group name (which runs compete with each other)
+- `cancel-in-progress` behavior — if `true`, say "newer runs cancel in-progress runs of the same group", not merely "prevents parallel deploys"
+- `fail-fast` behavior
+- deploy artifact paths
+- release naming format including any timestamp or hash components
+- retention and pruning policy for old releases or artifacts
+- manual vs automatic trigger conditions
+- required secrets and environment variables
+- whether deployment overwrites in place, stages to a temp path, uses symlinks, or uses versioned release directories
+
+Label CI/deployment claims with _independently verified from source/config_ when read directly from the workflow file. Do not summarize these details in ways that lose precision that an operator would need during an incident.
+
 ## Read-depth heuristic
 
 Do not read every large CSS, config, or generated file by default.
@@ -96,6 +122,49 @@ Do not read every large CSS, config, or generated file by default.
 - **Skip** — files that are clearly out of scope (e.g., binary assets, lock files, test snapshots) unless a specific question makes them relevant.
 
 When in doubt, prefer confirming existence first and reading fully only if a claim requires it.
+
+### Small source-of-truth file read rule
+
+If a small file appears to define vocabulary or source-of-truth tokens used throughout the project, read enough of it to verify the vocabulary rather than inheriting the vocabulary from docs.
+
+Examples where this applies:
+
+- CSS custom-property token files
+- route or menu config files
+- small schema or constants files
+- command or plugin registries
+
+Use a partial read when that is sufficient. Label the resulting claims with the appropriate claim origin (_partial read_, _full source read_). Do not label them as _independently verified from source/config_ if you did not actually read the file.
+
+## Cheap artifact glob rule
+
+Before leaving an open question about the existence or scope of static assets, scripts, generated outputs, documentation, tests, migrations, or config files, resolve it with a cheap path glob.
+
+Common glob patterns to try:
+
+- `static/**/*`
+- `public/**/*`
+- `scripts/**/*`
+- `tests/**/*` or `test/**/*` or `spec/**/*`
+- `.github/workflows/*`
+- `docs/**/*`
+- `migrations/**/*`
+- `dist/**/*` or `build/**/*`
+
+Do not deeply read all matched files by default. Use the glob to resolve existence and scope questions cheaply. Follow up with targeted reads only when a specific file's content is needed.
+
+## Open question quality rule
+
+Do not leave an open question in `OPEN_QUESTIONS.md` if it can be resolved with one cheap path glob or one small-file read.
+
+Leave a question open only when resolving it would require:
+
+- broad exploration that is disproportionate to the task
+- external documentation that is unavailable
+- commands that could have side effects
+- deep reads of files that are irrelevant to the current task
+
+If a glob or small read can close the question, close it and label the basis.
 
 ## Output files
 
