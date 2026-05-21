@@ -1,19 +1,26 @@
 # Changelog
 
-## Unreleased
+## 0.3.0 — 2026-05-21
 
-**`skills/codebase-orient/SKILL.md` — no installer behavior changes.**
+Consolidates post-v0.2.0 work into a tagged release. The orientation behavior additions recorded in the v0.2.1 development entry (instruction-layer topology, CHANGE_SURFACES mapping guidance, agent handoff summary) are included under this tag — v0.2.1 was a named development checkpoint that was never separately tagged.
 
-- Add thin-overlay framing sentence to project-local specialization rule: project-specific paths are the thin customisable layer; canonical rules are the stable layer; keep them visually separated. Matches the equivalent sentence added to the bootstrap embedded template in c75c675, closing the source/mirror inconsistency.
+**Installer output hardening — `scripts/*.sh`, `README.md` (9bc01df):**
 
----
+- Replace non-ASCII characters (em dashes, curly quotes) in installer script terminal output with ASCII equivalents.
+- Reduces mojibake rendering in PowerShell 5.1 / Windows terminals on code page 1252.
+- Added ASCII-only output encoding convention to README development notes.
+- No install behavior changes.
 
-**`skills/install-codebase-orient/SKILL.md` only — no installer behavior changes.**
+**Authority-boundary clarification — `skills/codebase-orient/SKILL.md` (a707995):**
 
-- Clarify canonical skill vs bootstrap vs repo-local specialization vs generated `docs/ai/` cache authority boundaries.
-- Fix `Last refreshed:` contradiction in idempotency rule: now defers explicitly to the no-date-only-churn rule already embedded in the template.
-- Add generated-cache framing note after "What this skill creates or refreshes" table: `docs/ai/` files are orientation aids; source code and project config remain authoritative.
-- Add thin-overlay framing to project-local specialization rule in embedded template: project-specific paths are the thin customisable layer; canonical rules are the stable layer; keep them visually separated.
+- Add thin-overlay framing to project-local specialization rule: project-specific paths are the thin customisable layer; canonical rules are the stable layer across all repos; keep them visually separated.
+- Closes source/mirror inconsistency introduced in c75c675.
+
+**Authority-boundary clarification — `skills/install-codebase-orient/SKILL.md` (c75c675):**
+
+- Fix `Last refreshed:` contradiction in idempotency rule: now defers to the no-date-only-churn rule.
+- Add generated-cache framing note after creates table: `docs/ai/` files are orientation aids; source code and project config remain authoritative.
+- Add thin-overlay framing to project-local specialization rule in embedded template.
 - Add SvelteKit subdirectory note and critical server-side route files callout to bootstrap discovery probes, matching canonical skill.
 - Add internal changelog entries for v0.2.0 and v0.2.1 syncs (previously unrecorded).
 - Bump `install-codebase-orient` frontmatter version to `0.2.2`.
