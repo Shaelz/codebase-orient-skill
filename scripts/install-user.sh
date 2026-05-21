@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install-user.sh — installs codebase-orient skill to the user-level Claude Code skills directory
+# install-user.sh - installs codebase-orient skill to the user-level Claude Code skills directory
 #
 # Usage:
 #   ./scripts/install-user.sh

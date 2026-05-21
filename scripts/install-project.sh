@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install-project.sh — installs codebase-orient skill into the current project's .claude/skills directory
+# install-project.sh - installs codebase-orient skill into the current project's .claude/skills directory
 #
 # Run this from the root of the project where you want to install the skill.
 #

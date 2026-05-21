@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install-codex-project.sh — installs codebase-orient skill into the current project's .agents/skills directory
+# install-codex-project.sh - installs codebase-orient skill into the current project's .agents/skills directory
 #
 # Run this from the root of the project where you want to install the skill.
 #
@@ -51,7 +51,7 @@ echo "  !.agents/skills/codebase-orient/"
 echo "  !.agents/skills/codebase-orient/SKILL.md"
 echo ""
 echo "Verification:"
-echo "  1. Restart or reload Codex if it is currently running — Codex may not"
+echo "  1. Restart or reload Codex if it is currently running - Codex may not"
 echo "     pick up new skills until the session is refreshed."
 echo "  2. Open this project in Codex and invoke the skill explicitly:"
 echo "       Use codebase-orient to orient yourself to this repo."

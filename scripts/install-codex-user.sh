@@ -1,5 +1,5 @@
 #!/usr/bin/env bash
-# install-codex-user.sh — installs codebase-orient skill to the user-level Codex skills directory
+# install-codex-user.sh - installs codebase-orient skill to the user-level Codex skills directory
 #
 # Usage:
 #   ./scripts/install-codex-user.sh
@@ -40,7 +40,7 @@ echo ""
 echo "Installation complete."
 echo ""
 echo "Verification:"
-echo "  1. Restart or reload Codex if it is currently running — Codex may not"
+echo "  1. Restart or reload Codex if it is currently running - Codex may not"
 echo "     pick up new skills until the session is refreshed."
 echo "  2. Open any project and invoke the skill explicitly:"
 echo "       Use codebase-orient to orient yourself to this repo."

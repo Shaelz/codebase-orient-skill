@@ -655,6 +655,14 @@ Do not remove these docs if your project has started relying on them.
 
 ---
 
+## Development notes
+
+Installer scripts (`.ps1`, `.sh`) must use **ASCII-only characters** in terminal output strings (`Write-Host`, `echo`). Em dashes, curly quotes, ellipsis, and other non-ASCII punctuation encode as multi-byte UTF-8 sequences that render as mojibake (`â€"`) in PowerShell 5.1 and Windows terminals running code page 1252.
+
+Rule: if it appears in a `Write-Host` or `echo` string, use ASCII punctuation only. Prose in README and SKILL.md can use normal Unicode punctuation — only terminal output is constrained.
+
+---
+
 ## License
 
 MIT
