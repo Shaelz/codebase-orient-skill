@@ -1,7 +1,7 @@
 # v1.0 Release Plan - codebase-orient-skill
 
 Current release: v0.3.2 | Target: v1.0.0 | Updated: 2026-05-22
-Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash; canonical/bootstrap drift check)
+Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash; canonical/bootstrap drift check; live-fire evidence backfilled)
 
 ---
 
@@ -368,6 +368,98 @@ Minimum coverage before v1.0: at least 4 of the 8 rows with a real pass, at leas
 
 ---
 
+## F1. Completed live-fire passes
+
+Records of actual live-fire orientation passes against real repos with real findings.
+
+### Claude Code - External SvelteKit frontend repo A (SvelteKit / frontend)
+
+- **Repo type:** SvelteKit / frontend / product-flow repo
+- **Agent/runtime:** Claude Code
+- **Invocation:** `/codebase-orient` without a wrapper prompt
+- **docs/ai existed:** Yes - recently refreshed before this pass
+- **Mode:** Normal
+
+**Findings:**
+
+- Skill recognized recently refreshed `docs/ai/` and performed lightweight verification rather than a full rewrite. No-date-only-churn behavior confirmed in practice.
+- Found a real cross-file consistency issue: `CODEBASE_MAP.md` still listed uncertainty items already resolved in `OPEN_QUESTIONS.md`.
+- Updated project-local `.claude/skills/codebase-orient/SKILL.md` with substantive specialization improvements after the orientation pass.
+- A later rerun validated the no-date-only-churn fix: date-only changes to `CHANGE_SURFACES.md` and `OPEN_QUESTIONS.md` were reverted; only substantive changes were committed in that repo.
+
+**Matrix rows covered:** Row 1 (SvelteKit/frontend/Claude Code), Row 7 (existing docs/ai - refresh vs rewrite correct, no-date-only-churn holds)
+
+**Evidence confidence:** High. Real repo, real cross-file consistency issue found, substantive changes committed.
+
+---
+
+### Claude Code - External Laravel backend repo A (Laravel / PHP backend / deployment-sensitive)
+
+- **Repo type:** Laravel / backend / admin / deployment-sensitive repo
+- **Agent/runtime:** Claude Code
+- **Invocation:** `/codebase-orient`
+- **docs/ai existed:** Yes - validated rather than rewritten broadly
+- **Mode:** Normal
+
+**Findings:**
+
+- Stale claim corrected: migration count 35 -> 32 (verified against source)
+- Stale claim corrected: feature test count 40+ -> 38 (verified against source)
+- Stale deploy-risk claim corrected: `storage:link` was listed as absent but had been added to `deploy.yml`; corresponding stale reference in `CHANGE_SURFACES.md` also corrected
+- `OPEN_QUESTIONS.md` verified current / unchanged; no-date-only-churn held
+- All corrections committed in External Laravel backend repo A as commit `5cd2cca`
+
+**Matrix rows covered:** Row 2 (Laravel/PHP backend/Claude Code), Row 8 (deployment-sensitive workflows - deployment surfaces flagged correctly)
+
+**Evidence confidence:** High. Real stale claims found against real source code, corrections committed.
+
+---
+
+### Codex - codebase-orient-skill (self-orientation, supporting evidence only)
+
+- **Repo type:** Skill-source repo (self-referential)
+- **Agent/runtime:** Codex
+- **Invocation:** Explicit natural-language invocation
+- **docs/ai existed:** No - created during this pass
+- **Mode:** Normal
+
+**Observations:**
+
+- Project-local `.agents/skills/codebase-orient/SKILL.md` install confirmed by hash match before the session.
+- Codex created the expected `docs/ai/` cache files and displayed skill behavior consistent with the skill definition.
+- Driven by real content inspection of this source repo (scripts, SKILL.md files, changelogs).
+
+**Limitations:**
+
+- Self-referential repo: the skill was orienting to a repo that describes itself.
+- Discovery confound: the skill body appeared later in the session thread, which may have supplemented project-local install pickup.
+- Not equivalent to orienting to an unfamiliar external codebase.
+
+**Classification:** Supporting / limited evidence. This does NOT count as a clean external-repo Codex pass. It establishes that Codex project-local skill installation works and that Codex exhibits skill behavior. It does not satisfy any F matrix row.
+
+**Matrix rows covered:** None counted. Supporting evidence for Codex install-to-behavior chain only.
+
+---
+
+### Live-fire coverage summary
+
+| Matrix row | Status | Evidence source |
+|------------|--------|-----------------|
+| Row 1: SvelteKit/frontend / Claude Code | PASS | External SvelteKit frontend repo A |
+| Row 2: Laravel/PHP backend / Claude Code | PASS | External Laravel backend repo A |
+| Row 3: Small/simple repo / Claude Code | NOT YET | - |
+| Row 4: Messy/legacy / dry-run / Claude Code | NOT YET | - |
+| Row 5: Docs-light repo / Claude Code | NOT YET | - |
+| Row 6: AGENTS.md/CLAUDE.md / Codex | NOT YET (supporting only) | self-orientation (limited, not a clean pass) |
+| Row 7: Existing docs/ai / Claude Code | PASS | External SvelteKit frontend repo A |
+| Row 8: Deployment-sensitive / Claude Code | PASS | External Laravel backend repo A |
+
+**Clean passes: 4 / 8.** Minimum count requirement (4) met. Codex requirement not yet met.
+
+**Minimum remaining before v1.0:** One clean Codex live-fire pass on an external real repo (satisfies Row 6 and the Codex row requirement). Cold-user simulation (G.2 hard blocker) remains separately outstanding.
+
+---
+
 ## G. v1.0 blockers and pre-v1 tasks
 
 Based on current evidence. Not speculative.
@@ -390,7 +482,7 @@ Based on current evidence. Not speculative.
 
 ### Preferred but not hard blockers
 
-4. **One more Codex live-fire test** - specifically testing that the generic skill produces useful output when invoked explicitly in Codex, on a repo the Codex session has not seen before. Codex skeptical audit drove v0.3.1 but was primarily a contract/docs audit, not a live discovery pass.
+4. **One clean Codex live-fire pass on an external repo** - a Codex session that has not seen the target repo before invokes the skill explicitly and produces useful orientation output. Supporting evidence exists: a self-orientation pass on the skill-source repo confirmed Codex project-local skill installation by hash and displayed skill behavior (see F1). This does not substitute for an external-repo pass because the repo is self-referential and there was a discovery confound. Codex skeptical audit drove v0.3.1 but was primarily a contract and docs audit, not a live discovery pass. One clean external-repo Codex pass is still required.
 
 5. ~~**Overlay install semantics decision**~~ - RESOLVED 2026-05-22. Overlay semantics are confirmed acceptable for v1.0. The extra-file survival test in the install matrix proves the behavior matches the documented contract (overlay, not exact-sync). Delete-first workaround is documented in README. No exact-sync tooling will be added before v1.0. Decision recorded.
 
@@ -487,20 +579,27 @@ Final checklist. All items must be checkable pass before tagging v1.0.
 
 ## K. Next immediate step
 
-**Run a fresh-clone install validation.** This is the highest-confidence, lowest-cost step that would close the most important hard blocker (G.1).
+Two items remain before v1.0 can be tagged. They can be pursued in either order, but the Codex live-fire pass is lower-friction and can be done in a single session.
+
+**K.1 - Clean Codex live-fire pass on an external repo (closes G.4, satisfies F matrix Codex requirement)**
+
+Pick any real external repo the Codex session has not seen before. It does not need to be complex - a mid-size Laravel or Node.js repo is fine. Invoke the skill explicitly, verify useful output, record findings in F1.
 
 Suggested session prompt:
 
-> Simulate a fresh-clone install of codebase-orient-skill and validate that the orientation skill works end-to-end.
+> Run a clean Codex live-fire orientation pass on [target repo].
 >
 > Steps:
-> 1. Clone the repo to a temporary directory (or use a new directory with no prior state).
-> 2. Run `scripts/install-user.ps1` (or `install-user.sh`) - do not pass -Force; this should succeed since there is no prior install.
-> 3. Open a target repo that has not been oriented before.
-> 4. Invoke `/codebase-orient` in Claude Code.
-> 5. Verify: orientation output is coherent, `docs/ai/` files are created, confidence labels are used, no false facts appear.
-> 6. Check that the installed SKILL.md matches the tracked source (`diff ~/.claude/skills/codebase-orient/SKILL.md skills/codebase-orient/SKILL.md`).
-> 7. Record pass/fail for each E-section test row touched.
-> 8. If any step fails, record the failure and the root cause.
+> 1. Confirm `.agents/skills/codebase-orient/SKILL.md` is installed (user-level or project-local).
+> 2. Invoke: "Use codebase-orient to orient yourself to this repo before we start."
+> 3. Verify: `docs/ai/` files are created, confidence labels appear, no false facts, no source code modified.
+> 4. Note any stale docs found and corrected, any open questions left, framework detected.
+> 5. Record pass/fail against F matrix Row 6.
 >
-> Hard boundaries: do not change skill behavior; do not change install scripts; do not commit changes to codebase-orient-skill during this test.
+> Hard boundaries: do not change skill behavior; do not change install scripts; do not commit to codebase-orient-skill during this test.
+
+**K.2 - Cold-user simulation (closes G.2 hard blocker)**
+
+A session or person with no prior knowledge of this repo's internals installs from README alone and gets a working result. Even one successful independent pass is sufficient.
+
+Suggested approach: ask a colleague to follow the README install instructions on a fresh machine or VM without any guidance beyond the README itself. Record what they hit, if anything.
