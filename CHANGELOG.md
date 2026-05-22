@@ -2,12 +2,14 @@
 
 ## Unreleased
 
-Add tracked v1.0 release plan and record v0.3.2 install validation evidence.
+Add tracked v1.0 release plan, record v0.3.2 install validation evidence, and complete canonical/bootstrap drift check.
 
 - Add `docs/V1_RELEASE_PLAN.md`: v1.0 definition, release criteria, test matrix, live-fire validation matrix, blockers, non-goals, known risks, definition of done, and next immediate step.
 - Add short link to the plan in README development notes.
 - Record completed v0.3.2 install matrix validation: Windows PowerShell (5 scripts, 5 cases each) and Git Bash (18 checks, 18/18 PASS) from disposable tagged clone.
-- Mark fresh-clone install validation and overlay semantics decision as resolved in V1 plan.
+- Correct validation evidence wording: "both platforms" clarified to "both tested Windows environments (PowerShell 5.1 and Git Bash/MSYS2)"; native macOS/Linux not tested, remains open.
+- Mark G.1 (fresh-clone install) and G.5 (overlay semantics decision) as resolved in V1 plan.
+- Mark G.3 (canonical/bootstrap drift check) as resolved: no material unintentional drift found; no edits to either SKILL.md required.
 - Record open gaps: macOS/Linux native bash, Codex live-fire discovery, recursive nested-file fixture, cold-user independent install.
 
 No skill or installer behavior changes.

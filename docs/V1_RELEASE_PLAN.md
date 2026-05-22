@@ -1,7 +1,7 @@
 # v1.0 Release Plan - codebase-orient-skill
 
 Current release: v0.3.2 | Target: v1.0.0 | Updated: 2026-05-22
-Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash)
+Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash; canonical/bootstrap drift check)
 
 ---
 
@@ -333,11 +333,19 @@ Records of actual validation passes. Each row is a real test, not a plan item.
 
 **Open gap from bash run:** recursive copy is implementation-inspected only (`cp -rf`). No nested fixture file was added to prove the recursive path by test. This remains pending.
 
+### v0.3.2 - 2026-05-22 - Canonical/bootstrap drift check
+
+- **Files compared:** `skills/codebase-orient/SKILL.md` vs embedded template in `skills/install-codebase-orient/SKILL.md`
+- **Last confirmed sync before this check:** v0.3.0 (two releases prior)
+- **Result:** No material unintentional drift. All major behavioral rules represented accurately. See G.3 for full detail.
+- **Action taken:** None. No edits to either SKILL.md.
+
 ### Not yet covered
 
-- macOS/Linux native bash (MSYS2 confirmed; native macOS/Linux not tested)
+- macOS/Linux native bash (MSYS2 on Windows confirmed; native macOS/Linux not tested)
 - Runtime orientation behavior (outside this install-matrix pass)
 - Codex live-fire discovery pass (install validated; invocation not tested this pass)
+- Independent cold-user install (README cold-reader pass done by maintainer; independent user not yet tested)
 
 ---
 
@@ -366,11 +374,19 @@ Based on current evidence. Not speculative.
 
 ### Hard blockers (must complete before v1.0 tag)
 
-1. ~~**Fresh-clone install validation**~~ - RESOLVED 2026-05-22. Full install matrix tested from disposable tagged clone on Windows PS and Git Bash. All 5 install scripts PASS on both platforms. See E1.
+1. ~~**Fresh-clone install validation**~~ - RESOLVED 2026-05-22. Full install matrix tested from disposable tagged clone on Windows PowerShell 5.1 and Windows Git Bash/MSYS2. All 5 install scripts PASS on both tested Windows environments. Native macOS/Linux bash was not part of this validation pass; it remains an open item in the D-section install criterion and E matrix but does not reopen this blocker (the original G.1 requirement was at least one clean install from a fresh clone, not full cross-platform coverage). See E1.
 
 2. **At least one cold-user simulation** - a person or session with no knowledge of this repo's internals installs from README alone and gets a working result. A friend install, a fresh-VM test, or a highly isolated session counts. Even one successful cold pass is sufficient. The v0.3.2 Windows PS validation included a README cold-reader pass (no blocker found), but was run by the maintainer, not an independent user. A genuine independent install pass is still pending.
 
-3. **Canonical skill vs bootstrap embedded template drift check** - the last confirmed full sync was at v0.3.0. Two subsequent changes (ASCII normalization at v0.3.2, plus earlier surface mapping additions) need a final diff pass to confirm the embedded template in `skills/install-codebase-orient/SKILL.md` still reflects the canonical rules in `skills/codebase-orient/SKILL.md`. Record the outcome.
+3. ~~**Canonical skill vs bootstrap embedded template drift check**~~ - RESOLVED 2026-05-22. Full section-by-section comparison completed. No material unintentional drift found. Details:
+
+   **Accurate in embedded template:** docs/ai non-canonical cache framing, docs-as-hypotheses and source authority rules, instruction-layer topology note, no-date-only-churn rule, orientation report discipline (full label set), agent handoff summary, all 9 confidence claim-origin labels, hidden-risk reporting, source-of-truth drift detection, CI/deployment precision rule, read-depth heuristic (including path-existence and small-file-read subsections), cheap artifact glob rule, open question quality rule, cross-file consistency rule, CHANGE_SURFACES mapping guidance (all three categories), project-local specialization rule with thin-overlay framing.
+
+   **Minor non-material wording differences (no action taken):** two reinforcing sentences in orientation report discipline absent from embedded template; one skip-condition bullet and one token-aware bullet absent; docs-impact inline example phrase absent. None affect behavioral outcomes.
+
+   **Intentionally excluded from embedded template:** SvelteKit/Laravel framework-specific discovery probes (bootstrap handles its own discovery pass; noted in the embedded template sync note at line 182); trigger phrases in when-to-use (handled by frontmatter `description`); bootstrap-specific sections (purpose, trigger phrases, creates table, hard rules, idempotency) are bootstrap-only by design.
+
+   No edits to either SKILL.md were made. Embedded template is fit for v1.0.
 
 ### Preferred but not hard blockers
 
