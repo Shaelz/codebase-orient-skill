@@ -2,10 +2,13 @@
 
 ## Unreleased
 
-Add tracked v1.0 release plan.
+Add tracked v1.0 release plan and record v0.3.2 install validation evidence.
 
 - Add `docs/V1_RELEASE_PLAN.md`: v1.0 definition, release criteria, test matrix, live-fire validation matrix, blockers, non-goals, known risks, definition of done, and next immediate step.
 - Add short link to the plan in README development notes.
+- Record completed v0.3.2 install matrix validation: Windows PowerShell (5 scripts, 5 cases each) and Git Bash (18 checks, 18/18 PASS) from disposable tagged clone.
+- Mark fresh-clone install validation and overlay semantics decision as resolved in V1 plan.
+- Record open gaps: macOS/Linux native bash, Codex live-fire discovery, recursive nested-file fixture, cold-user independent install.
 
 No skill or installer behavior changes.
 

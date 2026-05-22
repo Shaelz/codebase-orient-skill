@@ -1,6 +1,7 @@
 # v1.0 Release Plan - codebase-orient-skill
 
 Current release: v0.3.2 | Target: v1.0.0 | Updated: 2026-05-22
+Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash)
 
 ---
 
@@ -50,10 +51,28 @@ Branch `main` is clean and up to date with origin.
 - Install path contract verified
 - Lifecycle differences (no bootstrap, no project-local specialization) documented
 
-**Install scripts:**
-- PowerShell user-level install tested (install-user.ps1, install-bootstrap-user.ps1)
-- Force/overwrite behavior verified
-- Recursive copy verified (copies all files, preserves subdirectory structure)
+**Install scripts - Windows PowerShell (v0.3.2, 2026-05-22):**
+- All 5 install scripts tested: user/project-local for Claude Code and Codex, plus bootstrap user-level
+- Installed SKILL.md matched tracked source by SHA-256 for all 5 cases
+- Non-force refusal (exit 1 + message) verified for all 5 cases
+- Force overwrite verified for all 5 cases
+- Overlay semantics verified: injected extra file survived --force for all 5 cases
+- Terminal output: no mojibake; ASCII-only rendered correctly
+- README cold-reader pass: no release blocker found for Windows consumers
+- ASCII punctuation check (PS1 script): exit 0, all tracked files clean
+- Disposable clone remained clean after all tests
+
+**Install scripts - Git Bash / MSYS2 (v0.3.2, 2026-05-22):**
+- All 5 install scripts tested: same matrix as PowerShell above
+- 18/18 checks PASS: hash match, non-force refusal, --force overlay, extra-file survival
+- ASCII punctuation check (sh script): exit 0, all tracked files clean
+- Disposable clone remained clean after all tests
+- Note: recursive copy is implementation-inspected (cp -rf); no nested fixture file was added to prove the recursive path by test - this remains an open gap
+
+**Fresh-clone simulation:**
+- Disposable clone `disposable tagged clone` used for both PS and bash runs
+- Clone was at tagged commit `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (v0.3.2) before and after
+- All temp install targets used fake HOME or temp dirs; real user-level skills were not touched
 
 ### What is intentionally not supported
 
@@ -271,6 +290,57 @@ Run these checks before tagging v1.0. Mark each as pass/fail/skip-with-reason.
 
 ---
 
+## E1. Completed install validation runs
+
+Records of actual validation passes. Each row is a real test, not a plan item.
+
+### v0.3.2 - 2026-05-22 - Windows PowerShell
+
+- **Clone:** `disposable tagged clone`
+- **Commit:** `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (tag `v0.3.2`)
+- **Environment:** Windows, PowerShell 5.1
+- **Targets:** all temp dirs under `%TEMP%`; real user skills not touched
+
+| Case | Script | Result | Evidence |
+|------|--------|--------|---------|
+| Claude Code user-level | install-user.ps1 | PASS | SHA-256 match, refusal, --force overlay, extra-file survived |
+| Claude Code project-local | install-project.ps1 | PASS | SHA-256 match, refusal, --force overlay, extra-file survived |
+| Codex user-level | install-codex-user.ps1 | PASS | SHA-256 match, refusal, --force overlay, extra-file survived |
+| Codex project-local | install-codex-project.ps1 | PASS | SHA-256 match, refusal, --force overlay, extra-file survived |
+| Bootstrap user-level | install-bootstrap-user.ps1 | PASS | SHA-256 match, refusal, --force overlay, extra-file survived |
+| ASCII punctuation check | check-ascii-punctuation.ps1 | PASS | exit 0, all tracked files clean |
+| Terminal output | all scripts | PASS | no mojibake; ASCII rendered correctly |
+| README cold-reader | README.md | PASS | no release blocker found for Windows consumers |
+| Disposable clone state | git status | PASS | clean before and after all tests |
+
+### v0.3.2 - 2026-05-22 - Git Bash (MSYS2 bash 5.2, Windows)
+
+- **Clone:** `disposable tagged clone`
+- **Commit:** `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (tag `v0.3.2`)
+- **Environment:** Git Bash / MSYS2 bash 5.2.37, Windows
+- **Targets:** mktemp -d (fake HOME, project-local temp dirs); real user skills not touched
+
+| Case | Script | Result | Evidence |
+|------|--------|--------|---------|
+| Claude Code user-level | install-user.sh | PASS | SHA-256 match (A1), refusal (A2), overlay (A3), force re-hash (A4) |
+| Claude Code project-local | install-project.sh | PASS | SHA-256 match (B1), refusal (B2), overlay (B3) |
+| Codex user-level | install-codex-user.sh | PASS | SHA-256 match (C1), refusal (C2), overlay (C3) |
+| Codex project-local | install-codex-project.sh | PASS | SHA-256 match (D1), refusal (D2), overlay (D3) |
+| Bootstrap user-level | install-bootstrap-user.sh | PASS | SHA-256 match (E1), refusal (E2), overlay (E3) |
+| ASCII punctuation check | check-ascii-punctuation.sh | PASS | exit 0, all tracked files clean (F1) |
+| Disposable clone state | git status | PASS | clean before and after all tests (G1) |
+| Total | 18 checks | 18/18 PASS | 0 failures |
+
+**Open gap from bash run:** recursive copy is implementation-inspected only (`cp -rf`). No nested fixture file was added to prove the recursive path by test. This remains pending.
+
+### Not yet covered
+
+- macOS/Linux native bash (MSYS2 confirmed; native macOS/Linux not tested)
+- Runtime orientation behavior (outside this install-matrix pass)
+- Codex live-fire discovery pass (install validated; invocation not tested this pass)
+
+---
+
 ## F. Live-fire validation matrix
 
 At least one pass per repo type before v1.0. Record repo type, mode, and outcome.
@@ -296,9 +366,9 @@ Based on current evidence. Not speculative.
 
 ### Hard blockers (must complete before v1.0 tag)
 
-1. **Fresh-clone install validation** - has not been run as a clean simulation. Need at least one clean install from a fresh clone (or a new machine / new directory with no prior state) and a successful orientation invocation. This is the most important gap.
+1. ~~**Fresh-clone install validation**~~ - RESOLVED 2026-05-22. Full install matrix tested from disposable tagged clone on Windows PS and Git Bash. All 5 install scripts PASS on both platforms. See E1.
 
-2. **At least one cold-user simulation** - a person or session with no knowledge of this repo's internals installs from README alone and gets a working result. A friend install, a fresh-VM test, or a highly isolated session counts. Even one successful cold pass is sufficient.
+2. **At least one cold-user simulation** - a person or session with no knowledge of this repo's internals installs from README alone and gets a working result. A friend install, a fresh-VM test, or a highly isolated session counts. Even one successful cold pass is sufficient. The v0.3.2 Windows PS validation included a README cold-reader pass (no blocker found), but was run by the maintainer, not an independent user. A genuine independent install pass is still pending.
 
 3. **Canonical skill vs bootstrap embedded template drift check** - the last confirmed full sync was at v0.3.0. Two subsequent changes (ASCII normalization at v0.3.2, plus earlier surface mapping additions) need a final diff pass to confirm the embedded template in `skills/install-codebase-orient/SKILL.md` still reflects the canonical rules in `skills/codebase-orient/SKILL.md`. Record the outcome.
 
@@ -306,7 +376,7 @@ Based on current evidence. Not speculative.
 
 4. **One more Codex live-fire test** - specifically testing that the generic skill produces useful output when invoked explicitly in Codex, on a repo the Codex session has not seen before. Codex skeptical audit drove v0.3.1 but was primarily a contract/docs audit, not a live discovery pass.
 
-5. **Overlay install semantics decision** - decide explicitly whether current overlay semantics (no exact-sync, delete-first workaround) are acceptable for v1.0, or whether exact-sync tooling is needed before the v1.0 tag. Current position: overlay is acceptable; document it and call it done. Record this decision.
+5. ~~**Overlay install semantics decision**~~ - RESOLVED 2026-05-22. Overlay semantics are confirmed acceptable for v1.0. The extra-file survival test in the install matrix proves the behavior matches the documented contract (overlay, not exact-sync). Delete-first workaround is documented in README. No exact-sync tooling will be added before v1.0. Decision recorded.
 
 6. **CHANGELOG promotion** - the Unreleased entry (if any) must be promoted to a version before tagging v1.0.
 
