@@ -517,6 +517,49 @@ Records of actual live-fire orientation passes against real repos with real find
 
 ---
 
+### Codex (user-level skill) - Legacy PHP CMS snapshot (legacy PHP CMS snapshot, no Git, dry-run)
+
+- **Repo type:** Unseen legacy PHP flat-file CMS snapshot (`GetSimple CE 3.3.22`); mixed runtime/live-like artifacts; no `.git`; no `docs/ai/`
+- **Agent/runtime:** Codex using user-level installed skill at `the user-level installed skill path`
+- **docs/ai existed:** No; none created (dry-run mode, no target files modified)
+- **Mode:** Dry-run only
+
+**Blind discovery (no advance description of target contents given):**
+
+- Codex classified the folder as a legacy PHP flat-file CMS snapshot, likely a mixed live/deployed working snapshot rather than the canonical source repo.
+- Runtime/framework identified: GetSimple CE 3.3.22.
+- Meaningful surfaces discovered from source:
+  - Root `index.php` bootstrap/render flow
+  - `data/pages/*.xml` content source
+  - Admin page-save/sitemap workflow
+  - Active theme `theme/Seascape2-main`
+  - File-backed visitor counter
+  - Custom admin/operator pages
+  - Enabled plugin policy and plugin layer
+  - Competition results/team roster JSON workflows
+  - `.htaccess`, writable content/auth, backups/uploads/plugin internals flagged as security/deploy-sensitive surfaces
+
+**Substantive finding:**
+
+- `LOCAL_MAINTENANCE.md` states that checked-in `PRETTYURLS` is off.
+- `data/other/website.xml` has `<PRETTYURLS>1</PRETTYURLS>`.
+- Runtime code honors the XML value; sitemap output uses pretty URLs.
+- Real maintenance-doc vs config contradiction found and documented.
+
+**Safety-boundary behavior:**
+
+- Codex correctly recommended keeping this target dry-run only: live-like data, runtime artifacts, uploads, logs, backups, no Git history, possible snapshot/deployed-mirror status.
+- Codex recommended locating the canonical maintained source repo before creating `docs/ai/*`.
+- A possible candidate source path surfaced in log references (`a possible canonical maintained source location`) - unverified candidate only; not confirmed canonical source. Orienting that repo is optional project follow-up, not a `codebase-orient-skill` v1 requirement.
+
+**Final files modified:** None.
+
+**Classification:** PASS - blind dry-run generalization in an unseen no-Git legacy snapshot. Satisfies Row 4 (messy/legacy / dry-run). Note: original matrix plan listed Claude Code as the target agent; Codex was used. Behavioral requirements (unknown labels surfaced, no false confidence, no spurious writes, correct safety-boundary recommendation) were met regardless of which agent executed the run.
+
+**Evidence confidence:** High for blind dry-run generalization and safety-boundary behavior. The "unseen" precondition was structurally enforced: no advance description, no Git, no docs/ai, no project-local skill install.
+
+---
+
 ### Live-fire coverage summary
 
 | Matrix row | Status | Evidence source |
@@ -524,14 +567,14 @@ Records of actual live-fire orientation passes against real repos with real find
 | Row 1: SvelteKit/frontend / Claude Code | PASS | External SvelteKit frontend repo A |
 | Row 2: Laravel/PHP backend / Claude Code | PASS | External Laravel backend repo A |
 | Row 3: Small/simple repo / Claude Code | NOT YET | - |
-| Row 4: Messy/legacy / dry-run / Claude Code | NOT YET | - |
+| Row 4: Messy/legacy / dry-run / Claude Code | PASS (Codex dry-run) | Legacy PHP CMS snapshot (no-Git legacy snapshot) |
 | Row 5: Docs-light repo / Claude Code | NOT YET | - |
 | Row 6: AGENTS.md/CLAUDE.md / Codex | PASS | External Laravel backend repo A (Codex, 2026-05-22) |
 | Row 7: Existing docs/ai / Claude Code | PASS | External SvelteKit frontend repo A |
 | Row 8: Deployment-sensitive / Claude Code | PASS | External Laravel backend repo A |
 
-**Matrix rows satisfied: 5 / 8.** Minimum count requirement (4) met. Codex row requirement met.
-**External live-fire runs recorded: 4.** Claude Code in `External SvelteKit frontend repo A`; Claude Code in `External Laravel backend repo A`; Codex in `External Laravel backend repo A`; Claude Code -> Codex sequence in `External SvelteKit portfolio repo B`.
+**Matrix rows satisfied: 6 / 8.** Minimum count requirement (4) met. Codex row requirement met.
+**External live-fire runs recorded: 5.** Claude Code in `External SvelteKit frontend repo A`; Claude Code in `External Laravel backend repo A`; Codex in `External Laravel backend repo A`; Claude Code -> Codex sequence in `External SvelteKit portfolio repo B`; Codex dry-run in `Legacy PHP CMS snapshot` (no-Git legacy snapshot).
 
 **Minimum remaining before v1.0:** Cold-user simulation (G.2 hard blocker). All live-fire matrix requirements satisfied.
 
