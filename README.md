@@ -2,6 +2,15 @@
 
 An Agent Skill for **Claude Code** and **Codex** that turns "scan this repo" into a repeatable codebase orientation workflow.
 
+## Most users
+
+Install the `codebase-orient` skill at the user level for the tool you actually use, then invoke it explicitly when you want an orientation pass:
+
+- **Claude Code:** install `codebase-orient`, then run `/codebase-orient`
+- **Codex:** install `codebase-orient`, then say `Use codebase-orient to orient yourself to this repo.`
+
+Install the separate `install-codebase-orient` bootstrap skill only if you specifically want Claude Code to generate a project-local `.claude/skills/codebase-orient/SKILL.md` inside each target repo.
+
 Instead of asking the model to vaguely "understand the project," this skill guides it to build and maintain a small orientation layer:
 
 - a codebase map
@@ -327,6 +336,10 @@ There is one `SKILL.md` source - the install scripts copy it to whichever path y
 
 - **Most users:** install `codebase-orient` (the sections immediately below). Use `/codebase-orient` to orient Claude to any project.
 - **Bootstrap users:** install `install-codebase-orient` if you want Claude to run an orientation pass *and* write a project-local `codebase-orient` skill file into the repo (at `.claude/skills/codebase-orient/SKILL.md`). See [Bootstrap skill: user-level install](#bootstrap-skill-user-level-install-claude-code-only) below.
+
+**How do I update an existing install?**
+
+Re-run the same install command you used originally with `-Force` (PowerShell) or `--force` (bash). This refreshes the installed copy in place using the current contents of this repo.
 
 There are two common install styles for `codebase-orient`:
 
