@@ -491,7 +491,8 @@ Records of actual live-fire orientation passes against real repos with real find
 | Row 7: Existing docs/ai / Claude Code | PASS | External SvelteKit frontend repo A |
 | Row 8: Deployment-sensitive / Claude Code | PASS | External Laravel backend repo A |
 
-**Clean passes: 5 / 8.** Minimum count requirement (4) met. Codex row requirement met.
+**Matrix rows satisfied: 5 / 8.** Minimum count requirement (4) met. Codex row requirement met.
+**External live-fire runs recorded: 3.** Claude Code in `External SvelteKit frontend repo A`, Claude Code in `External Laravel backend repo A`, and Codex in `External Laravel backend repo A`.
 
 **Minimum remaining before v1.0:** Cold-user simulation (G.2 hard blocker). All live-fire matrix requirements satisfied.
 
@@ -506,6 +507,38 @@ Based on current evidence. Not speculative.
 1. ~~**Fresh-clone install validation**~~ - RESOLVED 2026-05-22. Full install matrix tested from disposable tagged clone on Windows PowerShell 5.1 and Windows Git Bash/MSYS2. All 5 install scripts PASS on both tested Windows environments. Native macOS/Linux bash was not part of this validation pass; it remains an open item in the D-section install criterion and E matrix but does not reopen this blocker (the original G.1 requirement was at least one clean install from a fresh clone, not full cross-platform coverage). See E1.
 
 2. **At least one cold-user simulation** - a person or session with no knowledge of this repo's internals installs from README alone and gets a working result. A friend install, a fresh-VM test, or a highly isolated session counts. Even one successful cold pass is sufficient. The v0.3.2 Windows PS validation included a README cold-reader pass (no blocker found), but was run by the maintainer, not an independent user. A genuine independent install pass is still pending.
+
+   **Cold-user handoff (send only this setup context):**
+   - Send the tester only the GitHub repo or release link for `codebase-orient-skill`.
+   - Tell them to install the appropriate skill for their tool by following the README.
+   - Do not explain the repo architecture or which skill to choose before they attempt the install.
+
+   **Ask the tester to record:**
+   - tool used: Claude Code or Codex
+   - OS and shell used
+   - which install command they chose
+   - whether installation succeeded
+   - whether they knew which skill to install
+   - whether invocation was clear
+   - where they hesitated or needed help
+   - whether any unexpected files or errors appeared
+
+   **PASS:**
+   - Tester correctly selects the reusable `codebase-orient` skill for normal use.
+   - Tester follows the README and installs it successfully.
+   - Tester can invoke it or clearly understands the documented invocation path.
+   - Tester does not need maintainer intervention to resolve confusion.
+
+   **FAIL / feedback-worthy hesitation:**
+   - Tester chooses the bootstrap skill unintentionally.
+   - Tester cannot distinguish Claude Code vs Codex install paths.
+   - Tester misunderstands project-local vs user-level install.
+   - Tester expects automatic behavior that does not occur.
+   - Tester is blocked by README ambiguity.
+
+   **Status rule:**
+   - G.2 remains pending until an actual external tester response is received and reviewed.
+   - A cold-agent simulation can be supplementary evidence, but it does not replace the independent-user test.
 
 3. ~~**Canonical skill vs bootstrap embedded template drift check**~~ - RESOLVED 2026-05-22. Full section-by-section comparison completed. No material unintentional drift found. Details:
 
