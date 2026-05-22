@@ -1,25 +1,21 @@
 # Changelog
 
-## Unreleased
+## 1.0.0-rc.1 - 2026-05-22
 
-- Polish README onboarding clarity before independent cold-user validation: surface the default install choice and make update guidance explicit without changing behavior.
+Freeze the cold-user validation baseline. All implementation and accumulated validation evidence are complete. Final `v1.0.0` tag is gated by one remaining external acceptance result: an independent cold-user install simulation (G.2).
 
-Add tracked v1.0 release plan, record v0.3.2 install validation evidence, and complete canonical/bootstrap drift check.
+**Validation and evidence (docs only):**
 
 - Add `docs/V1_RELEASE_PLAN.md`: v1.0 definition, release criteria, test matrix, live-fire validation matrix, blockers, non-goals, known risks, definition of done, and next immediate step.
-- Add short link to the plan in README development notes.
 - Record completed v0.3.2 install matrix validation: Windows PowerShell (5 scripts, 5 cases each) and Git Bash (18 checks, 18/18 PASS) from disposable tagged clone.
-- Correct validation evidence wording: "both platforms" clarified to "both tested Windows environments (PowerShell 5.1 and Git Bash/MSYS2)"; native macOS/Linux not tested, remains open.
-- Mark G.1 (fresh-clone install) and G.5 (overlay semantics decision) as resolved in V1 plan.
-- Mark G.3 (canonical/bootstrap drift check) as resolved: no material unintentional drift found; no edits to either SKILL.md required.
-- Record open gaps: macOS/Linux native bash, Codex live-fire discovery, recursive nested-file fixture, cold-user independent install.
-- Backfill live-fire validation evidence from prior Claude Code passes: External SvelteKit frontend repo A (SvelteKit/frontend, normal mode, existing docs/ai) and External Laravel backend repo A (Laravel/backend/deployment-sensitive, normal mode, stale claims corrected and committed as 5cd2cca). Record Codex self-orientation (codebase-orient-skill source repo) as limited supporting evidence only - not a clean external-repo Codex pass. Four F-matrix rows now satisfied (Rows 1, 2, 7, 8). Minimum remaining: one clean Codex external-repo live-fire pass. Update K (next immediate step) to reflect current priority.
-- Record successful external Codex live-fire pass in External Laravel backend repo A (Laravel/backend/deployment-sensitive). Codex followed project-local installed skill, verified existing Claude-maintained docs/ai cache against source with no substantive corrections, no date-only churn, no application code modified. Cross-agent cache lifecycle demonstrated (Claude Code corrects, Codex verifies). Close G.4. F-matrix Row 6 PASS. Five of eight live-fire matrix rows are now satisfied. Remaining hard blocker: cold-user simulation (G.2).
-- Tighten v1 validation wording in `docs/V1_RELEASE_PLAN.md`: distinguish matrix rows satisfied from external live-fire runs recorded, and add a minimal cold-user acceptance handoff for G.2. Keep G.2 pending until independent external feedback is received.
-- Record External SvelteKit portfolio repo B cross-agent cache-lifecycle validation: Claude Code created/refreshed orientation cache (commits 8283f5c, 42c96ed); Codex consumed the cache, found new substantive README drift (single-page vs three prerendered routes; symlink-swap vs release-directory rsync deploy), and pushed corrections as 69cc33e8. Corroborating second external cross-agent lifecycle evidence. Does not close a new required matrix row; External Laravel backend repo A remains the G.4 resolution. Four external live-fire runs now recorded.
-- Record blind no-Git dry-run validation in `Legacy PHP CMS snapshot` (GetSimple CE 3.3.22 legacy PHP CMS snapshot, Codex user-level skill, no prior docs/ai). Codex produced full orientation output in dry-run mode, surfaced real PRETTYURLS doc/config contradiction, correctly recommended dry-run only given snapshot/live-like status. No docs/ai artifacts written. Satisfies Row 4 (messy/legacy/dry-run). F-matrix rows satisfied: 6/8. Remaining hard blocker: cold-user simulation (G.2).
+- Complete canonical/bootstrap embedded-template drift check: no material unintentional drift found; no edits to either SKILL.md required.
+- Backfill live-fire validation evidence from prior Claude Code passes: External SvelteKit frontend repo A (SvelteKit/frontend, normal mode) and External Laravel backend repo A (Laravel/backend/deployment-sensitive, normal mode). F-matrix Rows 1, 2, 7, 8 satisfied.
+- Record external Codex live-fire pass in External Laravel backend repo A (project-local skill, cross-agent cache lifecycle, no date-only churn, no application code modified). Close G.4. F-matrix Row 6 PASS.
+- Record External SvelteKit portfolio repo B cross-agent cache-lifecycle validation: Claude Code refreshed orientation cache (commits 8283f5c, 42c96ed); Codex found substantive README drift and pushed corrections (69cc33e8). Corroborating second external cross-agent lifecycle evidence.
+- Record blind no-Git dry-run validation in `Legacy PHP CMS snapshot` (GetSimple CE 3.3.22 legacy PHP CMS snapshot, Codex user-level skill, no prior docs/ai). Codex surfaced real PRETTYURLS doc/config contradiction, recommended dry-run only. F-matrix Row 4 PASS. F-matrix rows satisfied: 6/8.
+- Polish README onboarding clarity before independent cold-user validation: surface the default install choice and make update guidance explicit without changing behavior.
 
-No skill or installer behavior changes.
+No Skill or installer behavior changes.
 
 ---
 

@@ -1,7 +1,7 @@
 # v1.0 Release Plan - codebase-orient-skill
 
-Current release: v0.3.2 | Target: v1.0.0 | Updated: 2026-05-22
-Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash; canonical/bootstrap drift check; live-fire evidence backfilled; Codex external live-fire PASS - External Laravel backend repo A)
+Current release: v1.0.0-rc.1 | Target: v1.0.0 | Updated: 2026-05-22
+Last validation: 2026-05-22 (v1.0.0-rc.1 baseline frozen; README polished for cold-user; 6/8 live-fire matrix rows satisfied; G.2 cold-user simulation is the sole remaining v1.0.0 gate)
 
 ---
 
@@ -11,13 +11,14 @@ Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash; cano
 
 | Tag | Commit | Summary |
 |-----|--------|---------|
+| v1.0.0-rc.1 | (see below) | Cold-user validation candidate; README polished; 6/8 live-fire rows satisfied |
 | v0.3.2 | d124cac | ASCII punctuation normalization + check scripts |
 | v0.3.1 | 6827554 | Install contract cleanup, artifact policy, Codex parity docs |
 | v0.3.0 | 0be3ede | Orientation surface mapping, authority-boundary cleanup |
 | v0.2.0 | - | Dual-runtime skill, bootstrap, no-date-only-churn, invocation reliability |
 | v0.1.x | - | Initial skill, Codex install scripts, bootstrap skill source |
 
-Branch `main` is clean and up to date with origin.
+Branch `main` is clean and up to date with origin. `v1.0.0-rc.1` is an immutable baseline for the external cold-user validation pass.
 
 ### What the repo currently supports
 
@@ -731,12 +732,12 @@ Final checklist. All items must be checkable pass before tagging v1.0.
 
 ## K. Next immediate step
 
-One hard blocker remains before v1.0 can be tagged. The live-fire matrix requirements are fully satisfied.
+`v1.0.0-rc.1` is tagged. The live-fire matrix requirements are fully satisfied. One hard blocker remains before `v1.0.0` can be tagged.
 
 **K.1 - Cold-user simulation (closes G.2 hard blocker)**
 
-A session or person with no prior knowledge of this repo's internals installs from README alone and gets a working result. Even one successful independent pass is sufficient.
+A session or person with no prior knowledge of this repo's internals installs from the README at `v1.0.0-rc.1` alone and gets a working result. Even one successful independent pass is sufficient. The README has been polished specifically for this test.
 
-Suggested approach: ask a colleague to follow the README install instructions on a fresh machine or VM without any guidance beyond the README itself. Record what they hit, if anything.
+Suggested approach: send a colleague only the GitHub repo link. Ask them to install the skill for their tool following the README, without any additional guidance. Record the G.2 acceptance criteria from the blocker section above.
 
-After G.2 is resolved, the remaining pre-tag step is CHANGELOG promotion (G.6).
+After G.2 is resolved, the remaining pre-tag step is CHANGELOG promotion and final `v1.0.0` tag (G.6).
