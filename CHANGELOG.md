@@ -12,6 +12,7 @@ Add tracked v1.0 release plan, record v0.3.2 install validation evidence, and co
 - Mark G.3 (canonical/bootstrap drift check) as resolved: no material unintentional drift found; no edits to either SKILL.md required.
 - Record open gaps: macOS/Linux native bash, Codex live-fire discovery, recursive nested-file fixture, cold-user independent install.
 - Backfill live-fire validation evidence from prior Claude Code passes: External SvelteKit frontend repo A (SvelteKit/frontend, normal mode, existing docs/ai) and External Laravel backend repo A (Laravel/backend/deployment-sensitive, normal mode, stale claims corrected and committed as 5cd2cca). Record Codex self-orientation (codebase-orient-skill source repo) as limited supporting evidence only - not a clean external-repo Codex pass. Four F-matrix rows now satisfied (Rows 1, 2, 7, 8). Minimum remaining: one clean Codex external-repo live-fire pass. Update K (next immediate step) to reflect current priority.
+- Record successful external Codex live-fire pass in External Laravel backend repo A (Laravel/backend/deployment-sensitive). Codex followed project-local installed skill, verified existing Claude-maintained docs/ai cache against source with no substantive corrections, no date-only churn, no application code modified. Cross-agent cache lifecycle demonstrated (Claude Code corrects, Codex verifies). Close G.4. F-matrix Row 6 PASS. Five clean live-fire rows now satisfied. Remaining hard blocker: cold-user simulation (G.2).
 
 No skill or installer behavior changes.
 

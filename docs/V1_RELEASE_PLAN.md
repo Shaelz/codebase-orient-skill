@@ -1,7 +1,7 @@
 # v1.0 Release Plan - codebase-orient-skill
 
 Current release: v0.3.2 | Target: v1.0.0 | Updated: 2026-05-22
-Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash; canonical/bootstrap drift check; live-fire evidence backfilled)
+Last validation: 2026-05-22 (v0.3.2 install matrix - Windows PS + Git Bash; canonical/bootstrap drift check; live-fire evidence backfilled; Codex external live-fire PASS - External Laravel backend repo A)
 
 ---
 
@@ -441,6 +441,43 @@ Records of actual live-fire orientation passes against real repos with real find
 
 ---
 
+### Codex - External Laravel backend repo A (Laravel / PHP backend / deployment-sensitive, external repo)
+
+- **Repo type:** Laravel / backend / admin / deployment-sensitive repo (same repo, different agent)
+- **Agent/runtime:** Codex
+- **Invocation:** Explicit natural-language invocation
+- **Skill path:** Project-local `.agents/skills/codebase-orient/SKILL.md` at `the project-local installed skill path`
+- **docs/ai existed:** Yes - Claude Code orientation cache from prior Claude Code pass (including correction commit `5cd2cca`)
+- **Mode:** Normal
+
+**Observed evidence:**
+
+- Codex session registry exposed `codebase-orient` at the exact External Laravel backend repo A project-local path.
+- The installed skill file was opened and followed explicitly.
+- Target repo confirmed as External Laravel backend repo A (not the skill-source repo).
+- Codex verified the existing `docs/ai/` cache against source/config/canonical docs:
+  - `deploy.yml` includes `php artisan storage:link` after `migrate --force` - confirmed correct
+  - Migration count 32 - confirmed correct
+  - Feature test count 38 - confirmed correct
+  - Public routes match `routes/web.php` - confirmed
+  - Filament/admin/operator surfaces match current source/docs - confirmed
+  - Instruction-layer topology claims are grounded - confirmed
+  - CI/deploy summary matches `.github/workflows/deploy.yml` - confirmed
+  - `OPEN_QUESTIONS.md` remains a correct uncertainty log - confirmed
+- Codex found no substantive correction needed. No changes made to `docs/ai/`.
+- No date-only churn. No application code modified.
+- Final External Laravel backend repo A working tree contained only the untracked `.agents/` install artifact.
+
+**Cross-agent validation significance:** This pass demonstrates the intended cross-agent lifecycle: Claude Code oriented and corrected, Codex independently verified. The Codex session confirmed the Claude-maintained cache was accurate and held the no-date-only-churn rule (no rewrite triggered despite a full verification pass).
+
+**Evidence note:** Codex skill pickup relied on project-local install; a distinct UI skill-attachment click event was not independently observable from the terminal/session report. Behavioral evidence (skill followed, real verification performed against real source) is sufficient to classify this as a PASS. The acceptance bar is behavioral, not UI-event-level.
+
+**Matrix rows covered:** Row 6 (AGENTS.md/CLAUDE.md/Codex - instruction-layer topology mapped, Codex explicit invocation confirmed)
+
+**Evidence confidence:** High, with the noted UI-attachment observability caveat.
+
+---
+
 ### Live-fire coverage summary
 
 | Matrix row | Status | Evidence source |
@@ -450,13 +487,13 @@ Records of actual live-fire orientation passes against real repos with real find
 | Row 3: Small/simple repo / Claude Code | NOT YET | - |
 | Row 4: Messy/legacy / dry-run / Claude Code | NOT YET | - |
 | Row 5: Docs-light repo / Claude Code | NOT YET | - |
-| Row 6: AGENTS.md/CLAUDE.md / Codex | NOT YET (supporting only) | self-orientation (limited, not a clean pass) |
+| Row 6: AGENTS.md/CLAUDE.md / Codex | PASS | External Laravel backend repo A (Codex, 2026-05-22) |
 | Row 7: Existing docs/ai / Claude Code | PASS | External SvelteKit frontend repo A |
 | Row 8: Deployment-sensitive / Claude Code | PASS | External Laravel backend repo A |
 
-**Clean passes: 4 / 8.** Minimum count requirement (4) met. Codex requirement not yet met.
+**Clean passes: 5 / 8.** Minimum count requirement (4) met. Codex row requirement met.
 
-**Minimum remaining before v1.0:** One clean Codex live-fire pass on an external real repo (satisfies Row 6 and the Codex row requirement). Cold-user simulation (G.2 hard blocker) remains separately outstanding.
+**Minimum remaining before v1.0:** Cold-user simulation (G.2 hard blocker). All live-fire matrix requirements satisfied.
 
 ---
 
@@ -482,7 +519,7 @@ Based on current evidence. Not speculative.
 
 ### Preferred but not hard blockers
 
-4. **One clean Codex live-fire pass on an external repo** - a Codex session that has not seen the target repo before invokes the skill explicitly and produces useful orientation output. Supporting evidence exists: a self-orientation pass on the skill-source repo confirmed Codex project-local skill installation by hash and displayed skill behavior (see F1). This does not substitute for an external-repo pass because the repo is self-referential and there was a discovery confound. Codex skeptical audit drove v0.3.1 but was primarily a contract and docs audit, not a live discovery pass. One clean external-repo Codex pass is still required.
+4. ~~**One clean Codex live-fire pass on an external repo**~~ - RESOLVED 2026-05-22. External Codex live-fire pass completed in External Laravel backend repo A (Laravel/backend/deployment-sensitive). Codex project-local skill (`.agents/skills/codebase-orient/SKILL.md`) was exposed and followed; existing Claude-maintained `docs/ai/` files were verified against source with no substantive corrections needed; no-date-only-churn held; no application code modified. Cross-agent cache lifecycle (Claude Code orients and corrects, Codex verifies) demonstrated. See F1 for full evidence record.
 
 5. ~~**Overlay install semantics decision**~~ - RESOLVED 2026-05-22. Overlay semantics are confirmed acceptable for v1.0. The extra-file survival test in the install matrix proves the behavior matches the documented contract (overlay, not exact-sync). Delete-first workaround is documented in README. No exact-sync tooling will be added before v1.0. Decision recorded.
 
@@ -579,27 +616,12 @@ Final checklist. All items must be checkable pass before tagging v1.0.
 
 ## K. Next immediate step
 
-Two items remain before v1.0 can be tagged. They can be pursued in either order, but the Codex live-fire pass is lower-friction and can be done in a single session.
+One hard blocker remains before v1.0 can be tagged. The live-fire matrix requirements are fully satisfied.
 
-**K.1 - Clean Codex live-fire pass on an external repo (closes G.4, satisfies F matrix Codex requirement)**
-
-Pick any real external repo the Codex session has not seen before. It does not need to be complex - a mid-size Laravel or Node.js repo is fine. Invoke the skill explicitly, verify useful output, record findings in F1.
-
-Suggested session prompt:
-
-> Run a clean Codex live-fire orientation pass on [target repo].
->
-> Steps:
-> 1. Confirm `.agents/skills/codebase-orient/SKILL.md` is installed (user-level or project-local).
-> 2. Invoke: "Use codebase-orient to orient yourself to this repo before we start."
-> 3. Verify: `docs/ai/` files are created, confidence labels appear, no false facts, no source code modified.
-> 4. Note any stale docs found and corrected, any open questions left, framework detected.
-> 5. Record pass/fail against F matrix Row 6.
->
-> Hard boundaries: do not change skill behavior; do not change install scripts; do not commit to codebase-orient-skill during this test.
-
-**K.2 - Cold-user simulation (closes G.2 hard blocker)**
+**K.1 - Cold-user simulation (closes G.2 hard blocker)**
 
 A session or person with no prior knowledge of this repo's internals installs from README alone and gets a working result. Even one successful independent pass is sufficient.
 
 Suggested approach: ask a colleague to follow the README install instructions on a fresh machine or VM without any guidance beyond the README itself. Record what they hit, if anything.
+
+After G.2 is resolved, the remaining pre-tag step is CHANGELOG promotion (G.6).
