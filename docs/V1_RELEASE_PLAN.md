@@ -478,6 +478,45 @@ Records of actual live-fire orientation passes against real repos with real find
 
 ---
 
+### Claude Code -> Codex - External SvelteKit portfolio repo B (SvelteKit / static portfolio / deployment workflow)
+
+- **Repo type:** SvelteKit / static portfolio / deployment workflow repo
+- **Agent/runtime sequence:** Claude Code (orientation and cache creation/refresh) then Codex (verification and substantive update)
+- **docs/ai existed at Codex pass:** Yes - created and refreshed by Claude Code in prior passes
+- **Mode:** Normal (both passes)
+
+**Claude Code phase:**
+
+- Initial Claude Code dry-run found real instruction drift in `README.md` and proposed the orientation layer.
+- Claude Code created and refreshed the orientation cache in two committed passes:
+  - `8283f5c` - `docs: add portfolio codebase orientation layer`
+  - `42c96ed` - `docs: refresh orientation docs with deploy corrections`
+
+**Codex phase:**
+
+- Codex ran using the project-local installed skill in `External SvelteKit portfolio repo B`.
+- Codex consumed the pre-existing Claude-created `docs/ai/` cache and verified it against source/config.
+- Codex found new substantive documentation drift not corrected in the Claude Code passes:
+  - `README.md` still described the site as single-page despite three prerendered routes.
+  - `README.md` described deploy as a symlink swap while the actual workflow uses release-directory upload plus rsync publish into `PUBLIC_PATH`.
+- Codex substantively refreshed the orientation cache: instruction-layer mapping, docs-impact guidance, deploy smoke-check guidance, and corrected README-drift status.
+- No application/source/config/deploy-behavior files changed.
+- No date-only churn. No spurious rewrites.
+
+**Durable target-repo commit:** `69cc33e8250db98396eef6692ce907be333b430a` (pushed; contains only `CLAUDE.md`, `README.md`, and `docs/ai/*`)
+
+**Final state:** Temporary `.agents/` Codex install artifact removed after evidence commit was pushed. Working tree clean and aligned with origin.
+
+**Cross-version wording:** Omitted. Insufficient timeline evidence to determine which version of the skill each agent used; lifecycle wording only.
+
+**Classification:** PASS - corroborating second external cross-agent orientation-cache lifecycle validation. This strengthens the lifecycle evidence base across a second repo family (SvelteKit portfolio vs Laravel backend). External Laravel backend repo A already closed the required Codex live-fire blocker (G.4); this pass does not close a new required matrix row.
+
+**Matrix rows covered:** None additional. Row 1 (SvelteKit/Claude Code) and Row 6 (Codex) are already satisfied by prior passes. Recorded as supplementary run evidence only.
+
+**Evidence confidence:** High. Substantive drift found by Codex against real source, corrected, and pushed to the target repo.
+
+---
+
 ### Live-fire coverage summary
 
 | Matrix row | Status | Evidence source |
@@ -492,7 +531,7 @@ Records of actual live-fire orientation passes against real repos with real find
 | Row 8: Deployment-sensitive / Claude Code | PASS | External Laravel backend repo A |
 
 **Matrix rows satisfied: 5 / 8.** Minimum count requirement (4) met. Codex row requirement met.
-**External live-fire runs recorded: 3.** Claude Code in `External SvelteKit frontend repo A`, Claude Code in `External Laravel backend repo A`, and Codex in `External Laravel backend repo A`.
+**External live-fire runs recorded: 4.** Claude Code in `External SvelteKit frontend repo A`; Claude Code in `External Laravel backend repo A`; Codex in `External Laravel backend repo A`; Claude Code -> Codex sequence in `External SvelteKit portfolio repo B`.
 
 **Minimum remaining before v1.0:** Cold-user simulation (G.2 hard blocker). All live-fire matrix requirements satisfied.
 
