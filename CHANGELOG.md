@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.0.0-rc.6 - 2026-05-23
+
+Candidate for rerunning independent human-through-agent validation. No orientation skill behavior change. No installer target, copy, or overwrite semantics change.
+
+**Exact-install integrity for agent-delegated onboarding:**
+
+- Add a compact README rule that agent-delegated installation must start from an exact local copy of the requested tagged source and must use the checked-in installer script for the selected tool and scope.
+- Clarify that project-local delegated installation is valid when requested, but it must still use an exact tagged checkout/archive plus the checked-in installer rather than reconstructed skill content.
+- Explicitly forbid manually recreating, pasting, summarizing, paraphrasing, or rewriting `SKILL.md` from web-fetched, rendered, transformed, or partial content; if exact acquisition or installer execution is not possible, the agent must stop and ask.
+
+**External validation evidence:**
+
+- Record that an independent `v1.0.0-rc.5` human-through-agent attempt failed the external validation gate on installation integrity.
+- In that run, a new Claude Code session reasonably chose the supported project-local route from a minimal public tag handoff, but then began an approximate manual-install path that would have reconstructed installed skill content from fetched non-authoritative material.
+- The attempt was interrupted before any installed skill file was written; only empty install directories were created in the target project, and no tracked target-project change was observed.
+
+**Release status:**
+
+- `v1.0.0-rc.5` remains the prior public agent-delegated onboarding candidate and historical evidence for the failed exact-install integrity gate.
+- `v1.0.0-rc.6` is the active candidate for rerunning independent human-through-agent validation.
+- Final `v1.0.0` remains blocked until that external validation gate passes against published `rc.6` and the final release checklist is rerun.
+
+---
+
 ## 1.0.0-rc.5 - 2026-05-23
 
 Release candidate for independent human-through-agent validation. No orientation skill behavior change. No installer target, copy, or overwrite semantics change.
@@ -19,7 +43,7 @@ Release candidate for independent human-through-agent validation. No orientation
 **Release status:**
 
 - `v1.0.0-rc.4` remains the prior published sanitized candidate and is unchanged.
-- `v1.0.0-rc.5` is the active candidate for independent human-through-agent validation.
+- `v1.0.0-rc.5` is the prior public agent-delegated onboarding candidate.
 - Final `v1.0.0` remains blocked until that revised external validation gate passes and the final release checklist is rerun against the published candidate.
 
 ---

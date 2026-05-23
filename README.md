@@ -17,10 +17,17 @@ Before running the install scripts, clone or download this repository locally an
 
 If you already work in Codex or Claude Code, a practical onboarding path is to give that coding agent this repository and ask it to install the reusable skill for the tool you are currently using.
 
+Exact-install integrity rule for agent-delegated setup:
+
+- The agent must first obtain an exact local copy of the requested repo revision by cloning/checking out the requested tag or by downloading and extracting that tagged archive.
+- It must then run the checked-in installer script for the selected tool and install scope.
+- It must not manually recreate, paste, summarize, paraphrase, or rewrite `SKILL.md` from web-fetched, rendered, transformed, or partial content.
+- If it cannot obtain an exact local copy or cannot run the documented installer, it must stop and ask rather than approximate the installation.
+
 Use this prompt:
 
 ```text
-Install the reusable codebase-orient skill for the coding tool we are using now. Follow this repository's README and use the recommended user-level install path by default. If an installation already exists, do not overwrite or delete it automatically; explain the choices and ask me whether to do an overlay refresh, a clean reinstall, or a project-local install instead. After installation, report how to invoke the installed skill explicitly. Do not run orientation in any target repository until I choose the target or ask you to do that next.
+Install the reusable codebase-orient skill for the coding tool we are using now. Follow this repository's README. Obtain an exact local copy of the requested repo revision first by cloning/checking out the requested tag or by downloading and extracting that tagged archive, then run the checked-in installer script. Do not manually recreate or rewrite SKILL.md from fetched or rendered content. Use the recommended user-level install path by default unless I request project-local scope; if I ask to install it "in this project," use the supported project-local route. If an installation already exists, do not overwrite or delete it automatically; explain the choices and ask me whether to do an overlay refresh, a clean reinstall, or a project-local install instead. If you cannot obtain an exact local copy or cannot run the documented installer, stop and ask. After installation, report how to invoke the installed skill explicitly. Do not run orientation in any target repository until I choose the target or ask you to do that next.
 ```
 
 The manual commands below remain the inspectable install contract that the agent should follow.
@@ -119,6 +126,8 @@ In Codex CLI or the IDE extension, run `/skills` or type `$` to mention/select `
 <summary>Project-local install for Claude Code or Codex</summary>
 
 Run these from the **target repo root**. The scripts install relative to the current working directory and do not verify that it is a repository root.
+
+For delegated installation from a GitHub URL or tag, first acquire the exact skill source separately, then run the checked-in project-local installer from the target repo root. Do not manually write `.claude/skills/codebase-orient/SKILL.md` or `.agents/skills/codebase-orient/SKILL.md`.
 
 **Claude Code project-local**
 
