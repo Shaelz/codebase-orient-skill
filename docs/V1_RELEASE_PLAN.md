@@ -1,7 +1,7 @@
 # v1.0 Release Plan - codebase-orient-skill
 
-Current release candidate: v1.0.0-rc.3 | Final target: v1.0.0 | Updated: 2026-05-23
-Last validation: 2026-05-23 (pre-validation contract audit found README mutation-scope and trust-posture wording in `rc.2` to be incomplete before external cold-user testing; `rc.3` corrects those statements; external cold-user validation (G.2) remains pending and must now run against `v1.0.0-rc.3`; D/J readiness criteria should be re-verified against `rc.3` as final pre-tag checks after G.2)
+Current release candidate: v1.0.0-rc.4 | Final target: v1.0.0 | Updated: 2026-05-23
+Last validation: 2026-05-23 (the pre-public exposure audit found private validation identifiers and maintainer-local filesystem paths in tracked docs and reachable history/tag metadata; `rc.4` is the sanitized publication-safe candidate; independent cold-user validation (G.2) remains pending and must now run against `v1.0.0-rc.4`; D/J readiness criteria should be re-verified against `rc.4` as final pre-tag checks after G.2)
 
 ---
 
@@ -11,7 +11,8 @@ Last validation: 2026-05-23 (pre-validation contract audit found README mutation
 
 | Tag | Commit | Summary |
 |-----|--------|---------|
-| v1.0.0-rc.3 | (this pass) | Pre-validation correction: README mutation-scope accuracy, Claude Code specialization disclosure, limitations/trust section |
+| v1.0.0-rc.4 | (this pass) | Pre-public sanitation: remove private validation identifiers and local-path disclosures from public-intended docs; promote publication-safe cold-user candidate |
+| v1.0.0-rc.3 | (prior pass) | Pre-validation correction: README mutation-scope accuracy, Claude Code specialization disclosure, limitations/trust section |
 | v1.0.0-rc.2 | 1de6b3c | Post-rc.1 candidate: README onboarding rewrite + fixed project-local installer `.gitignore` guidance |
 | v1.0.0-rc.1 | (see below) | Cold-user validation candidate; README polished; 6/8 live-fire rows satisfied |
 | v0.3.2 | d124cac | ASCII punctuation normalization + check scripts |
@@ -20,7 +21,7 @@ Last validation: 2026-05-23 (pre-validation contract audit found README mutation
 | v0.2.0 | - | Dual-runtime skill, bootstrap, no-date-only-churn, invocation reliability |
 | v0.1.x | - | Initial skill, Codex install scripts, bootstrap skill source |
 
-`v1.0.0-rc.1` and `v1.0.0-rc.2` are immutable historical candidates. `rc.2` introduced the README onboarding rewrite and project-local installer `.gitignore` correction but carried incomplete README mutation-scope and trust-posture wording. `rc.3` corrects those statements and is the intended candidate for all external cold-user validation. Neither `rc.1` nor `rc.2` should be used for validation.
+`v1.0.0-rc.1` and `v1.0.0-rc.2` remain historical pre-public candidates. `rc.2` introduced the README onboarding rewrite and project-local installer `.gitignore` correction but carried incomplete README mutation-scope and trust-posture wording. `rc.3` corrected those statements but was then blocked by the pre-public exposure audit because tracked docs and reachable pre-public history still contained private validation identifiers and maintainer-local paths. `rc.4` is the sanitized candidate intended for all external cold-user validation. Do not use `rc.1`, `rc.2`, or `rc.3` for that validation.
 
 ### What the repo currently supports
 
@@ -73,7 +74,7 @@ Last validation: 2026-05-23 (pre-validation contract audit found README mutation
 - Note: recursive copy is implementation-inspected (cp -rf); no nested fixture file was added to prove the recursive path by test - this remains an open gap
 
 **Fresh-clone simulation:**
-- Disposable clone `disposable tagged clone` used for both PS and bash runs
+- A disposable tagged clone was used for both PS and bash runs
 - Clone was at tagged commit `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (v0.3.2) before and after
 - All temp install targets used fake HOME or temp dirs; real user-level skills were not touched
 
@@ -299,7 +300,7 @@ Records of actual validation passes. Each row is a real test, not a plan item.
 
 ### v0.3.2 - 2026-05-22 - Windows PowerShell
 
-- **Clone:** `disposable tagged clone`
+- **Clone:** disposable tagged clone
 - **Commit:** `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (tag `v0.3.2`)
 - **Environment:** Windows, PowerShell 5.1
 - **Targets:** all temp dirs under `%TEMP%`; real user skills not touched
@@ -318,7 +319,7 @@ Records of actual validation passes. Each row is a real test, not a plan item.
 
 ### v0.3.2 - 2026-05-22 - Git Bash (MSYS2 bash 5.2, Windows)
 
-- **Clone:** `disposable tagged clone`
+- **Clone:** disposable tagged clone
 - **Commit:** `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (tag `v0.3.2`)
 - **Environment:** Git Bash / MSYS2 bash 5.2.37, Windows
 - **Targets:** mktemp -d (fake HOME, project-local temp dirs); real user skills not touched
@@ -375,7 +376,7 @@ Minimum coverage before v1.0: at least 4 of the 8 rows with a real pass, at leas
 
 Records of actual live-fire orientation passes against real repos with real findings.
 
-### Claude Code - External SvelteKit frontend repo A (SvelteKit / frontend)
+### Claude Code - External SvelteKit frontend repo A
 
 - **Repo type:** SvelteKit / frontend / product-flow repo
 - **Agent/runtime:** Claude Code
@@ -396,7 +397,7 @@ Records of actual live-fire orientation passes against real repos with real find
 
 ---
 
-### Claude Code - External Laravel backend repo A (Laravel / PHP backend / deployment-sensitive)
+### Claude Code - External Laravel backend repo A
 
 - **Repo type:** Laravel / backend / admin / deployment-sensitive repo
 - **Agent/runtime:** Claude Code
@@ -410,7 +411,7 @@ Records of actual live-fire orientation passes against real repos with real find
 - Stale claim corrected: feature test count 40+ -> 38 (verified against source)
 - Stale deploy-risk claim corrected: `storage:link` was listed as absent but had been added to `deploy.yml`; corresponding stale reference in `CHANGE_SURFACES.md` also corrected
 - `OPEN_QUESTIONS.md` verified current / unchanged; no-date-only-churn held
-- All corrections committed in External Laravel backend repo A as commit `5cd2cca`
+- All corrections were committed in the target repo
 
 **Matrix rows covered:** Row 2 (Laravel/PHP backend/Claude Code), Row 8 (deployment-sensitive workflows - deployment surfaces flagged correctly)
 
@@ -444,20 +445,20 @@ Records of actual live-fire orientation passes against real repos with real find
 
 ---
 
-### Codex - External Laravel backend repo A (Laravel / PHP backend / deployment-sensitive, external repo)
+### Codex - External Laravel backend repo A (deployment-sensitive, external repo)
 
 - **Repo type:** Laravel / backend / admin / deployment-sensitive repo (same repo, different agent)
 - **Agent/runtime:** Codex
 - **Invocation:** Explicit natural-language invocation
-- **Skill path:** Project-local `.agents/skills/codebase-orient/SKILL.md` at `the project-local installed skill path`
+- **Skill path:** Project-local `.agents/skills/codebase-orient/SKILL.md`
 - **docs/ai existed:** Yes - Claude Code orientation cache from prior Claude Code pass (including correction commit `5cd2cca`)
 - **Mode:** Normal
 
 **Observed evidence:**
 
-- Codex session registry exposed `codebase-orient` at the exact External Laravel backend repo A project-local path.
+- Codex session registry exposed `codebase-orient` at the project-local path.
 - The installed skill file was opened and followed explicitly.
-- Target repo confirmed as External Laravel backend repo A (not the skill-source repo).
+- Target repo confirmed as the external Laravel backend repo (not the skill-source repo).
 - Codex verified the existing `docs/ai/` cache against source/config/canonical docs:
   - `deploy.yml` includes `php artisan storage:link` after `migrate --force` - confirmed correct
   - Migration count 32 - confirmed correct
@@ -469,7 +470,7 @@ Records of actual live-fire orientation passes against real repos with real find
   - `OPEN_QUESTIONS.md` remains a correct uncertainty log - confirmed
 - Codex found no substantive correction needed. No changes made to `docs/ai/`.
 - No date-only churn. No application code modified.
-- Final External Laravel backend repo A working tree contained only the untracked `.agents/` install artifact.
+- Final target working tree contained only the untracked `.agents/` install artifact.
 
 **Cross-agent validation significance:** This pass demonstrates the intended cross-agent lifecycle: Claude Code oriented and corrected, Codex independently verified. The Codex session confirmed the Claude-maintained cache was accurate and held the no-date-only-churn rule (no rewrite triggered despite a full verification pass).
 
@@ -481,7 +482,7 @@ Records of actual live-fire orientation passes against real repos with real find
 
 ---
 
-### Claude Code -> Codex - External SvelteKit portfolio repo B (SvelteKit / static portfolio / deployment workflow)
+### Claude Code -> Codex - External SvelteKit portfolio repo B
 
 - **Repo type:** SvelteKit / static portfolio / deployment workflow repo
 - **Agent/runtime sequence:** Claude Code (orientation and cache creation/refresh) then Codex (verification and substantive update)
@@ -497,7 +498,7 @@ Records of actual live-fire orientation passes against real repos with real find
 
 **Codex phase:**
 
-- Codex ran using the project-local installed skill in `External SvelteKit portfolio repo B`.
+- Codex ran using the project-local installed skill in the external portfolio repo.
 - Codex consumed the pre-existing Claude-created `docs/ai/` cache and verified it against source/config.
 - Codex found new substantive documentation drift not corrected in the Claude Code passes:
   - `README.md` still described the site as single-page despite three prerendered routes.
@@ -506,13 +507,13 @@ Records of actual live-fire orientation passes against real repos with real find
 - No application/source/config/deploy-behavior files changed.
 - No date-only churn. No spurious rewrites.
 
-**Durable target-repo commit:** `69cc33e8250db98396eef6692ce907be333b430a` (pushed; contains only `CLAUDE.md`, `README.md`, and `docs/ai/*`)
+**Durable target-repo commit:** Documentation-only evidence commit pushed to the target repo (`CLAUDE.md`, `README.md`, and `docs/ai/*` only)
 
 **Final state:** Temporary `.agents/` Codex install artifact removed after evidence commit was pushed. Working tree clean and aligned with origin.
 
 **Cross-version wording:** Omitted. Insufficient timeline evidence to determine which version of the skill each agent used; lifecycle wording only.
 
-**Classification:** PASS - corroborating second external cross-agent orientation-cache lifecycle validation. This strengthens the lifecycle evidence base across a second repo family (SvelteKit portfolio vs Laravel backend). External Laravel backend repo A already closed the required Codex live-fire blocker (G.4); this pass does not close a new required matrix row.
+**Classification:** PASS - corroborating second external cross-agent orientation-cache lifecycle validation. This strengthens the lifecycle evidence base across a second repo family (SvelteKit portfolio vs Laravel backend). The external Laravel backend repo A already closed the required Codex live-fire blocker (G.4); this pass does not close a new required matrix row.
 
 **Matrix rows covered:** None additional. Row 1 (SvelteKit/Claude Code) and Row 6 (Codex) are already satisfied by prior passes. Recorded as supplementary run evidence only.
 
@@ -520,10 +521,10 @@ Records of actual live-fire orientation passes against real repos with real find
 
 ---
 
-### Codex (user-level skill) - Legacy PHP CMS snapshot (legacy PHP CMS snapshot, no Git, dry-run)
+### Codex (user-level skill) - Legacy PHP CMS snapshot (no Git, dry-run)
 
 - **Repo type:** Unseen legacy PHP flat-file CMS snapshot (`GetSimple CE 3.3.22`); mixed runtime/live-like artifacts; no `.git`; no `docs/ai/`
-- **Agent/runtime:** Codex using user-level installed skill at `the user-level installed skill path`
+- **Agent/runtime:** Codex using the user-level installed skill
 - **docs/ai existed:** No; none created (dry-run mode, no target files modified)
 - **Mode:** Dry-run only
 
@@ -553,7 +554,7 @@ Records of actual live-fire orientation passes against real repos with real find
 
 - Codex correctly recommended keeping this target dry-run only: live-like data, runtime artifacts, uploads, logs, backups, no Git history, possible snapshot/deployed-mirror status.
 - Codex recommended locating the canonical maintained source repo before creating `docs/ai/*`.
-- A possible candidate source path surfaced in log references (`a possible canonical maintained source location`) - unverified candidate only; not confirmed canonical source. Orienting that repo is optional project follow-up, not a `codebase-orient-skill` v1 requirement.
+- A possible canonical maintained source location was suggested by the snapshot context, but it was not confirmed during this dry-run. Finding that source remains optional project follow-up, not a `codebase-orient-skill` v1 requirement.
 
 **Final files modified:** None.
 
@@ -570,14 +571,14 @@ Records of actual live-fire orientation passes against real repos with real find
 | Row 1: SvelteKit/frontend / Claude Code | PASS | External SvelteKit frontend repo A |
 | Row 2: Laravel/PHP backend / Claude Code | PASS | External Laravel backend repo A |
 | Row 3: Small/simple repo / Claude Code | NOT YET | - |
-| Row 4: Messy/legacy / dry-run / Claude Code | PASS (Codex dry-run) | Legacy PHP CMS snapshot (no-Git legacy snapshot) |
+| Row 4: Messy/legacy / dry-run / Claude Code | PASS (Codex dry-run) | Legacy PHP CMS snapshot (no Git) |
 | Row 5: Docs-light repo / Claude Code | NOT YET | - |
 | Row 6: AGENTS.md/CLAUDE.md / Codex | PASS | External Laravel backend repo A (Codex, 2026-05-22) |
 | Row 7: Existing docs/ai / Claude Code | PASS | External SvelteKit frontend repo A |
 | Row 8: Deployment-sensitive / Claude Code | PASS | External Laravel backend repo A |
 
 **Matrix rows satisfied: 6 / 8.** Minimum count requirement (4) met. Codex row requirement met.
-**External live-fire runs recorded: 5.** Claude Code in `External SvelteKit frontend repo A`; Claude Code in `External Laravel backend repo A`; Codex in `External Laravel backend repo A`; Claude Code -> Codex sequence in `External SvelteKit portfolio repo B`; Codex dry-run in `Legacy PHP CMS snapshot` (no-Git legacy snapshot).
+**External live-fire runs recorded: 5.** Claude Code in one external SvelteKit/frontend repo; Claude Code in one external Laravel/backend/deployment-sensitive repo; Codex in that same external Laravel repo; Claude Code -> Codex sequence in one external SvelteKit/static-portfolio/deployment-workflow repo; Codex dry-run in one no-Git legacy PHP CMS snapshot.
 
 **Minimum remaining before v1.0:** Cold-user simulation (G.2 hard blocker). All live-fire matrix requirements satisfied.
 
@@ -591,7 +592,7 @@ Based on current evidence. Not speculative.
 
 1. ~~**Fresh-clone install validation**~~ - RESOLVED 2026-05-22. Full install matrix tested from disposable tagged clone on Windows PowerShell 5.1 and Windows Git Bash/MSYS2. All 5 install scripts PASS on both tested Windows environments. Native macOS/Linux bash was not part of this validation pass; it remains an open item in the D-section install criterion and E matrix but does not reopen this blocker (the original G.1 requirement was at least one clean install from a fresh clone, not full cross-platform coverage). See E1.
 
-2. **At least one cold-user simulation** - a person or session with no knowledge of this repo's internals installs from README alone and gets a working result. A friend install, a fresh-VM test, or a highly isolated session counts. Even one successful cold pass is sufficient. The v0.3.2 Windows PS validation included a README cold-reader pass (no blocker found), but was run by the maintainer, not an independent user. A genuine independent install pass is still pending.
+2. **At least one cold-user simulation** - a person or session with no knowledge of this repo's internals installs from README alone and gets a working result. A friend install, a fresh-VM test, or a highly isolated session counts. Even one successful cold pass is sufficient. The v0.3.2 Windows PS validation included a README cold-reader pass (no blocker found), but was run by the maintainer, not an independent user. A genuine independent install pass is still pending and must target `v1.0.0-rc.4`.
 
    **Cold-user handoff (send only this setup context):**
    - Send the tester only the GitHub repo or release link for `codebase-orient-skill`.
@@ -637,7 +638,7 @@ Based on current evidence. Not speculative.
 
 ### Preferred but not hard blockers
 
-4. ~~**One clean Codex live-fire pass on an external repo**~~ - RESOLVED 2026-05-22. External Codex live-fire pass completed in External Laravel backend repo A (Laravel/backend/deployment-sensitive). Codex project-local skill (`.agents/skills/codebase-orient/SKILL.md`) was exposed and followed; existing Claude-maintained `docs/ai/` files were verified against source with no substantive corrections needed; no-date-only-churn held; no application code modified. Cross-agent cache lifecycle (Claude Code orients and corrects, Codex verifies) demonstrated. See F1 for full evidence record.
+4. ~~**One clean Codex live-fire pass on an external repo**~~ - RESOLVED 2026-05-22. External Codex live-fire pass completed in the external Laravel/backend/deployment-sensitive repo. Codex project-local skill (`.agents/skills/codebase-orient/SKILL.md`) was exposed and followed; existing Claude-maintained `docs/ai/` files were verified against source with no substantive corrections needed; no-date-only-churn held; no application code modified. Cross-agent cache lifecycle (Claude Code orients and corrects, Codex verifies) demonstrated. See F1 for full evidence record.
 
 5. ~~**Overlay install semantics decision**~~ - RESOLVED 2026-05-22. Overlay semantics are confirmed acceptable for v1.0. The extra-file survival test in the install matrix proves the behavior matches the documented contract (overlay, not exact-sync). Delete-first workaround is documented in README. No exact-sync tooling will be added before v1.0. Decision recorded.
 
@@ -679,9 +680,9 @@ Mitigation: install script test matrix includes manual copy example verification
 
 ### Historical rc drift during validation
 
-`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. `v1.0.0-rc.2` carried those corrections but had incomplete README mutation-scope and trust-posture wording discovered by a pre-validation contract audit. `v1.0.0-rc.3` corrects those statements. Risk: a tester uses an older tag and encounters guidance that has already been corrected.
+`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. `v1.0.0-rc.2` carried those corrections but had incomplete README mutation-scope and trust-posture wording discovered by a pre-validation contract audit. `v1.0.0-rc.3` corrected those statements but was then blocked by the pre-public exposure audit because tracked docs and reachable history still disclosed private validation identifiers and local paths. `v1.0.0-rc.4` is the sanitized candidate. Risk: a tester uses an older tag and encounters guidance or privacy posture that has already been corrected.
 
-Mitigation: keep all prior RC tags immutable for history but direct all external cold-user validation to `v1.0.0-rc.3`. Do not use `rc.1` or `rc.2` for validation.
+Mitigation: keep prior RC tags only if they are sanitized and clearly presented as historical pre-public candidates, and direct all external cold-user validation to `v1.0.0-rc.4`. Do not use `rc.1`, `rc.2`, or `rc.3` for that validation.
 
 ### Over-invocation due to trigger description
 
@@ -740,11 +741,11 @@ Final checklist. All items must be checkable pass before tagging v1.0.
 
 ## K. Next immediate step
 
-`v1.0.0-rc.3` is the active release candidate. The live-fire matrix requirements remain fully satisfied. G.2 (cold-user simulation) is the remaining hard blocker before `v1.0.0` can be tagged. G.2 is not the sole pre-tag step: D-section and J-section checklist items must also be verified against `rc.3` as final pre-tag checks; `rc.3` corrects the known-limitations and mutation-scope gaps in the README criteria, but the full checklist should be confirmed before tagging.
+`v1.0.0-rc.4` is the active release candidate. The live-fire matrix requirements remain fully satisfied. G.2 (cold-user simulation) is the remaining hard blocker before `v1.0.0` can be tagged. G.2 is not the sole pre-tag step: D-section and J-section checklist items must also be verified against `rc.4` as final pre-tag checks; `rc.4` preserves the known-limitations and mutation-scope corrections from `rc.3` while removing the public-exposure blockers, but the full checklist should be confirmed before tagging.
 
 **K.1 - Cold-user simulation (closes G.2 hard blocker)**
 
-A session or person with no prior knowledge of this repo's internals installs from the README at `v1.0.0-rc.3` alone and gets a working result. Even one successful independent pass is sufficient. Use `rc.3`: it is the first candidate with accurate mutation-scope wording, Claude Code specialization disclosure, and a compact limitations/trust section, all of which a cold tester will encounter during a normal install pass. Do not use `rc.1` or `rc.2` for this test.
+A session or person with no prior knowledge of this repo's internals installs from the README at `v1.0.0-rc.4` alone and gets a working result. Even one successful independent pass is sufficient. Use `rc.4`: it preserves the accurate mutation-scope wording, Claude Code specialization disclosure, and compact limitations/trust section from `rc.3`, while also removing the pre-public exposure findings that blocked publication. Do not use `rc.1`, `rc.2`, or `rc.3` for this test.
 
 Suggested approach: send a colleague only the GitHub repo link and tag. Ask them to install the skill for their tool following the README, without any additional guidance. Record the G.2 acceptance criteria from the blocker section above.
 

@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.0-rc.4 - 2026-05-23
+
+Pre-public sanitation candidate for external cold-user validation. No skill behavior or installer changes.
+
+**Documentation sanitation:**
+
+- Remove maintainer-local filesystem paths from tracked public-intended docs.
+- Generalize private validation target names and local snapshot identifiers to public-safe repo-type descriptions while preserving the validation outcomes that matter for release confidence.
+- Keep the public distribution model unchanged: documented manual installation only; no marketplace or plugin packaging work added.
+
+**Release status:**
+
+- `v1.0.0-rc.3` remains the last pre-public contract-correction candidate, but it is blocked for publication because the tracked docs and reachable tags/history still carried private validation identifiers and local path disclosures.
+- `v1.0.0-rc.4` is the new publication-safe candidate for independent cold-user validation.
+- External cold-user validation remains pending and must now run against `v1.0.0-rc.4`.
+
+---
+
 ## 1.0.0-rc.3 - 2026-05-23
 
 Pre-validation contract correction before external cold-user testing. No skill behavior or installer changes.
@@ -45,10 +63,10 @@ Freeze the cold-user validation baseline. All implementation and accumulated val
 - Add `docs/V1_RELEASE_PLAN.md`: v1.0 definition, release criteria, test matrix, live-fire validation matrix, blockers, non-goals, known risks, definition of done, and next immediate step.
 - Record completed v0.3.2 install matrix validation: Windows PowerShell (5 scripts, 5 cases each) and Git Bash (18 checks, 18/18 PASS) from disposable tagged clone.
 - Complete canonical/bootstrap embedded-template drift check: no material unintentional drift found; no edits to either SKILL.md required.
-- Backfill live-fire validation evidence from prior Claude Code passes: External SvelteKit frontend repo A (SvelteKit/frontend, normal mode) and External Laravel backend repo A (Laravel/backend/deployment-sensitive, normal mode). F-matrix Rows 1, 2, 7, 8 satisfied.
-- Record external Codex live-fire pass in External Laravel backend repo A (project-local skill, cross-agent cache lifecycle, no date-only churn, no application code modified). Close G.4. F-matrix Row 6 PASS.
-- Record External SvelteKit portfolio repo B cross-agent cache-lifecycle validation: Claude Code refreshed orientation cache (commits 8283f5c, 42c96ed); Codex found substantive README drift and pushed corrections (69cc33e8). Corroborating second external cross-agent lifecycle evidence.
-- Record blind no-Git dry-run validation in `Legacy PHP CMS snapshot` (GetSimple CE 3.3.22 legacy PHP CMS snapshot, Codex user-level skill, no prior docs/ai). Codex surfaced real PRETTYURLS doc/config contradiction, recommended dry-run only. F-matrix Row 4 PASS. F-matrix rows satisfied: 6/8.
+- Backfill live-fire validation evidence from prior Claude Code passes: one external SvelteKit/frontend repo (normal mode) and one external Laravel/backend/deployment-sensitive repo (normal mode). F-matrix Rows 1, 2, 7, 8 satisfied.
+- Record external Codex live-fire pass in the external Laravel/backend/deployment-sensitive repo (project-local skill, cross-agent cache lifecycle, no date-only churn, no application code modified). Close G.4. F-matrix Row 6 PASS.
+- Record a second cross-agent cache-lifecycle validation in an external SvelteKit/static-portfolio/deployment-workflow repo: Claude Code refreshed orientation cache; Codex found substantive README drift and pushed only documentation/orientation corrections. Corroborating second external cross-agent lifecycle evidence.
+- Record blind no-Git dry-run validation in an unseen legacy PHP CMS snapshot (Codex user-level skill, no prior docs/ai). Codex surfaced a real maintenance-doc versus config contradiction and recommended dry-run only. F-matrix Row 4 PASS. F-matrix rows satisfied: 6/8.
 - Polish README onboarding clarity before independent cold-user validation: surface the default install choice and make update guidance explicit without changing behavior.
 
 No Skill or installer behavior changes.
