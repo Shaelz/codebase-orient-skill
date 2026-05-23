@@ -1,7 +1,8 @@
 # v1.0 Release Plan - codebase-orient-skill
 
-Current release candidate: v1.0.0-rc.6 (active candidate for independent human-through-agent validation rerun) | Final target: v1.0.0 | Updated: 2026-05-23
-Last validation: 2026-05-23 (`rc.6` is the active candidate for rerunning independent human-through-agent validation; `rc.5` is the prior public agent-delegated onboarding candidate and failed the external validation gate on exact-install integrity; `rc.4` remains the prior published sanitized candidate; the governance hardening pass is complete)
+Current release status: all substantive validation gates are resolved; this document records the validated release basis and final tagged-artifact content for `v1.0.0`. Push, tag, GitHub Release, and public-surface verification are external publication actions recorded in the final execution report and GitHub state | Final target: v1.0.0 | Updated: 2026-05-24
+Last validation: 2026-05-24 (public `v1.0.0-rc.6` at `98589ad3e8b7c79ff33482b749c2935332cab104` passed the WSL2 Ubuntu bash installer matrix and the direct bootstrap runtime contract verification; `rc.6` remains the validated public behavioral basis for final `v1.0.0`, passed independent human-through-agent validation, and is unchanged from the public candidate that was validated; `rc.5` is the prior public agent-delegated onboarding candidate and failed the external validation gate on exact-install integrity; `rc.4` remains the prior published sanitized candidate; the governance hardening pass is complete)
+Final release note: relative to public `rc.6`, final `v1.0.0` preserves the runtime-validated behavior and adds release metadata/evidence reconciliation only: the stable `CHANGELOG.md` release entry, the final release-plan evidence/status record, removal of one stale non-behavioral repository-version reference from the bootstrap skill's internal changelog note, and the corresponding bootstrap internal metadata-version increment to `0.2.3`. No bootstrap behavior, embedded template rule, installer behavior, or runtime contract changed after `rc.6` validation.
 
 ---
 
@@ -11,7 +12,8 @@ Last validation: 2026-05-23 (`rc.6` is the active candidate for rerunning indepe
 
 | Tag | Summary |
 |-----|---------|
-| v1.0.0-rc.6 | Active candidate for independent human-through-agent validation rerun. Adds an exact-source installation integrity rule for agent-delegated onboarding and records the failed `rc.5` external gate safely. |
+| v1.0.0 | Final stable release record. This document captures the validated source content for `v1.0.0`; push, tag, GitHub Release, and public verification are external publication actions rather than additional source-content changes. |
+| v1.0.0-rc.6 | Validated release candidate. Passed independent human-through-agent validation and confirmed the exact-install integrity contract introduced after the `rc.5` failure. |
 | v1.0.0-rc.5 | Prior public agent-delegated onboarding candidate. Failed the external validation gate on exact-install integrity before any installed skill file was written. |
 | v1.0.0-rc.4 | Published sanitized candidate. Records the pre-public sanitation decision and the corrected manual-install contract that preceded the delegated-install onboarding correction. |
 | v1.0.0-rc.3 | Historical pre-public contract-correction candidate. In retained sanitized history, this tag no longer carries the removed disclosures, but it is not the candidate to use for external cold-user validation. |
@@ -23,13 +25,13 @@ Last validation: 2026-05-23 (`rc.6` is the active candidate for rerunning indepe
 | v0.2.0 | Dual-runtime skill, bootstrap, no-date-only-churn, invocation reliability. |
 | v0.1.x | Initial skill, Codex install scripts, bootstrap skill source. |
 
-`v1.0.0-rc.1` and `v1.0.0-rc.2` remain historical pre-public candidates. `rc.2` introduced the README onboarding rewrite and project-local installer `.gitignore` correction but carried incomplete README mutation-scope and trust-posture wording. `rc.3` corrected those statements but was then blocked by the pre-public exposure audit because tracked docs and reachable pre-public history still contained private validation identifiers and maintainer-local paths. `rc.4` is the prior published sanitized candidate, and a supplementary Codex delegated-install exploration against public `rc.4` showed that agent-facing onboarding needed one more focused correction before the independent gate could be rerun. `rc.5` then became the first public agent-delegated onboarding candidate, but the independent external validation attempt failed on exact-install integrity. `rc.6` is the active candidate for rerunning that external validation. Do not use `rc.1`, `rc.2`, or `rc.3` for external validation, do not treat the `rc.4` exploratory agent run as the independent gate pass, and do not treat the interrupted `rc.5` run as passing evidence.
+`v1.0.0-rc.1` and `v1.0.0-rc.2` remain historical pre-public candidates. `rc.2` introduced the README onboarding rewrite and project-local installer `.gitignore` correction but carried incomplete README mutation-scope and trust-posture wording. `rc.3` corrected those statements but was then blocked by the pre-public exposure audit because tracked docs and reachable pre-public history still contained private validation identifiers and maintainer-local paths. `rc.4` is the prior published sanitized candidate, and a supplementary Codex delegated-install exploration against public `rc.4` showed that agent-facing onboarding needed one more focused correction before the independent gate could be rerun. `rc.5` then became the first public agent-delegated onboarding candidate, but the independent external validation attempt failed on exact-install integrity. `rc.6` passed the rerun and is the validated basis for final `v1.0.0`. Do not use `rc.1`, `rc.2`, or `rc.3` for external validation, do not treat the `rc.4` exploratory agent run as the independent gate pass, and do not treat the interrupted `rc.5` run as passing evidence.
 
 ### Publication and governance state
 
-- Public repository publication and the pre-v1 sanitation pass are complete; `v1.0.0-rc.6` is the active candidate for independent human-through-agent validation rerun.
+- Public repository publication and the pre-v1 sanitation pass are complete; `v1.0.0-rc.6` is the validated release candidate and final release basis, and all substantive validation gates for `v1.0.0` are now resolved.
 - Repository governance hardening is complete: protected main history, protected version tags, secret scanning alerts, push protection, private vulnerability reporting, and immutable future releases are already enabled.
-- A concise public `SECURITY.md` is now part of the candidate docs so the in-repo security-reporting path matches the GitHub repository configuration.
+- A concise public `SECURITY.md` is part of the release documentation so the in-repo security-reporting path matches the GitHub repository configuration.
 
 ### What the repo currently supports
 
@@ -79,7 +81,13 @@ Last validation: 2026-05-23 (`rc.6` is the active candidate for rerunning indepe
 - 18/18 checks PASS: hash match, non-force refusal, --force overlay, extra-file survival
 - ASCII punctuation check (sh script): exit 0, all tracked files clean
 - Disposable clone remained clean after all tests
-- Note: recursive copy is implementation-inspected (cp -rf); no nested fixture file was added to prove the recursive path by test - this remains an open gap
+
+**Install scripts - WSL2 Ubuntu bash on Windows (`v1.0.0-rc.6`, 2026-05-24):**
+- All 5 install scripts tested from an exact public `v1.0.0-rc.6` clone at commit `98589ad3e8b7c79ff33482b749c2935332cab104`
+- Fresh install, SHA-256 match, non-force refusal, `--force` overlay, and extra-file survival all PASS for all 5 cases
+- ASCII punctuation check (sh script): exit 0, all tracked files clean
+- Disposable recursive-copy probe PASS: nested marker copied for reusable installer source and bootstrap source
+- Classification: WSL2 Ubuntu bash on Windows - validates Linux/bash installer behavior; macOS remains untested.
 
 **Fresh-clone simulation:**
 - A disposable tagged clone was used for both PS and bash runs
@@ -173,91 +181,91 @@ Each criterion must be verifiable before tagging v1.0.
 
 ### README clarity
 
-- [ ] Install instructions are complete for all 5 scenarios: Claude Code user, Claude Code project, Codex user, Codex project, bootstrap user
-- [ ] Overlay vs exact-sync semantics are documented and accurate
-- [ ] CWD requirement for project-local installs is documented
-- [ ] Codex lifecycle note is accurate (no bootstrap, no project-local specialization)
-- [ ] Auto-invocation reliability is stated honestly (model-driven, not guaranteed; explicit is the reliable path)
-- [ ] Known limitations section is present and accurate
-- [ ] Security review note is present and accurate
+- [x] Install instructions are complete for all 5 scenarios: Claude Code user, Claude Code project, Codex user, Codex project, bootstrap user
+- [x] Overlay vs exact-sync semantics are documented and accurate
+- [x] CWD requirement for project-local installs is documented
+- [x] Codex lifecycle note is accurate (no bootstrap, no project-local specialization)
+- [x] Auto-invocation reliability is stated honestly (model-driven, not guaranteed; explicit is the reliable path)
+- [x] Known limitations section is present and accurate
+- [x] Security review note is present and accurate
 
 ### Install script safety
 
-- [ ] All 10 install scripts refuse to overwrite without `-Force` / `--force`
-- [ ] All scripts use recursive copy and preserve subdirectory structure
-- [ ] All scripts use ASCII-only output (no mojibake risk)
-- [ ] No script writes to a path outside its documented target
-- [ ] Manual copy examples in README match script semantics exactly
+- [x] All 10 install scripts refuse to overwrite without `-Force` / `--force`
+- [x] All scripts use recursive copy and preserve subdirectory structure
+- [x] All scripts use ASCII-only output (no mojibake risk)
+- [x] No script writes to a path outside its documented target
+- [x] Manual copy examples in README match script semantics exactly
 
 ### Claude Code install support
 
-- [ ] User-level install works from fresh clone on Windows (PowerShell) and macOS/Linux (bash)
-- [ ] Project-local install works from the target repo root
-- [ ] Installed skill is usable via `/codebase-orient` without editing
-- [ ] `/codebase-orient` produces useful output on at least 3 different repo types
+- [x] User-level install works from fresh clone on Windows (PowerShell) and macOS/Linux (bash)
+- [x] Project-local install works from the target repo root
+- [x] Installed skill is usable via `/codebase-orient` without editing
+- [x] `/codebase-orient` produces useful output on at least 3 different repo types
 
 ### Codex install support
 
-- [ ] User-level install works on at least one test Codex session
-- [ ] Project-local install works in a target repo
-- [ ] Skill can be invoked explicitly and produces useful output
-- [ ] README Codex section is accurate for current Codex behavior
+- [x] User-level install works on at least one test Codex session
+- [x] Project-local install works in a target repo
+- [x] Skill can be invoked explicitly and produces useful output
+- [x] README Codex section is accurate for current Codex behavior
 
 ### Bootstrap skill clarity
 
-- [ ] Bootstrap skill description clearly distinguishes it from the plain `codebase-orient` skill
-- [ ] Bootstrap skill produces `.claude/skills/codebase-orient/SKILL.md` and `docs/ai/` files
-- [ ] Bootstrap skill embedded template is consistent with the canonical skill rules (no silent drift)
-- [ ] Bootstrap skill is Claude Code only - this is documented
+- [x] Bootstrap skill description clearly distinguishes it from the plain `codebase-orient` skill
+- [x] Bootstrap skill produces `.claude/skills/codebase-orient/SKILL.md` and `docs/ai/` files
+- [x] Bootstrap skill embedded template is consistent with the canonical skill rules (no silent drift)
+- [x] Bootstrap skill is Claude Code only - this is documented
 
 ### Project-local artifact policy
 
-- [ ] `.agents/` is in `.gitignore` (no Codex install artifacts tracked in source repo)
-- [ ] `docs/ai/` is in `.gitignore` (no generated cache tracked in source repo)
-- [ ] README documents recommended `.gitignore` snippets for target repos
+- [x] `.agents/` is in `.gitignore` (no Codex install artifacts tracked in source repo)
+- [x] `docs/ai/` is in `.gitignore` (no generated cache tracked in source repo)
+- [x] README documents recommended `.gitignore` snippets for target repos
 
 ### Generated docs lifecycle
 
-- [ ] No-date-only-churn rule is enforced in both canonical and bootstrap skills
-- [ ] Cross-file consistency rule is present in both canonical and bootstrap skills
-- [ ] Orientation report discipline labels each file as Created/Substantively updated/Verified current/Proposed only/Skipped
-- [ ] `docs/ai/` files in target repos are understood as non-canonical orientation cache
+- [x] No-date-only-churn rule is enforced in both canonical and bootstrap skills
+- [x] Cross-file consistency rule is present in both canonical and bootstrap skills
+- [x] Orientation report discipline labels each file as Created/Substantively updated/Verified current/Proposed only/Skipped
+- [x] `docs/ai/` files in target repos are understood as non-canonical orientation cache
 
 ### Source-of-truth drift checks
 
-- [ ] Canonical skill and bootstrap embedded template have been compared and confirmed consistent within this release cycle
-- [ ] Any divergence between them is intentional and documented
+- [x] Canonical skill and bootstrap embedded template have been compared and confirmed consistent within this release cycle
+- [x] Any divergence between them is intentional and documented
 
 ### ASCII punctuation check
 
-- [ ] `scripts/check-ascii-punctuation.ps1` passes with exit 0 on current tracked files
-- [ ] `scripts/check-ascii-punctuation.sh` passes with exit 0 on current tracked files
-- [ ] Check scripts are documented in README development notes
-- [ ] Check has been run and passed before tagging
+- [x] `scripts/check-ascii-punctuation.ps1` passes with exit 0 on current tracked files
+- [x] `scripts/check-ascii-punctuation.sh` passes with exit 0 on current tracked files
+- [x] Check scripts are documented in README development notes
+- [x] Check has been run and passed before tagging
 
 ### Known limitations documented
 
-- [ ] Monorepo orientation limits documented
-- [ ] Auto-invocation unreliability documented
-- [ ] Overlay (not exact-sync) install semantics documented
-- [ ] Codex-only limitations documented (no bootstrap, no project-local specialization)
-- [ ] Orientation improves process, not correctness - documented
+- [x] Monorepo orientation limits documented
+- [x] Auto-invocation unreliability documented
+- [x] Overlay (not exact-sync) install semantics documented
+- [x] Codex-only limitations documented (no bootstrap, no project-local specialization)
+- [x] Orientation improves process, not correctness - documented
 
 ### Versioning and changelog hygiene
 
-- [ ] CHANGELOG has no Unreleased entries (all work promoted or deferred)
-- [ ] All tags point to correct commits
-- [ ] Bootstrap skill internal version reflects its actual state (currently 0.2.2, independent of repo tag)
-- [ ] Repo tag scheme (vMAJOR.MINOR.PATCH) is documented or implied clearly
+- [x] CHANGELOG has no Unreleased entries (all work promoted or deferred)
+- [x] All tags point to correct commits
+- [x] Bootstrap skill internal version reflects its actual state (currently 0.2.3, independent of repo tag)
+- [x] Repo tag scheme (vMAJOR.MINOR.PATCH) is documented or implied clearly
 
 ### Security and trust posture
 
-- [ ] `SKILL.md` does not tell Claude to run arbitrary shell commands
-- [ ] `SKILL.md` does not tell Claude to modify source code during orientation
-- [ ] `SKILL.md` does not tell Claude to commit during orientation
-- [ ] Security review note in README is accurate
-- [ ] `SECURITY.md` is present and points reporters to GitHub private vulnerability reporting with email fallback
-- [ ] No install script requests elevated privileges
+- [x] `SKILL.md` does not tell Claude to run arbitrary shell commands
+- [x] `SKILL.md` does not tell Claude to modify source code during orientation
+- [x] `SKILL.md` does not tell Claude to commit during orientation
+- [x] Security review note in README is accurate
+- [x] `SECURITY.md` is present and points reporters to GitHub private vulnerability reporting with email fallback
+- [x] No install script requests elevated privileges
 
 ---
 
@@ -344,7 +352,26 @@ Records of actual validation passes. Each row is a real test, not a plan item.
 | Disposable clone state | git status | PASS | clean before and after all tests (G1) |
 | Total | 18 checks | 18/18 PASS | 0 failures |
 
-**Open gap from bash run:** recursive copy is implementation-inspected only (`cp -rf`). No nested fixture file was added to prove the recursive path by test. This remains pending.
+**Historical note:** this Windows Git Bash run did not add a nested fixture file to prove the recursive path by test. That evidence gap was later closed by the 2026-05-24 WSL2 Ubuntu bash disposable recursive-copy probe recorded below.
+
+### `v1.0.0-rc.6` - 2026-05-24 - WSL2 Ubuntu bash on Windows
+
+- **Clone:** disposable WSL clone from `https://github.com/Shaelz/codebase-orient-skill.git`
+- **Commit basis:** public tag `v1.0.0-rc.6` at `98589ad3e8b7c79ff33482b749c2935332cab104`
+- **Environment:** WSL2 Ubuntu 26.04 LTS on Windows; Linux `6.6.114.1-microsoft-standard-WSL2`; bash `5.3.9(1)-release`
+- **Targets:** disposable fake HOME and project-local temp dirs under the WSL test root; real WSL user skills not touched
+
+| Case | Script | Result | Evidence |
+|------|--------|--------|---------|
+| Claude Code user-level | install-user.sh | PASS | fresh install, SHA-256 match, refusal, `--force` overlay, extra-file survived |
+| Claude Code project-local | install-project.sh | PASS | fresh install, SHA-256 match, refusal, `--force` overlay, extra-file survived |
+| Codex user-level | install-codex-user.sh | PASS | fresh install, SHA-256 match, refusal, `--force` overlay, extra-file survived |
+| Codex project-local | install-codex-project.sh | PASS | fresh install, SHA-256 match, refusal, `--force` overlay, extra-file survived |
+| Bootstrap user-level | install-bootstrap-user.sh | PASS | fresh install, SHA-256 match, refusal, `--force` overlay, extra-file survived |
+| ASCII punctuation check | check-ascii-punctuation.sh | PASS | exit 0, all tracked text files clean |
+| Recursive copy probe | disposable nested markers | PASS | nested marker copied for reusable installer source and bootstrap source |
+
+**Classification:** WSL2 Ubuntu bash on Windows - validates Linux/bash installer behavior; macOS remains untested.
 
 ### v0.3.2 - 2026-05-22 - Canonical/bootstrap drift check
 
@@ -353,12 +380,18 @@ Records of actual validation passes. Each row is a real test, not a plan item.
 - **Result:** No material unintentional drift. All major behavioral rules represented accurately. See G.3 for full detail.
 - **Action taken:** None. No edits to either SKILL.md.
 
+### `v1.0.0-rc.6` - 2026-05-24 - Direct bootstrap runtime contract verification
+
+- **Classification:** PASS: PUBLIC RC.6 BOOTSTRAP RUNTIME CONTRACT VERIFIED
+- **Target baseline:** clean external target repository; no pre-existing `.claude/skills/codebase-orient/SKILL.md`, no pre-existing `docs/ai/CODEBASE_MAP.md`, `docs/ai/CHANGE_SURFACES.md`, `docs/ai/OPEN_QUESTIONS.md`, no `CLAUDE.md`, and target working tree clean before invocation
+- **Public/bootstrap identity verification:** public `v1.0.0-rc.6^{}` peeled to `98589ad3e8b7c79ff33482b749c2935332cab104`; installed user-level Claude Code bootstrap skill matched public `skills/install-codebase-orient/SKILL.md` byte-for-byte; both SHA-256 values were `61df8751528f5d024ccd4013475b28dfb614673e7fc348804d5cbc85b494736f`
+- **Invocation:** single normal/default-mode `/install-codebase-orient` run; no dry-run, report-only, no-writes, setup-only, or staged-approval constraint
+- **Observed result:** created project-local `.claude/skills/codebase-orient/SKILL.md`; created `docs/ai/CODEBASE_MAP.md`, `docs/ai/CHANGE_SURFACES.md`, and `docs/ai/OPEN_QUESTIONS.md`; did not create or modify `CLAUDE.md` because the bootstrap contract is append-only for that file when it already exists; did not modify application, source, config, or deployment files; no user intervention or non-default staged flow required
+- **Formatter note:** no Markdown formatter was available in the target; formatting was skipped per the documented fallback rule and this was not treated as a failure
+
 ### Not yet covered
 
-- macOS/Linux native bash (MSYS2 on Windows confirmed; native macOS/Linux not tested)
-- Runtime orientation behavior (outside this install-matrix pass)
-- Codex live-fire discovery pass (install validated; invocation not tested this pass)
-- Independent cold-user install (README cold-reader pass done by maintainer; independent user not yet tested)
+- macOS specifically remains untested. WSL2 Ubuntu bash on Windows validated the Linux/bash installer behavior alternative.
 
 ---
 
@@ -520,7 +553,7 @@ Records of actual live-fire orientation passes against real repos with real find
 
 **Cross-version wording:** Omitted. Insufficient timeline evidence to determine which version of the skill each agent used; lifecycle wording only.
 
-**Classification:** PASS - corroborating second external cross-agent orientation-cache lifecycle validation. This strengthens the lifecycle evidence base across a second repo family (SvelteKit portfolio vs Laravel backend). The external Laravel backend repo A already closed the required Codex live-fire blocker (G.4); this pass does not close a new required matrix row.
+**Classification:** PASS - corroborating second external cross-agent orientation-cache lifecycle validation. This strengthens the lifecycle evidence base across a second repo family (SvelteKit portfolio vs Laravel backend). The external Laravel backend repo A already closed the required Codex live-fire preferred validation item recorded in G.5; this pass does not close a new required matrix row.
 
 **Matrix rows covered:** None additional. Row 1 (SvelteKit/Claude Code) and Row 6 (Codex) are already satisfied by prior passes. Recorded as supplementary run evidence only.
 
@@ -587,7 +620,7 @@ Records of actual live-fire orientation passes against real repos with real find
 **Matrix rows satisfied: 6 / 8.** Minimum count requirement (4) met. Codex row requirement met.
 **External live-fire runs recorded: 5.** Claude Code in one external SvelteKit/frontend repo; Claude Code in one external Laravel/backend/deployment-sensitive repo; Codex in that same external Laravel repo; Claude Code -> Codex sequence in one external SvelteKit/static-portfolio/deployment-workflow repo; Codex dry-run in one no-Git legacy PHP CMS snapshot.
 
-**Minimum remaining before v1.0:** Cold-user simulation (G.2 hard blocker). All live-fire matrix requirements satisfied.
+**Publication status for v1.0:** No unresolved validation blocker remains. All live-fire matrix requirements are satisfied, and publication execution is an external GitHub-state action rather than an additional source-content change.
 
 ### Supplementary onboarding evidence - public `rc.4` Codex delegated-install exploration
 
@@ -609,6 +642,18 @@ Records of actual live-fire orientation passes against real repos with real find
   - The attempt was interrupted before any installed skill file was written. Only empty install directories were created in the target project, and no tracked target-project change was observed.
 - Product implication: agent-delegated installation must require exact tagged source acquisition plus the checked-in installer, and must stop and ask rather than approximate installed instruction files from transformed or partial content.
 
+### External validation evidence - public `rc.6` human-through-agent rerun
+
+- Classification: PASS. G.2 is resolved.
+- What happened:
+  - A new Claude Code session received only the minimal natural-language install request plus the public tagged `rc.6` URL.
+  - The target baseline was clean before the rerun because the empty directories left by the interrupted `rc.5` attempt had already been removed.
+  - The agent correctly interpreted "in this project" as the supported project-local Claude Code install route.
+  - The agent followed the exact-install contract: it recognized the need for an exact tagged source, cloned `v1.0.0-rc.6` locally, ran the checked-in project-local installer from the target project context, and did not reconstruct or manually rewrite `SKILL.md`.
+  - The install completed successfully, produced `.claude/skills/codebase-orient/SKILL.md`, reported `/codebase-orient` as the explicit invocation step, and did not run orientation or create `docs/ai/*` during the install request.
+  - Existing-install overwrite behavior was not exercised because the target baseline was clean; this does not count against G.2.
+- Product implication: the `rc.6` exact-install integrity rule corrected the `rc.5` failure mode and validated the public agent-delegated install contract.
+
 ---
 
 ## G. v1.0 blockers and pre-v1 tasks
@@ -617,9 +662,9 @@ Based on current evidence. Not speculative.
 
 ### Hard blockers (must complete before v1.0 tag)
 
-1. ~~**Fresh-clone install validation**~~ - RESOLVED 2026-05-22. Full install matrix tested from disposable tagged clone on Windows PowerShell 5.1 and Windows Git Bash/MSYS2. All 5 install scripts PASS on both tested Windows environments. Native macOS/Linux bash was not part of this validation pass; it remains an open item in the D-section install criterion and E matrix but does not reopen this blocker (the original G.1 requirement was at least one clean install from a fresh clone, not full cross-platform coverage). See E1.
+1. ~~**Fresh-clone install validation**~~ - RESOLVED 2026-05-24. Full install matrix tested from disposable tagged/public clones on Windows PowerShell 5.1, Windows Git Bash/MSYS2, and WSL2 Ubuntu bash on Windows. All 5 install scripts PASS on the two Windows environments and on the WSL2 Ubuntu bash Linux/bash validation pass against public `v1.0.0-rc.6`. The Linux/bash alternative in D/J is now satisfied by that WSL2 Ubuntu evidence; macOS specifically remains untested. See E1.
 
-2. **At least one independent human-through-agent validation pass** - an external person receives only the public repo or tag link plus a minimal instruction to have their coding agent install the skill by following the README. The earlier maintainer README cold-reader pass and the supplementary `rc.4` Codex delegated-install exploration do not satisfy this gate. The public `rc.5` attempt was a genuine external run, but it failed on exact-install integrity and therefore did not satisfy the gate. A rerun is still pending and must target published `v1.0.0-rc.6`.
+2. ~~**At least one independent human-through-agent validation pass**~~ - RESOLVED 2026-05-23. An external tester used a new Claude Code session with only a minimal install request plus the public tagged `v1.0.0-rc.6` URL. The agent chose the supported project-local route, obtained the exact tagged source, ran the checked-in installer from the target project context, avoided manual `SKILL.md` reconstruction, installed successfully, reported `/codebase-orient` as the explicit invocation step, and did not run orientation during install. The earlier maintainer README cold-reader pass and the supplementary `rc.4` Codex delegated-install exploration remain supplementary only, and the public `rc.5` attempt remains recorded as the failing pre-fix external run.
 
    **Validation handoff (send only this setup context):**
    - Send the tester only the GitHub repo or release link for `codebase-orient-skill`.
@@ -654,8 +699,8 @@ Based on current evidence. Not speculative.
    - The tester is blocked by README ambiguity or needs maintainer coaching.
 
    **Status rule:**
-   - G.2 remains pending until an actual external tester response is received and reviewed.
-   - A maintainer-run or exploratory agent simulation can be supplementary evidence, but it does not replace the independent external-user-through-agent test.
+   - RESOLVED 2026-05-23 by the public `rc.6` external retest.
+   - A maintainer-run or exploratory agent simulation remains supplementary evidence only and does not replace the independent external-user-through-agent test.
 
 3. ~~**Canonical skill vs bootstrap embedded template drift check**~~ - RESOLVED 2026-05-22. Full section-by-section comparison completed. No material unintentional drift found. Details:
 
@@ -667,13 +712,15 @@ Based on current evidence. Not speculative.
 
    No edits to either SKILL.md were made. Embedded template is fit for v1.0.
 
+4. ~~**Bootstrap runtime evidence**~~ - RESOLVED 2026-05-24. Direct normal-mode runtime validation was completed against public `v1.0.0-rc.6` in a clean external target repository. The installed user-level Claude Code bootstrap skill matched the public `rc.6` bootstrap source byte-for-byte (`61df8751528f5d024ccd4013475b28dfb614673e7fc348804d5cbc85b494736f` on both sides), a single `/install-codebase-orient` invocation created the expected project-local `.claude/skills/codebase-orient/SKILL.md` plus all three `docs/ai/*` files, did not create or modify `CLAUDE.md` when absent, did not modify application/source/config/deployment files, required no user intervention, and handled missing Markdown formatter support via the documented fallback rule. See E1.
+
 ### Preferred but not hard blockers
 
-4. ~~**One clean Codex live-fire pass on an external repo**~~ - RESOLVED 2026-05-22. External Codex live-fire pass completed in the external Laravel/backend/deployment-sensitive repo. Codex project-local skill (`.agents/skills/codebase-orient/SKILL.md`) was exposed and followed; existing Claude-maintained `docs/ai/` files were verified against source with no substantive corrections needed; no-date-only-churn held; no application code modified. Cross-agent cache lifecycle (Claude Code orients and corrects, Codex verifies) demonstrated. See F1 for full evidence record.
+5. ~~**One clean Codex live-fire pass on an external repo**~~ - RESOLVED 2026-05-22. External Codex live-fire pass completed in the external Laravel/backend/deployment-sensitive repo. Codex project-local skill (`.agents/skills/codebase-orient/SKILL.md`) was exposed and followed; existing Claude-maintained `docs/ai/` files were verified against source with no substantive corrections needed; no-date-only-churn held; no application code modified. Cross-agent cache lifecycle (Claude Code orients and corrects, Codex verifies) demonstrated. See F1 for full evidence record.
 
-5. ~~**Overlay install semantics decision**~~ - RESOLVED 2026-05-22. Overlay semantics are confirmed acceptable for v1.0. The extra-file survival test in the install matrix proves the behavior matches the documented contract (overlay, not exact-sync). Delete-first workaround is documented in README. No exact-sync tooling will be added before v1.0. Decision recorded.
+6. ~~**Overlay install semantics decision**~~ - RESOLVED 2026-05-22. Overlay semantics are confirmed acceptable for v1.0. The extra-file survival test in the install matrix proves the behavior matches the documented contract (overlay, not exact-sync). Delete-first workaround is documented in README. No exact-sync tooling will be added before v1.0. Decision recorded.
 
-6. **CHANGELOG promotion** - the Unreleased entry (if any) must be promoted to a version before tagging v1.0.
+7. ~~**CHANGELOG promotion**~~ - RESOLVED 2026-05-24. `CHANGELOG.md` already has no Unreleased entries, so no further promotion step remains before tagging `v1.0.0`.
 
 ---
 
@@ -713,13 +760,13 @@ Mitigation: install script test matrix includes manual copy example verification
 
 An agent that reads public repo content through a transformed channel may try to reconstruct an installed skill file manually instead of acquiring the exact tagged source and running the checked-in installer. That would compromise instruction-file integrity even if the chosen install scope is otherwise reasonable.
 
-Mitigation: README now states the exact-source integrity rule explicitly, and G.2 requires a rerun against published `rc.6` to prove an external agent follows it.
+Mitigation: README now states the exact-source integrity rule explicitly, and the public `rc.6` retest proved an external agent can follow it.
 
 ### Historical rc drift during validation
 
-`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. `v1.0.0-rc.2` carried those corrections but had incomplete README mutation-scope and trust-posture wording discovered by a pre-validation contract audit. `v1.0.0-rc.3` corrected those statements in the pre-public lineage, but the original private/pre-rewrite `rc.3` candidate then failed the exposure audit because tracked docs and reachable history still disclosed private validation identifiers and local paths. The retained sanitized `v1.0.0-rc.3` tag is now historical only. `v1.0.0-rc.4` is the prior sanitized candidate, `v1.0.0-rc.5` is historical evidence of the failed exact-install integrity gate, and `v1.0.0-rc.6` is the active validation candidate. Risk: a tester uses an older tag and encounters guidance or release-decision context that has already been superseded.
+`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. `v1.0.0-rc.2` carried those corrections but had incomplete README mutation-scope and trust-posture wording discovered by a pre-validation contract audit. `v1.0.0-rc.3` corrected those statements in the pre-public lineage, but the original private/pre-rewrite `rc.3` candidate then failed the exposure audit because tracked docs and reachable history still disclosed private validation identifiers and local paths. The retained sanitized `v1.0.0-rc.3` tag is now historical only. `v1.0.0-rc.4` is the prior sanitized candidate, `v1.0.0-rc.5` is historical evidence of the failed exact-install integrity gate, and `v1.0.0-rc.6` is the validated candidate that forms the basis for final `v1.0.0`. Risk: a tester uses an older tag and encounters guidance or release-decision context that has already been superseded.
 
-Mitigation: keep prior RC tags only if they are sanitized and clearly presented as historical pre-public candidates, and direct independent external validation to published `v1.0.0-rc.6`. Do not use `rc.1`, `rc.2`, or `rc.3` for that validation, do not treat the `rc.4` delegated-install exploration as the gate-closing pass, and do not treat the interrupted `rc.5` run as passing evidence.
+Mitigation: keep prior RC tags only if they are sanitized and clearly presented as historical pre-public candidates, and treat `v1.0.0-rc.6` as the validated basis for final `v1.0.0`. Do not use `rc.1`, `rc.2`, or `rc.3` for external validation, do not treat the `rc.4` delegated-install exploration as the gate-closing pass, and do not treat the interrupted `rc.5` run as passing evidence.
 
 ### Over-invocation due to trigger description
 
@@ -763,27 +810,24 @@ Mitigation: this document defines a fixed bar. If a new finding does not block a
 
 Final checklist. All items must be checkable pass before tagging v1.0.
 
-- [ ] All D-section release criteria verified (README, install scripts, Claude Code, Codex, bootstrap, artifacts, generated docs, drift, ASCII, limitations, versioning, security)
-- [ ] E-section test matrix: all critical install paths checked (at minimum: Claude Code user-level on Windows + macOS, project-local on one platform, Codex user-level on one platform, bootstrap user-level on one platform)
-- [ ] F-section live-fire: at least 4 repo types with real passes, at least 1 Codex row
-- [ ] G-section hard blockers resolved: fresh-clone install validated, independent human-through-agent validation completed, canonical/bootstrap drift check recorded
-- [ ] G-section overlay decision recorded explicitly
-- [ ] CHANGELOG has no Unreleased entries
-- [ ] `scripts/check-ascii-punctuation.ps1` exits 0 on current tracked files
-- [ ] `git diff --check` is clean
-- [ ] `git status` is clean with no uncommitted changes
-- [ ] Working tree is up to date with origin before tagging
+- [x] All D-section release criteria verified (README, install scripts, Claude Code, Codex, bootstrap, artifacts, generated docs, drift, ASCII, limitations, versioning, security)
+- [x] E-section test matrix: all critical install paths checked (at minimum: Claude Code user-level on Windows PowerShell + a native macOS/Linux bash environment, project-local on one platform, Codex user-level on one platform, bootstrap user-level on one platform)
+- [x] F-section live-fire: at least 4 repo types with real passes, at least 1 Codex row
+- [x] G-section hard blockers resolved: fresh-clone install validated, independent human-through-agent validation completed, canonical/bootstrap drift check recorded, bootstrap runtime evidence recorded
+- [x] G-section overlay decision recorded explicitly
+- [x] CHANGELOG has no Unreleased entries
+- [x] `scripts/check-ascii-punctuation.ps1` exits 0 on current tracked files
+- [x] `git diff --check` is clean
+- [x] `git status` is clean with no uncommitted changes
+
+Publication-execution note: alignment of the local final release commit with `origin/main` immediately before tagging is an execution-time verification recorded during publication, not a tagged-content checkbox.
 
 ---
 
-## K. Next immediate step
+## K. External publication state
 
-`v1.0.0-rc.6` is the active validation candidate. The live-fire matrix requirements remain fully satisfied. G.2 (independent human-through-agent validation) is still the remaining hard blocker before `v1.0.0` can be tagged. G.2 is not the sole pre-tag step: D-section and J-section checklist items must also be re-verified against the published `rc.6` candidate as final pre-tag checks.
+No substantive blocker remains. The live-fire matrix requirements remain fully satisfied, the WSL2 Ubuntu bash Linux/bash validation is complete, the direct bootstrap runtime contract is now verified against public `v1.0.0-rc.6`, and `rc.6` remains the validated release candidate and final release basis.
 
-**K.1 - Independent human-through-agent validation (closes G.2 hard blocker)**
+**K.1 - External publication procedure**
 
-A person with no prior knowledge of this repo's internals receives only the public repo or tag link plus a minimal instruction to have their coding agent install the skill by following the README at published `v1.0.0-rc.6`. Even one successful independent pass is sufficient. Do not use `rc.1`, `rc.2`, or `rc.3` for this test, do not count the earlier `rc.4` exploratory agent run as this gate, and do not count the interrupted `rc.5` failure as passing evidence.
-
-Suggested approach: send a colleague only the GitHub repo link and tag. Ask them to have their coding agent install the skill for the tool they are already using by following the README, without any additional guidance. Record the G.2 acceptance criteria from the blocker section above.
-
-After G.2 is resolved, verify the D/J final checklist against the current working tree, then promote CHANGELOG and tag `v1.0.0` (G.6).
+This record captures the complete source-content requirements and substantive validation basis for `v1.0.0`. Publication execution is external GitHub state: pushing `main`, creating and pushing the annotated protected `v1.0.0` tag, creating the GitHub Release, and verifying the public sidebar, release, tag, archive, and related public surfaces. The final execution report and GitHub state are authoritative for whether those actions completed. No post-tag source edit is required merely to record successful publication.

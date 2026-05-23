@@ -1,5 +1,19 @@
 # Changelog
 
+## 1.0.0 - 2026-05-24
+
+First stable public release of `codebase-orient`.
+
+- Publish the reusable repository-orientation skill for Claude Code and Codex with guarded user-level and project-local install paths.
+- Keep Claude Code bootstrap support available as a Claude Code only path.
+- Preserve the agent-delegated installation contract: exact tagged source acquisition, checked-in installer execution, no reconstructed `SKILL.md`, and stop-and-ask fallback when exact installation is not possible.
+- Keep explicit invocation guidance and the documented authority boundaries for generated `docs/ai/*` orientation artifacts.
+- Include the public `SECURITY.md` reporting policy and the completed public-release/governance preparation record.
+- Record that independent human-through-agent validation passed against public `v1.0.0-rc.6`.
+- No marketplace or plugin packaging is part of this release.
+
+---
+
 ## 1.0.0-rc.6 - 2026-05-23
 
 Candidate for rerunning independent human-through-agent validation. No orientation skill behavior change. No installer target, copy, or overwrite semantics change.

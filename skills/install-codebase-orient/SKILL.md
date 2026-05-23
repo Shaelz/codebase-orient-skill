@@ -1,6 +1,6 @@
 ---
 name: install-codebase-orient
-version: "0.2.2"
+version: "0.2.3"
 description: "Install or refresh a project-local codebase orientation workflow in the current repo. Use when the user asks to set up codebase orientation, create a codebase map, scan the repo properly, make Claude understand this project, prepare this repo for future Claude sessions, bootstrap Claude for this repo, or orient Claude to this codebase."
 ---
 
@@ -455,7 +455,12 @@ If the skill is running in dry-run/report-only mode, report the proposed local s
 
 ## Changelog
 
-> **Version scheme note:** The version number in this file's frontmatter tracks the bootstrap skill's own content changes. It is independent from the repo release tag (repo is currently `v0.3.0`). The repo `CHANGELOG.md` records which repo release corresponds to which bootstrap skill version.
+> **Version scheme note:** The version number in this file's frontmatter tracks the bootstrap skill's own content changes. It is independent from the repository release tag. The repository `CHANGELOG.md` records release history and relevant bootstrap-skill changes.
+
+### 0.2.3 - 2026-05-24
+
+- Replaced the stale concrete repository-version reference in the version-scheme note with durable repository changelog wording.
+- No bootstrap behavior, embedded template rule, installer behavior, or runtime/output contract changed.
 
 ### 0.2.2 - 2026-05-21
 
