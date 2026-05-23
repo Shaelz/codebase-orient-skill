@@ -5,7 +5,7 @@
 Instead of asking the model to vaguely "understand the project", this skill tells it what to read first, what uncertainty to label, what hidden risks to surface, and what orientation artifacts to create or refresh. It is for developers who want better repo context before refactors, multi-file changes, handoffs, or work in an unfamiliar area.
 
 > [!NOTE]
-> Installing a skill only copies the skill files into your tool's skill directory. Running `codebase-orient` does not edit application code, refactor, or commit. It creates or refreshes `docs/ai/CODEBASE_MAP.md`, `docs/ai/CHANGE_SURFACES.md`, and `docs/ai/OPEN_QUESTIONS.md` in the target repo.
+> Installing a skill copies skill files into your tool's skill directory only. Running `codebase-orient` instructs the agent not to edit application code, refactor, or commit. In normal mode it may create or refresh `docs/ai/CODEBASE_MAP.md`, `docs/ai/CHANGE_SURFACES.md`, and `docs/ai/OPEN_QUESTIONS.md`. In dry-run mode it reports those proposed changes without writing them. On Claude Code project-local installs, an orientation pass may also add verified project-specific discovery paths to `.claude/skills/codebase-orient/SKILL.md`.
 
 ## Quickstart
 
@@ -223,6 +223,10 @@ Repository evidence does **not** support these two Claude Code bootstrap behavio
 - the `install-codebase-orient` bootstrap skill;
 - post-orientation project-local specialization of `.claude/skills/codebase-orient/SKILL.md`.
 
+### Claude Code project-local specialization
+
+When a Claude Code project-local skill exists at `.claude/skills/codebase-orient/SKILL.md`, an orientation pass may extend it with verified project-specific discovery paths found during that pass. Only paths confirmed to exist and relevant to the project are added; canonical skill rules are not overwritten. Project-specific additions are kept visually separated at the end of the file. This is the only additional write that orientation may perform beyond the `docs/ai/` files described above. In dry-run mode, proposed additions are reported but not written. Codex project-local installs do not use this behavior.
+
 ### Project-local `.gitignore` snippets
 
 If you install a project-local skill and want to track only the shared skill file, these are the patterns printed or documented by the repo.
@@ -244,6 +248,13 @@ If you install a project-local skill and want to track only the shared skill fil
 !.agents/skills/codebase-orient/
 !.agents/skills/codebase-orient/SKILL.md
 ```
+
+## Limitations and trust
+
+- **Explicit invocation is the reliable path.** Auto-invocation is model-driven and not guaranteed in either Claude Code or Codex. If you need the orientation pass, invoke it explicitly.
+- **Orientation improves process, not correctness.** The skill instructs the agent to label uncertainty and verify claims against source, but verify any claim that matters before acting on it.
+- **Large monorepos may need scoped orientation.** Running against an entire monorepo can produce shallow results. Scope the invocation to the relevant package or area when needed.
+- **Skills are agent instructions.** Review `SKILL.md` before installing third-party skills. This skill is designed to be conservative: no source edits, no refactors, no commits during orientation.
 
 ## Reference and contributor notes
 

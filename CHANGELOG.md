@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.0-rc.3 - 2026-05-23
+
+Pre-validation contract correction before external cold-user testing. No skill behavior or installer changes.
+
+**README corrections:**
+
+- Narrow the early safety NOTE: distinguish normal-mode writes (`docs/ai/*` creation or refresh) from dry-run mode (proposes changes without writing); disclose that Claude Code project-local installs may also update `.claude/skills/codebase-orient/SKILL.md` with verified project-specific discovery paths.
+- Add `### Claude Code project-local specialization` under `## Important notes`: concisely states what specialization writes, that canonical rules are not overwritten, that dry-run mode suppresses the write, and that Codex project-local installs do not use this behavior.
+- Restore a compact `## Limitations and trust` section: explicit invocation is the reliable path; orientation improves process not correctness; large monorepos may need scoped orientation; skills are agent instructions and `SKILL.md` should be reviewed before installing.
+
+**Release status:**
+
+- `v1.0.0-rc.1` and `v1.0.0-rc.2` remain intact as immutable historical candidates.
+- `v1.0.0-rc.2` should no longer be used for external cold-user validation; the mutation-scope and trust-posture wording corrected here was not present in that candidate.
+- External cold-user validation is pending and must now run against `v1.0.0-rc.3`.
+
+---
+
 ## 1.0.0-rc.2 - 2026-05-23
 
 Promote the post-`rc.1` user-facing corrections into the active release candidate for external cold-user validation.
