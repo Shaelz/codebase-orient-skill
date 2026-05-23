@@ -1,5 +1,23 @@
 # Changelog
 
+## 1.0.0-rc.2 - 2026-05-23
+
+Promote the post-`rc.1` user-facing corrections into the active release candidate for external cold-user validation.
+
+**User-facing corrections:**
+
+- Rewrite `README.md` around a faster newcomer journey: what the skill is, which install path applies, the exact command to run, the first prompt to give the agent, and the expected repo changes.
+- Clarify local acquisition and shell-script invocation: README now supports clone or download flows and uses `bash ./scripts/...` or `bash /path/to/...` for macOS/Linux examples where archive downloads may not preserve executable bits.
+- Fix project-local `.gitignore` guidance emitted by the Claude Code and Codex project-local installer scripts: all four scripts now print `.claude/*` or `.agents/*` with the required negations so the shared `SKILL.md` file can actually be re-included and tracked.
+- Behaviorally verify the corrected `.gitignore` guidance with `git add -n` / ignore-state checks before promoting this candidate.
+
+**Release status:**
+
+- `v1.0.0-rc.1` remains intact as the prior historical candidate and does not contain these README / installer-guidance fixes.
+- Final `v1.0.0` remains blocked on the external cold-user validation gate and should be tested against `v1.0.0-rc.2`, not `v1.0.0-rc.1`.
+
+---
+
 ## 1.0.0-rc.1 - 2026-05-22
 
 Freeze the cold-user validation baseline. All implementation and accumulated validation evidence are complete. Final `v1.0.0` tag is gated by one remaining external acceptance result: an independent cold-user install simulation (G.2).

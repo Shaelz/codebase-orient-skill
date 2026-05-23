@@ -1,7 +1,7 @@
 # v1.0 Release Plan - codebase-orient-skill
 
-Current release: v1.0.0-rc.1 | Target: v1.0.0 | Updated: 2026-05-22
-Last validation: 2026-05-22 (v1.0.0-rc.1 baseline frozen; README polished for cold-user; 6/8 live-fire matrix rows satisfied; G.2 cold-user simulation is the sole remaining v1.0.0 gate)
+Current release candidate: v1.0.0-rc.2 | Final target: v1.0.0 | Updated: 2026-05-23
+Last validation: 2026-05-23 (`v1.0.0-rc.1` remains the prior tagged baseline, but commit `cbd3ce574e84c974101096e40ac17cc94a3170de` fixed README onboarding and project-local installer `.gitignore` guidance after `rc.1`; external cold-user validation remains the sole remaining v1.0.0 gate and should now run against `v1.0.0-rc.2`)
 
 ---
 
@@ -11,6 +11,7 @@ Last validation: 2026-05-22 (v1.0.0-rc.1 baseline frozen; README polished for co
 
 | Tag | Commit | Summary |
 |-----|--------|---------|
+| v1.0.0-rc.2 | (this pass) | Post-rc.1 candidate: README onboarding rewrite + fixed project-local installer `.gitignore` guidance |
 | v1.0.0-rc.1 | (see below) | Cold-user validation candidate; README polished; 6/8 live-fire rows satisfied |
 | v0.3.2 | d124cac | ASCII punctuation normalization + check scripts |
 | v0.3.1 | 6827554 | Install contract cleanup, artifact policy, Codex parity docs |
@@ -18,7 +19,7 @@ Last validation: 2026-05-22 (v1.0.0-rc.1 baseline frozen; README polished for co
 | v0.2.0 | - | Dual-runtime skill, bootstrap, no-date-only-churn, invocation reliability |
 | v0.1.x | - | Initial skill, Codex install scripts, bootstrap skill source |
 
-Branch `main` is clean and up to date with origin. `v1.0.0-rc.1` is an immutable baseline for the external cold-user validation pass.
+`v1.0.0-rc.1` remains an immutable historical candidate. It predates the README onboarding rewrite and the project-local installer `.gitignore` guidance fix in commit `cbd3ce574e84c974101096e40ac17cc94a3170de`, so it should no longer be used for external cold-user validation. `v1.0.0-rc.2` is the intended candidate after this bookkeeping pass.
 
 ### What the repo currently supports
 
@@ -675,6 +676,12 @@ The README documents install paths and expected behavior. If a script is changed
 
 Mitigation: install script test matrix includes manual copy example verification.
 
+### Historical rc drift during validation
+
+`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. Risk: a tester uses the older `rc.1` tag and encounters guidance that has already been corrected in commit `cbd3ce574e84c974101096e40ac17cc94a3170de`.
+
+Mitigation: keep `v1.0.0-rc.1` immutable for history, but direct all remaining external cold-user validation to `v1.0.0-rc.2`.
+
 ### Over-invocation due to trigger description
 
 The `codebase-orient` frontmatter `description` is rich with trigger phrases. This is intentional for discovery. Risk: Claude invokes orientation on tiny tasks where the user expected a direct answer, burning tokens unnecessarily.
@@ -732,11 +739,11 @@ Final checklist. All items must be checkable pass before tagging v1.0.
 
 ## K. Next immediate step
 
-`v1.0.0-rc.1` is tagged. The live-fire matrix requirements are fully satisfied. One hard blocker remains before `v1.0.0` can be tagged.
+`v1.0.0-rc.2` is the intended active release candidate after this bookkeeping pass. The live-fire matrix requirements remain fully satisfied. One hard blocker remains before `v1.0.0` can be tagged.
 
 **K.1 - Cold-user simulation (closes G.2 hard blocker)**
 
-A session or person with no prior knowledge of this repo's internals installs from the README at `v1.0.0-rc.1` alone and gets a working result. Even one successful independent pass is sufficient. The README has been polished specifically for this test.
+A session or person with no prior knowledge of this repo's internals installs from the README at `v1.0.0-rc.2` alone and gets a working result. Even one successful independent pass is sufficient. Use `rc.2`, not `rc.1`, because `rc.2` includes the post-`rc.1` README onboarding rewrite and the corrected project-local installer `.gitignore` guidance.
 
 Suggested approach: send a colleague only the GitHub repo link. Ask them to install the skill for their tool following the README, without any additional guidance. Record the G.2 acceptance criteria from the blocker section above.
 
