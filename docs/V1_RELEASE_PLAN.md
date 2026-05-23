@@ -9,17 +9,17 @@ Last validation: 2026-05-23 (the pre-public exposure audit found private validat
 
 ### Release and tag state
 
-| Tag | Commit | Summary |
-|-----|--------|---------|
-| v1.0.0-rc.4 | (this pass) | Pre-public sanitation: remove private validation identifiers and local-path disclosures from public-intended docs; promote publication-safe cold-user candidate |
-| v1.0.0-rc.3 | (prior pass) | Pre-validation correction: README mutation-scope accuracy, Claude Code specialization disclosure, limitations/trust section |
-| v1.0.0-rc.2 | 1de6b3c | Post-rc.1 candidate: README onboarding rewrite + fixed project-local installer `.gitignore` guidance |
-| v1.0.0-rc.1 | (see below) | Cold-user validation candidate; README polished; 6/8 live-fire rows satisfied |
-| v0.3.2 | d124cac | ASCII punctuation normalization + check scripts |
-| v0.3.1 | 6827554 | Install contract cleanup, artifact policy, Codex parity docs |
-| v0.3.0 | 0be3ede | Orientation surface mapping, authority-boundary cleanup |
-| v0.2.0 | - | Dual-runtime skill, bootstrap, no-date-only-churn, invocation reliability |
-| v0.1.x | - | Initial skill, Codex install scripts, bootstrap skill source |
+| Tag | Summary |
+|-----|---------|
+| v1.0.0-rc.4 | Active publication-safe cold-user candidate. Records the pre-public sanitation decision and retains the corrected manual-install contract. |
+| v1.0.0-rc.3 | Historical pre-public contract-correction candidate. In retained sanitized history, this tag no longer carries the removed disclosures, but it is not the candidate to use for external cold-user validation. |
+| v1.0.0-rc.2 | Historical pre-public candidate: README onboarding rewrite + fixed project-local installer `.gitignore` guidance. |
+| v1.0.0-rc.1 | Historical pre-public cold-user candidate; README polished; 6/8 live-fire rows satisfied. |
+| v0.3.2 | ASCII punctuation normalization + check scripts. |
+| v0.3.1 | Install contract cleanup, artifact policy, Codex parity docs. |
+| v0.3.0 | Orientation surface mapping and authority-boundary cleanup. |
+| v0.2.0 | Dual-runtime skill, bootstrap, no-date-only-churn, invocation reliability. |
+| v0.1.x | Initial skill, Codex install scripts, bootstrap skill source. |
 
 `v1.0.0-rc.1` and `v1.0.0-rc.2` remain historical pre-public candidates. `rc.2` introduced the README onboarding rewrite and project-local installer `.gitignore` correction but carried incomplete README mutation-scope and trust-posture wording. `rc.3` corrected those statements but was then blocked by the pre-public exposure audit because tracked docs and reachable pre-public history still contained private validation identifiers and maintainer-local paths. `rc.4` is the sanitized candidate intended for all external cold-user validation. Do not use `rc.1`, `rc.2`, or `rc.3` for that validation.
 
@@ -75,7 +75,7 @@ Last validation: 2026-05-23 (the pre-public exposure audit found private validat
 
 **Fresh-clone simulation:**
 - A disposable tagged clone was used for both PS and bash runs
-- Clone was at tagged commit `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (v0.3.2) before and after
+- Clone was at the tagged `v0.3.2` baseline before and after
 - All temp install targets used fake HOME or temp dirs; real user-level skills were not touched
 
 ### What is intentionally not supported
@@ -301,7 +301,7 @@ Records of actual validation passes. Each row is a real test, not a plan item.
 ### v0.3.2 - 2026-05-22 - Windows PowerShell
 
 - **Clone:** disposable tagged clone
-- **Commit:** `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (tag `v0.3.2`)
+- **Commit basis:** tagged `v0.3.2` baseline
 - **Environment:** Windows, PowerShell 5.1
 - **Targets:** all temp dirs under `%TEMP%`; real user skills not touched
 
@@ -320,7 +320,7 @@ Records of actual validation passes. Each row is a real test, not a plan item.
 ### v0.3.2 - 2026-05-22 - Git Bash (MSYS2 bash 5.2, Windows)
 
 - **Clone:** disposable tagged clone
-- **Commit:** `d124cacf6cc2b78949ab9a5298b893d1a8ac2f2c` (tag `v0.3.2`)
+- **Commit basis:** tagged `v0.3.2` baseline
 - **Environment:** Git Bash / MSYS2 bash 5.2.37, Windows
 - **Targets:** mktemp -d (fake HOME, project-local temp dirs); real user skills not touched
 
@@ -451,7 +451,7 @@ Records of actual live-fire orientation passes against real repos with real find
 - **Agent/runtime:** Codex
 - **Invocation:** Explicit natural-language invocation
 - **Skill path:** Project-local `.agents/skills/codebase-orient/SKILL.md`
-- **docs/ai existed:** Yes - Claude Code orientation cache from prior Claude Code pass (including correction commit `5cd2cca`)
+- **docs/ai existed:** Yes - Claude Code orientation cache from a prior Claude Code correction pass
 - **Mode:** Normal
 
 **Observed evidence:**
@@ -492,9 +492,7 @@ Records of actual live-fire orientation passes against real repos with real find
 **Claude Code phase:**
 
 - Initial Claude Code dry-run found real instruction drift in `README.md` and proposed the orientation layer.
-- Claude Code created and refreshed the orientation cache in two committed passes:
-  - `8283f5c` - `docs: add portfolio codebase orientation layer`
-  - `42c96ed` - `docs: refresh orientation docs with deploy corrections`
+- Claude Code created and refreshed the orientation cache in two prior committed passes.
 
 **Codex phase:**
 
@@ -680,7 +678,7 @@ Mitigation: install script test matrix includes manual copy example verification
 
 ### Historical rc drift during validation
 
-`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. `v1.0.0-rc.2` carried those corrections but had incomplete README mutation-scope and trust-posture wording discovered by a pre-validation contract audit. `v1.0.0-rc.3` corrected those statements but was then blocked by the pre-public exposure audit because tracked docs and reachable history still disclosed private validation identifiers and local paths. `v1.0.0-rc.4` is the sanitized candidate. Risk: a tester uses an older tag and encounters guidance or privacy posture that has already been corrected.
+`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. `v1.0.0-rc.2` carried those corrections but had incomplete README mutation-scope and trust-posture wording discovered by a pre-validation contract audit. `v1.0.0-rc.3` corrected those statements in the pre-public lineage, but the original private/pre-rewrite `rc.3` candidate then failed the exposure audit because tracked docs and reachable history still disclosed private validation identifiers and local paths. The retained sanitized `v1.0.0-rc.3` tag is now historical only. `v1.0.0-rc.4` is the active sanitized candidate. Risk: a tester uses an older tag and encounters guidance or release-decision context that has already been superseded.
 
 Mitigation: keep prior RC tags only if they are sanitized and clearly presented as historical pre-public candidates, and direct all external cold-user validation to `v1.0.0-rc.4`. Do not use `rc.1`, `rc.2`, or `rc.3` for that validation.
 
@@ -741,7 +739,7 @@ Final checklist. All items must be checkable pass before tagging v1.0.
 
 ## K. Next immediate step
 
-`v1.0.0-rc.4` is the active release candidate. The live-fire matrix requirements remain fully satisfied. G.2 (cold-user simulation) is the remaining hard blocker before `v1.0.0` can be tagged. G.2 is not the sole pre-tag step: D-section and J-section checklist items must also be verified against `rc.4` as final pre-tag checks; `rc.4` preserves the known-limitations and mutation-scope corrections from `rc.3` while removing the public-exposure blockers, but the full checklist should be confirmed before tagging.
+`v1.0.0-rc.4` is the active release candidate. The live-fire matrix requirements remain fully satisfied. G.2 (cold-user simulation) is the remaining hard blocker before `v1.0.0` can be tagged. G.2 is not the sole pre-tag step: D-section and J-section checklist items must also be verified against `rc.4` as final pre-tag checks; `rc.4` preserves the known-limitations and mutation-scope corrections from the pre-public `rc.3` candidate while recording the sanitation/release decision that makes this the correct external validation tag.
 
 **K.1 - Cold-user simulation (closes G.2 hard blocker)**
 

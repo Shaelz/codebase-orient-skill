@@ -32,7 +32,7 @@ Pre-validation contract correction before external cold-user testing. No skill b
 
 - `v1.0.0-rc.1` and `v1.0.0-rc.2` remain intact as immutable historical candidates.
 - `v1.0.0-rc.2` should no longer be used for external cold-user validation; the mutation-scope and trust-posture wording corrected here was not present in that candidate.
-- External cold-user validation is pending and must now run against `v1.0.0-rc.3`.
+- At the time of `v1.0.0-rc.3`, external cold-user validation was intended to run against that candidate. That intent was later superseded by `v1.0.0-rc.4` after the pre-public sanitation pass.
 
 ---
 
