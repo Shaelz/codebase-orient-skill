@@ -1,7 +1,7 @@
 # v1.0 Release Plan - codebase-orient-skill
 
-Current release candidate: v1.0.0-rc.4 | Final target: v1.0.0 | Updated: 2026-05-23
-Last validation: 2026-05-23 (the pre-public exposure audit found private validation identifiers and maintainer-local filesystem paths in tracked docs and reachable history/tag metadata; `rc.4` is the sanitized publication-safe candidate; independent cold-user validation (G.2) remains pending and must now run against `v1.0.0-rc.4`; D/J readiness criteria should be re-verified against `rc.4` as final pre-tag checks after G.2)
+Current release candidate: v1.0.0-rc.5 (active candidate for independent human-through-agent validation) | Final target: v1.0.0 | Updated: 2026-05-23
+Last validation: 2026-05-23 (`rc.5` is the active candidate for independent human-through-agent validation; `rc.4` is the prior published sanitized candidate; the governance hardening pass is complete; supplementary Codex delegated-install exploration against public `rc.4` exposed agent-facing onboarding friction but did not satisfy the independent external validation gate)
 
 ---
 
@@ -11,7 +11,8 @@ Last validation: 2026-05-23 (the pre-public exposure audit found private validat
 
 | Tag | Summary |
 |-----|---------|
-| v1.0.0-rc.4 | Active publication-safe cold-user candidate. Records the pre-public sanitation decision and retains the corrected manual-install contract. |
+| v1.0.0-rc.5 | Active candidate for independent human-through-agent validation. Adds agent-delegated onboarding guidance and the public security policy. |
+| v1.0.0-rc.4 | Published sanitized candidate. Records the pre-public sanitation decision and the corrected manual-install contract that preceded the delegated-install onboarding correction. |
 | v1.0.0-rc.3 | Historical pre-public contract-correction candidate. In retained sanitized history, this tag no longer carries the removed disclosures, but it is not the candidate to use for external cold-user validation. |
 | v1.0.0-rc.2 | Historical pre-public candidate: README onboarding rewrite + fixed project-local installer `.gitignore` guidance. |
 | v1.0.0-rc.1 | Historical pre-public cold-user candidate; README polished; 6/8 live-fire rows satisfied. |
@@ -21,7 +22,13 @@ Last validation: 2026-05-23 (the pre-public exposure audit found private validat
 | v0.2.0 | Dual-runtime skill, bootstrap, no-date-only-churn, invocation reliability. |
 | v0.1.x | Initial skill, Codex install scripts, bootstrap skill source. |
 
-`v1.0.0-rc.1` and `v1.0.0-rc.2` remain historical pre-public candidates. `rc.2` introduced the README onboarding rewrite and project-local installer `.gitignore` correction but carried incomplete README mutation-scope and trust-posture wording. `rc.3` corrected those statements but was then blocked by the pre-public exposure audit because tracked docs and reachable pre-public history still contained private validation identifiers and maintainer-local paths. `rc.4` is the sanitized candidate intended for all external cold-user validation. Do not use `rc.1`, `rc.2`, or `rc.3` for that validation.
+`v1.0.0-rc.1` and `v1.0.0-rc.2` remain historical pre-public candidates. `rc.2` introduced the README onboarding rewrite and project-local installer `.gitignore` correction but carried incomplete README mutation-scope and trust-posture wording. `rc.3` corrected those statements but was then blocked by the pre-public exposure audit because tracked docs and reachable pre-public history still contained private validation identifiers and maintainer-local paths. `rc.4` is the prior published sanitized candidate, and a supplementary Codex delegated-install exploration against public `rc.4` showed that agent-facing onboarding needed one more focused correction before the independent gate could be rerun. `rc.5` is the active candidate for that independent external validation. Do not use `rc.1`, `rc.2`, or `rc.3` for external validation, and do not treat the `rc.4` exploratory agent run as the independent gate pass.
+
+### Publication and governance state
+
+- Public repository publication and the pre-v1 sanitation pass are complete; `v1.0.0-rc.5` is the active candidate for independent human-through-agent validation.
+- Repository governance hardening is complete: protected main history, protected version tags, secret scanning alerts, push protection, private vulnerability reporting, and immutable future releases are already enabled.
+- A concise public `SECURITY.md` is now part of the candidate docs so the in-repo security-reporting path matches the GitHub repository configuration.
 
 ### What the repo currently supports
 
@@ -248,6 +255,7 @@ Each criterion must be verifiable before tagging v1.0.
 - [ ] `SKILL.md` does not tell Claude to modify source code during orientation
 - [ ] `SKILL.md` does not tell Claude to commit during orientation
 - [ ] Security review note in README is accurate
+- [ ] `SECURITY.md` is present and points reporters to GitHub private vulnerability reporting with email fallback
 - [ ] No install script requests elevated privileges
 
 ---
@@ -580,6 +588,16 @@ Records of actual live-fire orientation passes against real repos with real find
 
 **Minimum remaining before v1.0:** Cold-user simulation (G.2 hard blocker). All live-fire matrix requirements satisfied.
 
+### Supplementary onboarding evidence - public `rc.4` Codex delegated-install exploration
+
+- Classification: supplementary evidence only. This was not an independent external-user pass and does not close G.2.
+- What it showed:
+  - A coding agent acting on behalf of a user selected the recommended Codex user-level installation route from the README.
+  - Existing-install refusal and later overlay refresh behavior worked as documented.
+  - The agent then blurred together installation, installed-skill discovery/invocation, and immediately running the workflow until explicit invocation was surfaced more clearly.
+  - After explicit invocation was surfaced, the resulting orientation behavior was useful and matched expectations.
+- Product implication: the public onboarding contract needed to treat agent-delegated installation as a first-class path, make overwrite decisions explicit for the agent, and separate installation from invocation more clearly before rerunning the external validation gate.
+
 ---
 
 ## G. v1.0 blockers and pre-v1 tasks
@@ -590,39 +608,42 @@ Based on current evidence. Not speculative.
 
 1. ~~**Fresh-clone install validation**~~ - RESOLVED 2026-05-22. Full install matrix tested from disposable tagged clone on Windows PowerShell 5.1 and Windows Git Bash/MSYS2. All 5 install scripts PASS on both tested Windows environments. Native macOS/Linux bash was not part of this validation pass; it remains an open item in the D-section install criterion and E matrix but does not reopen this blocker (the original G.1 requirement was at least one clean install from a fresh clone, not full cross-platform coverage). See E1.
 
-2. **At least one cold-user simulation** - a person or session with no knowledge of this repo's internals installs from README alone and gets a working result. A friend install, a fresh-VM test, or a highly isolated session counts. Even one successful cold pass is sufficient. The v0.3.2 Windows PS validation included a README cold-reader pass (no blocker found), but was run by the maintainer, not an independent user. A genuine independent install pass is still pending and must target `v1.0.0-rc.4`.
+2. **At least one independent human-through-agent validation pass** - an external person receives only the public repo or tag link plus a minimal instruction to have their coding agent install the skill by following the README. The earlier maintainer README cold-reader pass and the supplementary `rc.4` Codex delegated-install exploration do not satisfy this gate. A genuine independent external pass is still pending and must target published `v1.0.0-rc.5`.
 
-   **Cold-user handoff (send only this setup context):**
+   **Validation handoff (send only this setup context):**
    - Send the tester only the GitHub repo or release link for `codebase-orient-skill`.
-   - Tell them to install the appropriate skill for their tool by following the README.
-   - Do not explain the repo architecture or which skill to choose before they attempt the install.
+   - Tell them to have their coding agent install the appropriate skill for the tool they are already using by following the README.
+   - Do not explain the repo architecture, which skill to choose, or which install path should win before they attempt the install.
 
    **Ask the tester to record:**
-   - tool used: Claude Code or Codex
+   - tool used by the human and by the coding agent
    - OS and shell used
-   - which install command they chose
+   - which install route the agent chose
    - whether installation succeeded
-   - whether they knew which skill to install
-   - whether invocation was clear
+   - whether the agent knew which skill to install
+   - whether the agent surfaced any existing-install overwrite decision before changing an existing install
+   - whether explicit invocation guidance was clear after install
    - where they hesitated or needed help
-   - whether any unexpected files or errors appeared
+   - whether any unexpected files, writes, or errors appeared
 
    **PASS:**
-   - Tester correctly selects the reusable `codebase-orient` skill for normal use.
-   - Tester follows the README and installs it successfully.
-   - Tester can invoke it or clearly understands the documented invocation path.
-   - Tester does not need maintainer intervention to resolve confusion.
+   - The agent correctly selects the reusable `codebase-orient` skill for normal use.
+   - The agent chooses the appropriate supported install route for the tool in use.
+   - The agent does not overwrite an existing install without surfacing the decision first.
+   - Installation succeeds from the README contract without maintainer coaching.
+   - Explicit invocation guidance is clear after install.
+   - If orientation is actually run, the agent accurately reports the expected writes.
 
    **FAIL / feedback-worthy hesitation:**
-   - Tester chooses the bootstrap skill unintentionally.
-   - Tester cannot distinguish Claude Code vs Codex install paths.
-   - Tester misunderstands project-local vs user-level install.
-   - Tester expects automatic behavior that does not occur.
-   - Tester is blocked by README ambiguity.
+   - The agent chooses the bootstrap skill unintentionally.
+   - The agent cannot distinguish Claude Code vs Codex install paths.
+   - The agent overwrites an existing install without first surfacing the decision.
+   - Install, discovery/invocation, and workflow execution are blurred together in a way that confuses the user.
+   - The tester is blocked by README ambiguity or needs maintainer coaching.
 
    **Status rule:**
    - G.2 remains pending until an actual external tester response is received and reviewed.
-   - A cold-agent simulation can be supplementary evidence, but it does not replace the independent-user test.
+   - A maintainer-run or exploratory agent simulation can be supplementary evidence, but it does not replace the independent external-user-through-agent test.
 
 3. ~~**Canonical skill vs bootstrap embedded template drift check**~~ - RESOLVED 2026-05-22. Full section-by-section comparison completed. No material unintentional drift found. Details:
 
@@ -678,9 +699,9 @@ Mitigation: install script test matrix includes manual copy example verification
 
 ### Historical rc drift during validation
 
-`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. `v1.0.0-rc.2` carried those corrections but had incomplete README mutation-scope and trust-posture wording discovered by a pre-validation contract audit. `v1.0.0-rc.3` corrected those statements in the pre-public lineage, but the original private/pre-rewrite `rc.3` candidate then failed the exposure audit because tracked docs and reachable history still disclosed private validation identifiers and local paths. The retained sanitized `v1.0.0-rc.3` tag is now historical only. `v1.0.0-rc.4` is the active sanitized candidate. Risk: a tester uses an older tag and encounters guidance or release-decision context that has already been superseded.
+`v1.0.0-rc.1` was tagged before the README onboarding rewrite and the project-local installer `.gitignore` correction. `v1.0.0-rc.2` carried those corrections but had incomplete README mutation-scope and trust-posture wording discovered by a pre-validation contract audit. `v1.0.0-rc.3` corrected those statements in the pre-public lineage, but the original private/pre-rewrite `rc.3` candidate then failed the exposure audit because tracked docs and reachable history still disclosed private validation identifiers and local paths. The retained sanitized `v1.0.0-rc.3` tag is now historical only. `v1.0.0-rc.4` is the prior sanitized candidate, and `v1.0.0-rc.5` is the active validation candidate. Risk: a tester uses an older tag and encounters guidance or release-decision context that has already been superseded.
 
-Mitigation: keep prior RC tags only if they are sanitized and clearly presented as historical pre-public candidates, and direct all external cold-user validation to `v1.0.0-rc.4`. Do not use `rc.1`, `rc.2`, or `rc.3` for that validation.
+Mitigation: keep prior RC tags only if they are sanitized and clearly presented as historical pre-public candidates, and direct independent external validation to published `v1.0.0-rc.5` once available. Do not use `rc.1`, `rc.2`, or `rc.3` for that validation, and do not treat the `rc.4` delegated-install exploration as the gate-closing pass.
 
 ### Over-invocation due to trigger description
 
@@ -727,7 +748,7 @@ Final checklist. All items must be checkable pass before tagging v1.0.
 - [ ] All D-section release criteria verified (README, install scripts, Claude Code, Codex, bootstrap, artifacts, generated docs, drift, ASCII, limitations, versioning, security)
 - [ ] E-section test matrix: all critical install paths checked (at minimum: Claude Code user-level on Windows + macOS, project-local on one platform, Codex user-level on one platform, bootstrap user-level on one platform)
 - [ ] F-section live-fire: at least 4 repo types with real passes, at least 1 Codex row
-- [ ] G-section hard blockers resolved: fresh-clone install validated, cold-user simulation completed, canonical/bootstrap drift check recorded
+- [ ] G-section hard blockers resolved: fresh-clone install validated, independent human-through-agent validation completed, canonical/bootstrap drift check recorded
 - [ ] G-section overlay decision recorded explicitly
 - [ ] CHANGELOG has no Unreleased entries
 - [ ] `scripts/check-ascii-punctuation.ps1` exits 0 on current tracked files
@@ -739,12 +760,12 @@ Final checklist. All items must be checkable pass before tagging v1.0.
 
 ## K. Next immediate step
 
-`v1.0.0-rc.4` is the active release candidate. The live-fire matrix requirements remain fully satisfied. G.2 (cold-user simulation) is the remaining hard blocker before `v1.0.0` can be tagged. G.2 is not the sole pre-tag step: D-section and J-section checklist items must also be verified against `rc.4` as final pre-tag checks; `rc.4` preserves the known-limitations and mutation-scope corrections from the pre-public `rc.3` candidate while recording the sanitation/release decision that makes this the correct external validation tag.
+`v1.0.0-rc.5` is the active validation candidate. The live-fire matrix requirements remain fully satisfied. G.2 (independent human-through-agent validation) is still the remaining hard blocker before `v1.0.0` can be tagged. G.2 is not the sole pre-tag step: D-section and J-section checklist items must also be re-verified against the published `rc.5` candidate as final pre-tag checks.
 
-**K.1 - Cold-user simulation (closes G.2 hard blocker)**
+**K.1 - Independent human-through-agent validation (closes G.2 hard blocker)**
 
-A session or person with no prior knowledge of this repo's internals installs from the README at `v1.0.0-rc.4` alone and gets a working result. Even one successful independent pass is sufficient. Use `rc.4`: it preserves the accurate mutation-scope wording, Claude Code specialization disclosure, and compact limitations/trust section from `rc.3`, while also removing the pre-public exposure findings that blocked publication. Do not use `rc.1`, `rc.2`, or `rc.3` for this test.
+A person with no prior knowledge of this repo's internals receives only the public repo or tag link plus a minimal instruction to have their coding agent install the skill by following the README at published `v1.0.0-rc.5`. Even one successful independent pass is sufficient. Do not use `rc.1`, `rc.2`, or `rc.3` for this test, and do not count the earlier `rc.4` exploratory agent run as this gate.
 
-Suggested approach: send a colleague only the GitHub repo link and tag. Ask them to install the skill for their tool following the README, without any additional guidance. Record the G.2 acceptance criteria from the blocker section above.
+Suggested approach: send a colleague only the GitHub repo link and tag. Ask them to have their coding agent install the skill for the tool they are already using by following the README, without any additional guidance. Record the G.2 acceptance criteria from the blocker section above.
 
 After G.2 is resolved, verify the D/J final checklist against the current working tree, then promote CHANGELOG and tag `v1.0.0` (G.6).

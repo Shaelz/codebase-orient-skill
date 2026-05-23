@@ -1,5 +1,29 @@
 # Changelog
 
+## 1.0.0-rc.5 - 2026-05-23
+
+Release candidate for independent human-through-agent validation. No orientation skill behavior change. No installer target, copy, or overwrite semantics change.
+
+**Onboarding and security:**
+
+- Add a first-class agent-delegated installation path to `README.md`, including a pasteable prompt that tells a coding agent to follow the documented install contract, avoid silent overwrite, report explicit invocation, and stop before running orientation in a target repo.
+- Clarify existing-install decisions in `README.md`: overlay refresh (`-Force` / `--force`), clean reinstall (delete first), and intentional project-local install.
+- Clarify the distinction between installation, Codex skill discovery, explicit invocation, and a later orientation run. Reading an installed `SKILL.md` is described as file-copy evidence, not proof that the tool discovered or invoked the installed skill.
+- Add a root `SECURITY.md` that points reporters to GitHub private vulnerability reporting, with email fallback.
+
+**Codex installer wording alignment:**
+
+- Update Codex installer output only where needed to direct users to explicitly invoke `codebase-orient` after installation using the documented Codex skill-selection flow.
+- Align README and Codex installer wording to current official Codex documentation: Codex detects newly installed or updated skills automatically; if `codebase-orient` does not appear, restart Codex; and in Codex CLI/IDE the explicit invocation path is `/skills` or `$`.
+
+**Release status:**
+
+- `v1.0.0-rc.4` remains the prior published sanitized candidate and is unchanged.
+- `v1.0.0-rc.5` is the active candidate for independent human-through-agent validation.
+- Final `v1.0.0` remains blocked until that revised external validation gate passes and the final release checklist is rerun against the published candidate.
+
+---
+
 ## 1.0.0-rc.4 - 2026-05-23
 
 Pre-public sanitation candidate for external cold-user validation. No skill behavior or installer changes.

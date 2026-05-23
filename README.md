@@ -13,6 +13,18 @@ Most users want the reusable `codebase-orient` skill at the **user level** for t
 
 Before running the install scripts, clone or download this repository locally and run the commands below from the repository root so `scripts/` is present.
 
+### Have your coding agent install it
+
+If you already work in Codex or Claude Code, a practical onboarding path is to give that coding agent this repository and ask it to install the reusable skill for the tool you are currently using.
+
+Use this prompt:
+
+```text
+Install the reusable codebase-orient skill for the coding tool we are using now. Follow this repository's README and use the recommended user-level install path by default. If an installation already exists, do not overwrite or delete it automatically; explain the choices and ask me whether to do an overlay refresh, a clean reinstall, or a project-local install instead. After installation, report how to invoke the installed skill explicitly. Do not run orientation in any target repository until I choose the target or ask you to do that next.
+```
+
+The manual commands below remain the inspectable install contract that the agent should follow.
+
 | If you use | Recommended install | What it changes |
 |---|---|---|
 | Claude Code | User-level `codebase-orient` | Copies the skill to `~/.claude/skills/codebase-orient/` |
@@ -22,6 +34,13 @@ Before running the install scripts, clone or download this repository locally an
 ### Install the reusable skill
 
 If you want a **project-local** install instead, or the **Claude Code bootstrap** route, skip to [Alternate install paths](#alternate-install-paths) before running the default commands below.
+
+If the install target already exists, stop and choose intentionally:
+
+- Overlay refresh: rerun with `-Force` in PowerShell or `--force` in bash.
+- Clean reinstall: delete the installed target first, then rerun without `-Force` or `--force`.
+- Project-local install: use this when you intentionally want repo-scoped installation or testing.
+- Agents acting on your behalf should ask before overwriting an existing installation.
 
 **Claude Code**
 
@@ -55,7 +74,17 @@ bash ./scripts/install-codex-user.sh
 
 ### First use
 
-After installing, restart or reload the tool if it is already running, then invoke the skill explicitly:
+Keep these three steps separate:
+
+- Installing the skill copies files into the tool's skill location.
+- Invoking the installed skill is the next step.
+- Running orientation in a target repo happens only after you explicitly invoke it there.
+
+Reading an installed `SKILL.md` directly can confirm what was copied, but that is not the same as confirming the tool discovered or invoked the installed skill.
+
+After installing, Codex should detect a newly installed or updated skill automatically. If `codebase-orient` does not appear, restart Codex.
+
+Then invoke the skill explicitly:
 
 **Claude Code**
 
@@ -66,7 +95,7 @@ After installing, restart or reload the tool if it is already running, then invo
 **Codex**
 
 ```text
-Use codebase-orient to orient yourself to this repo.
+In Codex CLI or the IDE extension, run `/skills` or type `$` to mention/select `codebase-orient`, then ask it to orient the repo. In the Codex app, the skill is also available, but this README does not assume the same picker interaction there unless Codex documentation says so.
 ```
 
 ### What to expect after the first run
@@ -177,7 +206,7 @@ Use the same invocation whenever `docs/ai/` is missing, stale, or likely cheaper
 **Codex**
 
 ```text
-Use codebase-orient to orient yourself to this repo before planning this change.
+In Codex CLI or the IDE extension, run `/skills` or type `$` to mention/select `codebase-orient`, then ask it to orient this repo before planning this change.
 ```
 
 You can also ask for dry-run behavior:
@@ -201,7 +230,7 @@ That distinction matters because the generated `docs/ai/` files can go stale, wh
 
 ### Explicit invocation is the reliable path
 
-The skill may be auto-invoked when the model recognizes an orientation request, but repository evidence is clear that auto-invocation is model-driven and not guaranteed. If you want the orientation pass, invoke it explicitly.
+The skill may be auto-invoked when the model recognizes an orientation request, but repository evidence is clear that auto-invocation is model-driven and not guaranteed. If you want the orientation pass, invoke it explicitly. Current Codex documentation says skills are available in the Codex CLI, IDE extension, and Codex app; Codex detects newly installed or updated skills automatically; if a skill does not appear, restart Codex; and in CLI/IDE the explicit invocation path is `/skills` or `$`.
 
 ### Reinstall behavior
 
