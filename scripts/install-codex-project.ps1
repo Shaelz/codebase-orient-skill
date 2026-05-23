@@ -52,7 +52,7 @@ Write-Host "Optional: to track only the skill file in git (not other .agents int
 Write-Host "add the following to your project .gitignore:"
 Write-Host ""
 Write-Host "  # Ignore all .agents internals except the skill"
-Write-Host "  .agents/"
+Write-Host "  .agents/*"
 Write-Host "  !.agents/skills/"
 Write-Host "  !.agents/skills/codebase-orient/"
 Write-Host "  !.agents/skills/codebase-orient/SKILL.md"

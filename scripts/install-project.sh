@@ -45,7 +45,7 @@ echo "Optional: to track only the skill file in git (not other .claude internals
 echo "add the following to your project .gitignore:"
 echo ""
 echo "  # Ignore all .claude internals except the skill"
-echo "  .claude/"
+echo "  .claude/*"
 echo "  !.claude/skills/"
 echo "  !.claude/skills/codebase-orient/"
 echo "  !.claude/skills/codebase-orient/SKILL.md"

@@ -45,7 +45,7 @@ echo "Optional: to track only the skill file in git (not other .agents internals
 echo "add the following to your project .gitignore:"
 echo ""
 echo "  # Ignore all .agents internals except the skill"
-echo "  .agents/"
+echo "  .agents/*"
 echo "  !.agents/skills/"
 echo "  !.agents/skills/codebase-orient/"
 echo "  !.agents/skills/codebase-orient/SKILL.md"

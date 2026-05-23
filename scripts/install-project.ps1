@@ -52,7 +52,7 @@ Write-Host "Optional: to track only the skill file in git (not other .claude int
 Write-Host "add the following to your project .gitignore:"
 Write-Host ""
 Write-Host "  # Ignore all .claude internals except the skill"
-Write-Host "  .claude/"
+Write-Host "  .claude/*"
 Write-Host "  !.claude/skills/"
 Write-Host "  !.claude/skills/codebase-orient/"
 Write-Host "  !.claude/skills/codebase-orient/SKILL.md"
