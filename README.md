@@ -201,6 +201,34 @@ It tells the agent to:
 - report hidden risks such as stale docs, source-of-truth drift, generated-vs-source mismatches, and lifecycle traps.
 
 It is meant for broad or unfamiliar work. It is explicitly meant to be skipped for tiny, known, single-file edits.
+The reusable canonical skill currently includes an explicit tuned framework-probe section for SvelteKit. Other frameworks currently use the generic discovery order unless later live-fire or eval evidence justifies a dedicated tuned probe section. The separate Claude Code bootstrap skill has its own bootstrap-specific discovery helpers and should not be treated as identical framework coverage.
+
+## Local behavioral evals
+
+This repo now includes a small local/manual Codex eval scaffold for behavioral checks on `codebase-orient`.
+
+- Prompt corpus: `evals/codebase-orient-behavioral-cases.json`
+- Runner: `scripts/run-behavioral-evals.ps1`
+- Default artifact location: `../codebase-orient-behavioral-eval-artifacts/`
+
+The PowerShell entrypoint is a thin wrapper over a dependency-free Node core, so maintainer use requires `node` to be available on `PATH`.
+
+Run the validated one-case vertical slice:
+
+```powershell
+powershell -ExecutionPolicy Bypass -File .\scripts\run-behavioral-evals.ps1 --case-id explicit-dry-run-unfamiliar
+```
+
+The current vertical slice executes one selected `single` case per invocation. `explicit-dry-run-unfamiliar` is the one fresh end-to-end case validated so far. The corpus also contains additional designed cases, including two-pass scenarios, that are not yet all executed or supported by the current vertical slice. No representative multi-case subset command is currently implemented.
+
+The runner keeps disposable fixtures and raw traces outside the repository by default. It isolates the skill under test into a temporary `USERPROFILE\.agents\skills\codebase-orient` home so the eval uses the repo's current canonical skill content instead of a stale user-level install. The current vertical slice emits a structured evidence summary for maintainer review; it is not yet a representative multi-case or automatic pass/fail gate.
+
+Observable limits are intentional and documented:
+
+- `codex exec --json` provides deterministic filesystem and command-event evidence.
+- The proven dry-run case ran under a `read-only` sandbox, so its no-write result deterministically proves no files were written during that constrained run only. It does not by itself prove voluntary no-write compliance under a writable sandbox.
+- The local traces from this scaffold did not expose a dedicated skill-selected event type.
+- Invocation and skip behavior are therefore reported as proxy evidence, not direct proof, based on the JSONL agent-message stream plus outcome traces.
 
 ## Running it again later
 

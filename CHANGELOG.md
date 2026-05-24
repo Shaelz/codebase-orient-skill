@@ -2,11 +2,13 @@
 
 ## Unreleased
 
-Post-v1 maintenance hardening only. No installer behavior change. No intended change to the canonical reusable orientation behavior beyond maintenance markers.
+Post-v1 maintenance hardening only. No installer behavior change.
 
 - Add a deterministic shared-rule drift guard for canonical `skills/codebase-orient/SKILL.md` vs the bootstrap embedded shared-rule snapshot in `skills/install-codebase-orient/SKILL.md`, including explicit shared-block markers, a validation script, and a GitHub Actions check that now guards those shared blocks against future accidental drift.
 - Align the bootstrap embedded shared-rule snapshot to canonical wording so future bootstrap-generated project-local skills receive the synchronized shared-rule content.
 - Freeze the former `docs/V1_RELEASE_PLAN.md` contents as `docs/releases/v1.0-validation-record.md` and keep `docs/V1_RELEASE_PLAN.md` as a short compatibility pointer now that `v1.0.0` has shipped.
+- Add an initial local/manual Codex behavioral eval scaffold: an inspectable prompt corpus plus a PowerShell wrapper over a Node runner that uses isolated disposable fixtures, stores traces outside the repo by default, and currently emits evidence summaries for one validated single-case vertical slice with proxy-only invocation evidence from local `codex exec --json` traces.
+- Clarify that the reusable canonical skill currently has an explicit tuned framework-probe section for SvelteKit, while other frameworks still rely on the generic discovery order unless later live-fire or eval evidence justifies dedicated tuned probes.
 
 ## 1.0.0 - 2026-05-24
 
