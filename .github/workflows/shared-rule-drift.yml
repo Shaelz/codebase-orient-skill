@@ -1,0 +1,20 @@
+name: shared-rule-drift
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  compare-shared-rules:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@08eba0b27e820071cde6df949e0beb9ba490695 # v4.3.0
+      - name: Validate shared-rule synchronization
+        shell: pwsh
+        run: ./scripts/check-shared-rule-drift.ps1
