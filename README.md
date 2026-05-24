@@ -299,7 +299,7 @@ If you install a project-local skill and want to track only the shared skill fil
 - [`skills/codebase-orient/SKILL.md`](skills/codebase-orient/SKILL.md): canonical reusable skill behavior
 - [`skills/install-codebase-orient/SKILL.md`](skills/install-codebase-orient/SKILL.md): Claude Code bootstrap skill behavior and versioned embedded template
 - [`CHANGELOG.md`](CHANGELOG.md): release history
-- [`docs/V1_RELEASE_PLAN.md`](docs/V1_RELEASE_PLAN.md): release criteria, validation record, and current known gaps
+- [`docs/releases/v1.0-validation-record.md`](docs/releases/v1.0-validation-record.md): frozen historical validation record for `v1.0.0`
 - [`scripts/`](scripts/): install and validation helpers
 
 Tracked repo-maintenance text in this repo follows an ASCII punctuation convention. The check scripts are:
@@ -310,6 +310,12 @@ Tracked repo-maintenance text in this repo follows an ASCII punctuation conventi
 
 ```bash
 ./scripts/check-ascii-punctuation.sh
+```
+
+Shared canonical/bootstrap rule blocks can also be validated directly with:
+
+```powershell
+.\scripts\check-shared-rule-drift.ps1
 ```
 
 <details>

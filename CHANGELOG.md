@@ -1,5 +1,13 @@
 # Changelog
 
+## Unreleased
+
+Post-v1 maintenance hardening only. No installer behavior change. No intended change to the canonical reusable orientation behavior beyond maintenance markers.
+
+- Add a deterministic shared-rule drift guard for canonical `skills/codebase-orient/SKILL.md` vs the bootstrap embedded shared-rule snapshot in `skills/install-codebase-orient/SKILL.md`, including explicit shared-block markers, a validation script, and a GitHub Actions check that now guards those shared blocks against future accidental drift.
+- Align the bootstrap embedded shared-rule snapshot to canonical wording so future bootstrap-generated project-local skills receive the synchronized shared-rule content.
+- Freeze the former `docs/V1_RELEASE_PLAN.md` contents as `docs/releases/v1.0-validation-record.md` and keep `docs/V1_RELEASE_PLAN.md` as a short compatibility pointer now that `v1.0.0` has shipped.
+
 ## 1.0.0 - 2026-05-24
 
 First stable public release of `codebase-orient`.
