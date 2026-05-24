@@ -1,0 +1,45 @@
+name: Feature request
+description: Propose a focused improvement to install flows, onboarding, workflow behavior, or distribution.
+title: "[Feature]: "
+labels:
+  - enhancement
+body:
+  - type: textarea
+    id: use_case
+    attributes:
+      label: Use case or problem
+      description: What problem are you trying to solve?
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed improvement
+    validations:
+      required: true
+  - type: dropdown
+    id: surface
+    attributes:
+      label: Affected surface
+      options:
+        - Claude Code
+        - Codex
+        - Install scripts
+        - Onboarding/docs
+        - Orientation workflow
+        - Distribution/packaging
+        - Other
+    validations:
+      required: true
+  - type: textarea
+    id: alternatives
+    attributes:
+      label: Alternatives considered
+  - type: checkboxes
+    id: acknowledgements
+    attributes:
+      label: Acknowledgement
+      options:
+        - label: I understand marketplace/plugin packaging is not part of current `v1.0.0` functionality unless explicitly proposed as future work.
+    validations:
+      required: true
