@@ -1,0 +1,102 @@
+[
+  {
+    "id": "explicit-dry-run-unfamiliar",
+    "category": "explicit-invocation",
+    "execution": "single",
+    "fixture": "basic-readme",
+    "sandbox": "read-only",
+    "prompt": "Use $codebase-orient in dry-run mode. Orient this unfamiliar repo and report proposed docs/ai changes without writing files.",
+    "expected_proxy_skill_mention": true,
+    "notes": "Deterministic checks: no docs/ai writes, no source edits, no commits. Skill invocation remains proxy evidence because the JSONL stream did not expose a dedicated skill-selected event in the exploratory probe."
+  },
+  {
+    "id": "implicit-unfamiliar-repo",
+    "category": "implicit-invocation",
+    "execution": "single",
+    "fixture": "basic-readme",
+    "sandbox": "read-only",
+    "prompt": "This is an unfamiliar repo. Please orient it before we plan broad changes, but keep this as report-only and do not write files.",
+    "expected_proxy_skill_mention": true,
+    "notes": "Proxy-only invocation evidence. Deterministic checks still verify no writes and no commits."
+  },
+  {
+    "id": "implicit-multifile-planning",
+    "category": "implicit-invocation",
+    "execution": "single",
+    "fixture": "basic-readme",
+    "sandbox": "read-only",
+    "prompt": "Before planning multi-file work, scan this repo, map the important surfaces, and report what docs/ai updates would be needed without writing files.",
+    "expected_proxy_skill_mention": true,
+    "notes": "Proxy-only invocation evidence."
+  },
+  {
+    "id": "implicit-stale-docs-refresh",
+    "category": "implicit-invocation",
+    "execution": "single",
+    "fixture": "basic-readme",
+    "sandbox": "read-only",
+    "prompt": "docs/ai is stale or missing. Refresh your repo understanding from source first, but only report proposed docs/ai changes in this run.",
+    "expected_proxy_skill_mention": true,
+    "notes": "Proxy-only invocation evidence."
+  },
+  {
+    "id": "implicit-handoff-prep",
+    "category": "implicit-invocation",
+    "execution": "single",
+    "fixture": "basic-readme",
+    "sandbox": "read-only",
+    "prompt": "Prepare an agent handoff for this repo. First orient the codebase, then report what docs/ai outputs would be produced, but do not write files.",
+    "expected_proxy_skill_mention": true,
+    "notes": "Proxy-only invocation evidence."
+  },
+  {
+    "id": "negative-readme-typo",
+    "category": "negative-invocation",
+    "execution": "single",
+    "fixture": "readme-typo",
+    "sandbox": "read-only",
+    "prompt": "Fix the typo in README.md by changing 'teh' to 'the'. Only touch that one line.",
+    "expected_proxy_skill_mention": false,
+    "notes": "Proxy-only skip evidence. Deterministic checks still verify no docs/ai writes and no commits."
+  },
+  {
+    "id": "negative-known-one-file-fix",
+    "category": "negative-invocation",
+    "execution": "single",
+    "fixture": "one-file-fix",
+    "sandbox": "read-only",
+    "prompt": "Fix the obvious typo in src/app.js where userNmae should be userName. Keep the change scoped to that file.",
+    "expected_proxy_skill_mention": false,
+    "notes": "Proxy-only skip evidence."
+  },
+  {
+    "id": "behavior-dry-run-no-writes",
+    "category": "behavioral-contract",
+    "execution": "single",
+    "fixture": "basic-readme",
+    "sandbox": "read-only",
+    "prompt": "Use $codebase-orient in dry-run mode. Report the docs/ai changes you would make, but do not write files.",
+    "expected_proxy_skill_mention": true,
+    "notes": "Deterministic checks: docs/ai absent after run, source unchanged, no commits."
+  },
+  {
+    "id": "behavior-no-date-only-churn",
+    "category": "behavioral-contract",
+    "execution": "two-pass-rerun",
+    "fixture": "basic-readme",
+    "sandbox": "workspace-write",
+    "prompt": "Use $codebase-orient to orient this repo normally.",
+    "expected_proxy_skill_mention": true,
+    "notes": "Pass 1 creates docs/ai. Pass 2 reruns against the now-current fixture. Deterministic check: docs/ai hashes remain unchanged on the second pass."
+  },
+  {
+    "id": "behavior-stale-docs-source-drift",
+    "category": "behavioral-contract",
+    "execution": "two-pass-source-drift",
+    "fixture": "basic-readme",
+    "sandbox": "workspace-write",
+    "prompt": "Use $codebase-orient to orient this repo normally.",
+    "expected_proxy_skill_mention": true,
+    "notes": "Pass 1 creates docs/ai. The harness then mutates README.md outside Codex. Pass 2 reruns and checks that at least one docs/ai file changes. This is outcome/proxy evidence for stale-cache verification, not direct proof of why the model changed it."
+  }
+]

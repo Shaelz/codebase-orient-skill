@@ -132,6 +132,8 @@ Execute in this order:
 
 Apply these probes in addition to the generic discovery order when the relevant framework is detected.
 
+The reusable skill currently includes one explicit tuned probe set for SvelteKit. Other frameworks currently use the generic discovery order unless later live-fire or eval evidence justifies a dedicated tuned probe section.
+
 ### SvelteKit
 
 Glob the following file patterns when a SvelteKit project is detected:
