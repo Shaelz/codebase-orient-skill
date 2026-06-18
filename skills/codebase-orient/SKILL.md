@@ -273,6 +273,8 @@ Do not rewrite a generated `docs/ai/` file solely to update a date, timestamp, o
 
 The docs/ai files are orientation aids, not ground truth. Always verify against source code before editing.
 
+When re-running orientation on a repo that already has docs/ai/ files, read them to understand what was previously recorded - but treat their structural claims as hypotheses requiring source verification, the same way the docs-as-hypotheses rule applies to CLAUDE.md and README.md. Do not accept prior orientation claims as discovery input for the new analysis pass; verify them against source before carrying them forward.
+
 After any structural change, check whether the three docs/ai files need updates. Update only the relevant sections. Do not rewrite the whole map unless the architecture changed significantly.
 
 <!-- shared-rule:start:cross-file-consistency-rule -->
