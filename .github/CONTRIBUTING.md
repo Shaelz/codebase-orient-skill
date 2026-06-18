@@ -26,6 +26,18 @@ Please include:
 - actual result
 - sanitized logs or output
 
+## Commit messages
+
+Use lowercase conventional commit prefixes:
+
+- `feat:` - new skill behavior, rules, or guidance
+- `fix:` - correcting wrong or broken behavior
+- `docs:` - README, CHANGELOG, community files, documentation only
+- `refactor:` - restructuring without behavior change
+- `chore:` - scripts, tooling, CI, non-behavioral maintenance
+
+The description after the prefix should also be lowercase. Example: `feat: add agent-closable vs human-required classification to open questions`.
+
 ## Pull requests
 
 Please keep pull requests small and focused.
