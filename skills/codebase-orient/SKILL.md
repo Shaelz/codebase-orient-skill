@@ -242,6 +242,8 @@ After orientation, create or refresh:
 - `docs/ai/CHANGE_SURFACES.md`
 - `docs/ai/OPEN_QUESTIONS.md`
 
+In target repos, these files should be committed to version control. They are authored narrative that improves across sessions, not regenerable cache - do not add them to `.gitignore` in target repos.
+
 Add or update `Last refreshed: <date>` at the top of each file **only when its content changes for a substantive reason**. Do not update the date solely because orientation ran again. A file that is verified current and unchanged should be left as-is.
 
 Before staging, format all created/updated files if the project has a discoverable formatter that covers Markdown (e.g., Prettier, markdownlint). If a formatter is missing, unavailable, not configured for Markdown, or its invocation would fail, skip formatting, note this clearly in the orientation report, and continue. Do not treat missing formatter support as an orientation failure.
