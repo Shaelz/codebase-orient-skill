@@ -393,6 +393,7 @@ If any of the following appear, include a `Potential drift / hidden risk` sectio
 - path existence without full source read
 - behavior inferred from comments, fixtures, or tests rather than implementation
 - setup that works in this session but may fail after restart, reinstall, deploy, rebuild, cache clear, or future Claude session
+- release validation records or gate scripts present in the repo (if found, note in CHANGE_SURFACES that any file change after a validated candidate requires a re-check before tagging)
 
 For each item, report:
 
