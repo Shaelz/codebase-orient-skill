@@ -402,6 +402,13 @@ Before finishing orientation, classify every unresolved open question as one of:
 - **Relevant but non-blocking**: useful context for the task but work can proceed without it
 - **Background**: not needed for the current task at all
 
+Also classify each open question by who can act on it:
+
+- **Agent-closable**: resolvable by running a command, reading a file, or making a local change
+- **Human-required**: requires external access, permissions, approvals, or out-of-band action
+
+This second axis lets a new agent immediately identify which items it can work on autonomously without waiting for human input.
+
 Then apply these rules:
 
 1. **Automatically resolve Blocking questions** by reading the minimum necessary files - unless the user explicitly requested dry-run or report-only mode.
