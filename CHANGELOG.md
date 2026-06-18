@@ -2,6 +2,15 @@
 
 ## Unreleased
 
+**Orientation skill improvements (canonical + bootstrap):**
+
+- Treat existing docs/ai output as hypotheses on re-run: the staleness rule now explicitly applies the docs-as-hypotheses discipline to prior orientation output, preventing stale structural claims from being accepted as discovery input on subsequent passes.
+- Add agent-closable vs human-required classification axis to open questions: the orientation-completion-rule now requires each unresolved question to be classified not only by urgency (Blocking / Relevant-but-non-blocking / Background) but also by who can act on it, letting a new agent immediately identify which items it can work on autonomously.
+- Surface check script constraints in CHANGE_SURFACES docs-impact guidance: the change-surfaces-mapping-guidance rule now instructs orient to note what file types or patterns scripts/ check scripts enforce, so future agents know about constraints like ASCII-only requirements before writing.
+- Add conditional release status section to CODEBASE_MAP: the discovery order now instructs orient to add a Release status section to CODEBASE_MAP.md when a release plan, milestone doc, or version changelog is found, summarizing current version, active milestone, and blockers.
+- Clarify that docs/ai files should be committed in target repos: the output files section now states explicitly that these files are authored narrative that improves across sessions and should not be gitignored in target repos.
+- Flag release validation records and gate scripts as a hidden-risk surface: the hidden-risk-reporting-rule now includes release validation records and gate scripts in its checklist, and instructs orient to note in CHANGE_SURFACES that file changes after a validated candidate require a re-check before tagging.
+
 Post-v1 maintenance hardening only. No installer behavior change.
 
 - Add a deterministic shared-rule drift guard for canonical `skills/codebase-orient/SKILL.md` vs the bootstrap embedded shared-rule snapshot in `skills/install-codebase-orient/SKILL.md`, including explicit shared-block markers, a validation script, and a GitHub Actions check that now guards those shared blocks against future accidental drift.
