@@ -364,7 +364,7 @@ When populating `docs/ai/CHANGE_SURFACES.md`, include entries for these change t
 
 - **Auth/admin/operator UX changes**: admin panels, operator dashboards, internal tooling surfaces; note any accessibility requirements or WCAG targets found in source or docs
 - **Deployment-sensitive changes**: flag files whose changes should prompt a smoke check after deploy; note likely smoke-check entry points (e.g., login page, health endpoint, main route)
-- **Docs-impact changes**: for each major subsystem, note which project docs need updating alongside code changes (e.g., "changes to the auth flow should also update `docs/auth.md`")
+- **Docs-impact changes**: for each major subsystem, note which project docs need updating alongside code changes (e.g., "changes to the auth flow should also update `docs/auth.md`"). For check or validation scripts found in `scripts/`, note what file types or patterns they enforce as a constraint on docs-impact changes (e.g., ASCII-only enforcement that applies to all tracked Markdown).
 
 Do not create separate `docs/ai/` files for smoke-check lists or handoff notes - record them inline in `CHANGE_SURFACES.md`.
 <!-- shared-rule:end:change-surfaces-mapping-guidance -->
