@@ -125,7 +125,7 @@ Execute in this order:
 10. Request lifecycle / middleware - hooks, interceptors, middleware
 11. Database layer - migrations, schema snapshots
 12. Tests - test structure and coverage shape
-13. Documentation - existing docs, verification matrices
+13. Documentation - existing docs, verification matrices. If a release plan, milestone tracking doc, or version changelog is found, add a `## Release status` section to `CODEBASE_MAP.md` summarizing the current version, active milestone, and what is blocking the next release. Omit this section if no release lifecycle artifact is present.
 14. Known uncertainty
 
 ## Framework-specific probes
