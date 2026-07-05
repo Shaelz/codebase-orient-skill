@@ -115,7 +115,7 @@ mkdir -p "$parent"
 stage="$(mktemp -d "$parent/.${leaf}.stage.XXXXXX")"
 backup="$parent/.${leaf}.backup.$$"
 moved_existing=false
-cleanup() { [ -d "$stage" ] && rm -rf "$stage"; }
+cleanup() { if [ -d "$stage" ]; then rm -rf "$stage"; fi; }
 trap cleanup EXIT
 
 copy_managed "$SOURCE_DIR" "$stage"
@@ -133,5 +133,5 @@ if ! mv "$stage" "$DEST_DIR" || ! validate_package "$DEST_DIR" "Installed"; then
     exit 1
 fi
 
-[ "$moved_existing" = true ] && rm -rf "$backup"
+if [ "$moved_existing" = true ]; then rm -rf "$backup"; fi
 if [ "$CLEAN" = true ]; then echo "Clean reinstall complete."; else echo "Installation complete."; fi

@@ -21,7 +21,32 @@
 - Extend the existing behavioral-evaluation runner with the authored
   no-date-only-churn and source-drift two-pass cases, an optional model
   override, and stronger tested-skill isolation evidence.
-- Add installer behavior tests covering both managed packages.
+- Add installer behavior tests covering both managed packages, including a
+  new Bash test suite (`scripts/test-installers.sh`) mirroring the existing
+  PowerShell coverage.
+- Fix a Bash installer defect where a successful normal install or `--clean`
+  reinstall printed a success message but exited with status 1, because the
+  `EXIT` trap's cleanup check used `[ -d "$stage" ] && rm -rf "$stage"` as a
+  bare statement; a false test in that position is exempt from `set -e` but
+  still sets the trap function's own exit status, which becomes the script's
+  final exit code. Every Bash wrapper script (`install-user.sh`,
+  `install-project.sh`, `install-codex-user.sh`, `install-codex-project.sh`,
+  `install-bootstrap-user.sh`) ends by calling `install-package.sh` as its
+  last statement, so this previously caused those default-mode and
+  `--clean` invocations to report failure to callers despite installing
+  correctly. Fixed by using explicit `if`/`fi` instead of `&&` for both the
+  trap cleanup and the post-replace backup removal. Caught by the new Bash
+  test suite.
+- Fix the behavioral-evaluation runner's Codex sandbox isolation: `CODEX_HOME`
+  was left pointing at the real user's `.codex` directory even though `HOME`
+  and `USERPROFILE` were overridden to a disposable sandbox, and the
+  disposable `.codex` directory was never created. Both meant Codex could
+  read real global state during a nominally isolated eval run. Fixed by
+  pointing `CODEX_HOME` at the disposable home and creating that directory
+  before invocation. A fully empty disposable `CODEX_HOME` cannot
+  authenticate, so the runner now seeds it with a copy of the real
+  `auth.json` only - no other real Codex state (skills, session history,
+  config) is copied in.
 
 These changes remain unreleased. They do not select a release version, create a
 tag, or imply publication.

@@ -276,9 +276,9 @@ async function runLiveCase(args) {
       env_overrides: {
         USERPROFILE: isolatedHomeRoot,
         HOME: isolatedHomeRoot,
-        CODEX_HOME: process.env.CODEX_HOME || path.join(process.env.USERPROFILE || os.homedir(), ".codex"),
+        CODEX_HOME: path.join(isolatedHomeRoot, ".codex"),
       },
-      fallback_prevention: "The runner sets USERPROFILE and HOME to a disposable home containing only the copied codebase-orient skill, and passes --ignore-user-config to codex exec.",
+      fallback_prevention: "The runner sets USERPROFILE, HOME, and CODEX_HOME to a disposable home containing only the copied codebase-orient skill, and passes --ignore-user-config to codex exec. The disposable CODEX_HOME is seeded with a copy of the real auth.json only, so live cases can authenticate without inheriting any other real Codex state such as registered skills or session history.",
     },
     snapshots: {
       initial: initialSnapshots,
@@ -729,6 +729,7 @@ async function writeRunnerFailure({
 
 async function prepareIsolatedSkillHome(homeRoot, fixtureRoot) {
   await resetDirectory(homeRoot);
+  await seedIsolatedCodexHome(homeRoot);
   const isolatedSkillDir = path.join(homeRoot, ".agents", "skills", "codebase-orient");
   await copyDirectory(canonicalSkillDir, isolatedSkillDir);
   const fixtureSkillDir = path.join(fixtureRoot, ".agents", "skills", "codebase-orient");
@@ -749,6 +750,21 @@ async function prepareIsolatedSkillHome(homeRoot, fixtureRoot) {
     fixture_sha256: fixtureHash,
     hashes_match: canonicalHash === isolatedHash && canonicalHash === fixtureHash,
   };
+}
+
+async function seedIsolatedCodexHome(homeRoot) {
+  const isolatedCodexHome = path.join(homeRoot, ".codex");
+  await fsp.mkdir(isolatedCodexHome, { recursive: true });
+  const realCodexHome = path.join(process.env.USERPROFILE || os.homedir(), ".codex");
+  const realAuthPath = path.join(realCodexHome, "auth.json");
+  try {
+    await fsp.copyFile(realAuthPath, path.join(isolatedCodexHome, "auth.json"));
+  } catch (error) {
+    throw new Error(
+      `Unable to seed isolated Codex auth from ${realAuthPath}: ${error.message}. ` +
+        "Live cases require an authenticated local Codex install; only auth.json is copied, no other real Codex state.",
+    );
+  }
 }
 
 async function createFixtureRepo(fixtureType, fixtureRoot) {
@@ -791,7 +807,7 @@ async function invokeCodexExec({
     ...process.env,
     USERPROFILE: isolatedHomeRoot,
     HOME: isolatedHomeRoot,
-    CODEX_HOME: process.env.CODEX_HOME || path.join(process.env.USERPROFILE || os.homedir(), ".codex"),
+    CODEX_HOME: path.join(isolatedHomeRoot, ".codex"),
   };
   const commandArgs = [
     "exec",

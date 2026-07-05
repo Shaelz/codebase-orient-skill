@@ -224,9 +224,13 @@ representative multi-case subset command is implemented.
 
 The runner keeps disposable fixtures and raw traces outside the repository by
 default. It copies the canonical skill into disposable user-level and
-project-local locations and records content hashes. Runtime skill precedence
-remains observable evidence: if Codex selects another installed copy, the trace
-must be treated as an isolation failure rather than a behavior result.
+project-local locations and records content hashes. It also points `CODEX_HOME`
+at the disposable home rather than the real one, seeding it with a copy of the
+real `auth.json` only so live runs can authenticate without inheriting any
+other real Codex state (registered skills, session history, config). Runtime
+skill precedence remains observable evidence: if Codex selects another
+installed copy, the trace must be treated as an isolation failure rather than
+a behavior result.
 
 Observable limits are intentional and documented:
 
