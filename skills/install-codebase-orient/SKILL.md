@@ -1,202 +1,23 @@
 ---
 name: install-codebase-orient
 version: "0.2.4"
-description: "Install or refresh a project-local codebase orientation workflow in the current repo. Use when the user asks to set up codebase orientation, create a codebase map, scan the repo properly, make Claude understand this project, prepare this repo for future Claude sessions, bootstrap Claude for this repo, or orient Claude to this codebase."
+description: 'Use in Claude Code for a first provenance-backed orientation pass in the current repository. Creates the fixed four-artifact docs/ai package without generating or mutating a project-local runtime SKILL.md. Trigger phrases: install orientation, bootstrap orientation, create codebase map, orient this project.'
 ---
 
 # Skill: install-codebase-orient
 
-> **Source:** This file is the tracked source for the Claude Code bootstrap skill. It installs to `.claude/skills/install-codebase-orient/SKILL.md` at the Claude Code user level. It generates a **Claude Code project-local** `codebase-orient` skill only - Codex installs are handled by the main repo's separate Codex install scripts, not this bootstrapper.
-
 ## Purpose
 
-Install or refresh a project-local codebase orientation workflow inside the current repository.
-
-This is a reusable global bootstrap skill. It does not know any one repo's architecture - it produces a repo-local orientation layer that does.
-
-## Trigger phrases
-
-Use this skill when the user asks things like:
-- set up codebase orientation
-- set up repo orientation
-- install orientation workflow
-- create codebase map
-- scan this repo properly
-- understand this codebase
-- make Claude understand this project
-- prepare this repo for future Claude sessions
-- bootstrap Claude for this repo
-- orient Claude to this project
-
-## What this skill creates or refreshes
-
-Inside the current repository:
-
-| File | Purpose |
-|------|---------|
-| `.claude/skills/codebase-orient/SKILL.md` | Repo-local reusable orientation workflow (Claude Code) |
-| `docs/ai/CODEBASE_MAP.md` | Architecture map: routes, models, services, schema |
-| `docs/ai/CHANGE_SURFACES.md` | Which files to inspect before each type of change |
-| `docs/ai/OPEN_QUESTIONS.md` | Real uncertainties discovered during inspection |
-| `CLAUDE.md` | Minimal orientation pointer (append only if file exists) |
-
-This skill installs to the Claude Code project-local path. For Codex support (`.agents/skills/codebase-orient/`), use the Codex install scripts from the `codebase-orient-skill` repo.
-
-> **Generated cache, not canonical documentation:** The `docs/ai/` files are generated orientation aids - a cache of what Claude observed during inspection. Source code and project config remain authoritative. Treat `docs/ai/` as context, not ground truth.
-
-## Hard rules
-
-- Do not modify application/source code during setup.
-- Do not refactor.
-- Do not commit.
-- Preserve existing project instructions (CLAUDE.md, AGENTS.md, .claude/ config).
-- Use concise, durable markdown.
-- Verify against source code before writing orientation claims.
-- Treat docs/ai files as orientation aids, not absolute truth.
-- Mark every meaningful claim: **Fact** | **Strong inference** | **Weak inference** | **Unknown**
-
-## Idempotency rule
-
-If the docs/ai files already exist:
-- Refresh stale sections rather than rewriting from scratch.
-- Preserve useful existing content.
-- Ensure each file has a `Last refreshed:` line; update the date only when content changes substantively - do not stamp today's date on a file whose content has not changed. See the no-date-only-churn rule in the embedded template below.
-- Only fully rewrite a doc if the architecture has significantly changed.
-
-## Discovery order
-
-Execute inspection in this order:
-
-1. Project instructions and repo docs (CLAUDE.md, AGENTS.md, README.md, docs/)
-2. Runtime/framework config (package.json, svelte.config.*, vite.config.*, composer.json, etc.)
-3. Routes / entrypoints
-4. Domain models / entities / types
-5. Services / actions / workflows / jobs / importers
-6. Persistence / schema / migrations
-7. Admin / UI surfaces
-8. Public / UI surfaces
-9. Tests
-10. Deployment / config
-11. Known uncertainty
-
-## Framework-aware probes
-
-### SvelteKit / JS / TS
-
-- `src/routes/**/+page.svelte`: UI route pages; each file is a route candidate; check subdirectories, not only the top-level `src/routes/+page.svelte`
-- `src/routes/**/+page.server.ts`: server-side data loading, form actions, route-level access control
-- `src/routes/**/+layout.svelte`: shared layout shells
-- `src/routes/**/+layout.server.ts`: server-side load functions for layout-level auth, session, or data
-- `src/routes/**/+server.ts`: API endpoints and server-only request handlers
-
-Server-side route files (`+page.server.ts`, `+layout.server.ts`, `+server.ts`) are critical for understanding auth, data loading, form actions, API endpoints, and route-level access control. Do not skip them when mapping routes or change surfaces.
-
-- `src/lib/`: shared lib: components, server utilities, assessment logic, i18n
-- `src/app.html`: root HTML shell
-- `src/hooks.server.ts`: server-side request handling
-- `package.json`: deps, scripts
-- `svelte.config.*`: adapter, compiler options
-- `vite.config.*`: build config, plugins
-- `static/`: public static assets
-- `tests/`: unit and e2e test structure
-- `docs/`: existing documentation
-
-### Laravel / PHP
-
-- `routes/`: web, api, console route files
-- `app/Models/`: Eloquent models
-- `app/Console/`: Artisan commands
-- `app/Services/`: service layer
-- `app/Filament/`: admin panel resources
-- `database/migrations/`: schema history
-- `resources/`: views, lang, assets
-- `tests/`: Feature and Unit tests
-- `docs/`: existing documentation
-
-### Generic
-
-- Entrypoints and routing
-- Domain model / core types
-- Persistence layer
-- UI surfaces
-- Services / workflows
-- Tests
-- Deployment config
-
-## Output docs
-
-### docs/ai/CODEBASE_MAP.md
-
-Sections:
-- Project identity
-- Runtime/framework
-- Entry points/routes
-- Domain/data model
-- Services/workflows
-- Admin/UI surfaces
-- Public/UI surfaces
-- Persistence/schema
-- Tests
-- Deployment/config
-- Important docs
-- Known uncertainty
-
-### docs/ai/CHANGE_SURFACES.md
-
-For each change type, list files/dirs to inspect first:
-- Route/page changes
-- Styling/theme changes
-- Auth/admin/operator UX changes (note any accessibility requirements or WCAG targets found in source or docs)
-- Data model/schema changes
-- Imports/jobs/workflows
-- Copy/i18n changes
-- Test changes
-- Deployment-sensitive changes (flag likely smoke-check entry points: login page, health endpoint, main route)
-- Docs-impact changes (note which project docs need updating alongside code changes per major subsystem)
-
-### docs/ai/OPEN_QUESTIONS.md
-
-Group by: Architecture | Data/persistence | UI/admin | Tests | Deployment | Documentation drift
-
-Only list real uncertainties found during inspection. Do not invent concerns.
-
-## Formatting generated docs
-
-Before staging created or refreshed `docs/ai/` files, format them if the project has a discoverable formatter that covers Markdown (e.g., Prettier, markdownlint). If a formatter is missing, unavailable, not configured for Markdown, or its invocation would fail, skip formatting, note this in the orientation report, and continue. Do not treat missing formatter support as an orientation failure.
-
-## Staleness rule
-
-The docs/ai files are orientation aids, not ground truth. Always verify against source code before editing.
-
-## Update rule
-
-After orientation or after any structural change, check:
-- Is `docs/ai/CODEBASE_MAP.md` stale?
-- Does `docs/ai/CHANGE_SURFACES.md` need new surfaces?
-- Does `docs/ai/OPEN_QUESTIONS.md` have resolved or new uncertainties?
-
-Update only relevant sections. Do not rewrite the whole map unless the architecture changed significantly.
-
-## Required content for `.claude/skills/codebase-orient/SKILL.md`
-
-> **Sync note:** This embedded template is a manually synced snapshot of `skills/codebase-orient/SKILL.md` from the `codebase-orient-skill` repo. When the canonical source changes, check this section for drift and either update it manually or use the repo's `install-project.ps1` / `install-project.sh` scripts to install the freshest version directly. Do not add Codex install behavior to this section - Codex installs are handled by the repo's separate Codex install scripts (targeting `.agents/skills/codebase-orient/`). Intentionally excluded: framework-specific discovery probes (SvelteKit, Laravel) - the bootstrap skill's own discovery pass handles these; project-specific paths are added via the project-local specialization rule below.
-
-When creating or refreshing the project-local `codebase-orient` skill, the generated SKILL.md **must** include the following sections in addition to the standard discovery order, output files, and staleness rule:
-
-<!-- shared-rule:start:docs-as-hypotheses-rule -->
-> **Docs-as-hypotheses rule**
-> - Treat these documents as helpful hypotheses, not authoritative truth.
-> - Extract high-impact factual claims about architecture, routes, deployment, tests, and source-of-truth files.
-> - Verify those claims against source code before relying on them. Focus on claims that would affect future edits; do not audit every sentence.
-> - Do not copy claims from these docs into `CODEBASE_MAP.md` without labeling whether they are _independently verified from source/config_ or _inherited from existing docs_.
-> - If an instruction doc is stale or misleading compared to what the source shows, record the drift in `OPEN_QUESTIONS.md` under the hidden-risk reporting rule and label it as documentation drift.
-> - Map the instruction-layer topology: note which instruction files are present (e.g., `CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`) and at which scope (project-local vs user-level). Record this in `CODEBASE_MAP.md`; it helps future agents know which rules apply.
-<!-- shared-rule:end:docs-as-hypotheses-rule -->
+Run a first Orient pass in the current Claude Code project. This bootstrap
+entry point creates or reconciles the same fixed, provenance-backed
+four-artifact package as the reusable Orient skill. It does not install,
+generate, specialize, or mutate `.claude/skills/codebase-orient/SKILL.md`.
+Source code and project configuration remain authoritative.
 
 <!-- shared-rule:start:when-to-use-this-skill -->
-### When to use this skill
+## When to use this skill
 
-#### Use this skill when
+### Use this skill when
 
 - Entering a new or unfamiliar repo
 - Starting a fresh session after meaningful time away from the repo
@@ -208,7 +29,7 @@ When creating or refreshing the project-local `codebase-orient` skill, the gener
 - When the agent would otherwise spend significant context rediscovering what is already in or near `docs/ai/`
 - Any time the user says "scan", "orient", "understand", "map", "review", "audit", "survey", "familiarize", or "before I start"
 
-#### Skip this skill when
+### Skip this skill when
 
 - Making a tiny, local, known edit to a single file
 - Fixing a one-file bug where the relevant file and the change are already clear
@@ -218,7 +39,7 @@ When creating or refreshing the project-local `codebase-orient` skill, the gener
 <!-- shared-rule:end:when-to-use-this-skill -->
 
 <!-- shared-rule:start:token-aware-use-guidance -->
-### Token-aware use guidance
+## Token-aware use guidance
 
 `docs/ai/` is an orientation cache. A fresh cache reduces repeated repo-discovery token cost across sessions and agent handoffs.
 
@@ -230,13 +51,23 @@ When creating or refreshing the project-local `codebase-orient` skill, the gener
 Do not save tokens by skipping orientation and then guessing at structure. If broad repo discovery would otherwise be repeated or expensive, refresh the cache instead.
 <!-- shared-rule:end:token-aware-use-guidance -->
 
+## Hard rules during orientation
+
+- Do not modify application or source code.
+- Do not refactor.
+- Do not commit.
+- Verify claims against source code before writing them.
+- Mark every meaningful claim with a confidence label.
+
 <!-- shared-rule:start:normal-mode-vs-dry-run-mode -->
-### Normal mode vs dry-run mode
+## Normal mode vs dry-run mode
 
 **Normal mode** (default - use when the user does not specify):
 
 - Resolve small task-relevant uncertainties automatically by reading source files
-- Apply `docs/ai/` updates without requesting approval
+- Create a full package on first use in a clean repository
+- Reuse an exact-current clean package without rewriting it
+- Treat an unspecific request to refresh or reconcile as a full reconciliation
 - Report what changed at the end
 
 **Dry-run / report-only mode** (use when the user says "dry-run", "report only", "don't write", "propose changes first", "audit only", "no writes", or similar):
@@ -248,8 +79,27 @@ Do not save tokens by skipping orientation and then guessing at structure. If br
 If mode is not specified, default to Normal mode.
 <!-- shared-rule:end:normal-mode-vs-dry-run-mode -->
 
+## Lifecycle and write safety
+
+- **Explicit refresh:** Refresh or reconcile only when the user explicitly asks
+  after an exact-current package is found.
+- **Scoped refresh:** Follow an explicit user scope and its direct dependencies.
+  Record scoped coverage without advancing or claiming a package-wide full
+  snapshot. Do not create a partial supported package before a full package
+  exists.
+- **Legacy adoption:** Markdown artifacts without `ORIENTATION_STATE.json` are
+  legacy material. Inspect them, but obtain explicit approval before writing a
+  manifest or changing them. Reconcile from source after approval.
+- **Dirty tree:** Before writing state that represents uncommitted work, ask
+  whether to write a dirty snapshot or report only. Record the tree condition;
+  keep it marked dirty until a clean refresh replaces it.
+- **No usable Git history:** Perform a full reconciliation and record that
+  revision comparison is unavailable.
+- **Manual edits:** Orient owns the package. Do not promise merge or preservation
+  behavior for manually edited Orient state.
+
 <!-- shared-rule:start:confidence-labels -->
-### Confidence labels
+## Confidence labels
 
 - **Fact**: directly verified in code or docs
 - **Strong inference**: supported by multiple files
@@ -272,8 +122,59 @@ Distinguish how a claim was established:
 In final reports and orientation docs, label each non-trivial claim with one of the above origins so readers can judge which claims need re-verification before acting on them.
 <!-- shared-rule:end:confidence-labels -->
 
+## Discovery order
+
+> **Customization note:** The discovery order below is intentionally broad and works across most project shapes without editing. You can tune the file paths and order for a specific project, but this is optional - not required before first use.
+
+Execute in this order:
+
+1. Project instruction files such as `CLAUDE.md`, `AGENTS.md`, and `README.md`, if present - product purpose, agent rules, project conventions.
+   <!-- shared-rule:start:docs-as-hypotheses-rule -->
+   **Docs-as-hypotheses rule**
+   - Treat these documents as helpful hypotheses, not authoritative truth.
+   - Extract high-impact factual claims about architecture, routes, deployment, tests, and source-of-truth files.
+   - Verify those claims against source code before relying on them. Focus on claims that would affect future edits; do not audit every sentence.
+   - Do not copy claims from these docs into `CODEBASE_MAP.md` without labeling whether they are _independently verified from source/config_ or _inherited from existing docs_.
+   - If an instruction doc is stale or misleading compared to what the source shows, record the drift in `OPEN_QUESTIONS.md` under the hidden-risk reporting rule and label it as documentation drift.
+   - Map the instruction-layer topology: note which instruction files are present (e.g., `CLAUDE.md`, `AGENTS.md`, `.claude/settings.json`) and at which scope (project-local vs user-level). Record this in `CODEBASE_MAP.md`; it helps future agents know which rules apply.
+   <!-- shared-rule:end:docs-as-hypotheses-rule -->
+2. Project manifest (e.g., `package.json`, `pyproject.toml`, `Cargo.toml`) - deps, scripts, build/test commands
+3. Build and config files (e.g., framework config, bundler config) - adapter, build config
+4. `scripts/` directory, if present - may contain manually-run tooling not represented in package scripts or CI
+5. Entry points and routing layer - all pages, controllers, or API routes
+6. Core business logic - domain types, models, scoring, report logic
+7. Server-side services - auth, db/schema, email, external integrations
+8. UI/presentation layer - components, views, templates
+9. Internationalisation or copy files - locale files
+10. Request lifecycle / middleware - hooks, interceptors, middleware
+11. Database layer - migrations, schema snapshots
+12. Tests - test structure and coverage shape
+13. Documentation - existing docs, verification matrices. If a release plan, milestone tracking doc, or version changelog is found, add a `## Release status` section to `CODEBASE_MAP.md` summarizing the current version, active milestone, and what is blocking the next release. Omit this section if no release lifecycle artifact is present.
+14. Known uncertainty
+
+## Framework-specific probes
+
+Apply these probes in addition to the generic discovery order when the relevant framework is detected.
+
+The reusable skill currently includes one explicit tuned probe set for SvelteKit. Other frameworks currently use the generic discovery order unless later live-fire or eval evidence justifies a dedicated tuned probe section.
+
+### SvelteKit
+
+Glob the following file patterns when a SvelteKit project is detected:
+
+- `src/routes/**/+page.svelte`: UI route pages; each file is a route candidate; check subdirectories, not only the top-level `src/routes/+page.svelte`
+- `src/routes/**/+page.server.ts`: server-side data loading, form actions, and route-level access control
+- `src/routes/**/+layout.svelte`: shared layout shells
+- `src/routes/**/+layout.server.ts`: server-side load functions for layout-level auth, session, or data
+- `src/routes/**/+server.ts`: API endpoints and server-only request handlers
+
+Server-side route files (`+page.server.ts`, `+layout.server.ts`, `+server.ts`) are critical for understanding auth, data loading, form actions, API endpoints, and route-level access control. Do not skip them when mapping routes or change surfaces.
+
+- The standard app shell template is `src/app.html`.
+- Adapter choice in `svelte.config.js` determines deployment target - confirm before making deployment-related claims.
+
 <!-- shared-rule:start:ci-deployment-precision-rule -->
-### CI/deployment precision rule
+## CI/deployment precision rule
 
 When reading CI or deployment workflow files, preserve operationally relevant detail. Do not round down specifics into vague summaries.
 
@@ -293,7 +194,7 @@ Label CI/deployment claims with _independently verified from source/config_ when
 <!-- shared-rule:end:ci-deployment-precision-rule -->
 
 <!-- shared-rule:start:read-depth-heuristic -->
-### Read-depth heuristic
+## Read-depth heuristic
 
 Do not read every large CSS, config, or generated file by default.
 
@@ -303,13 +204,13 @@ Do not read every large CSS, config, or generated file by default.
 
 When in doubt, prefer confirming existence first and reading fully only if a claim requires it.
 
-#### Path existence vs content read
+### Path existence vs content read
 
 Path existence alone is sufficient for low-risk inventory claims - confirming a directory structure, listing file counts, or noting that a config file is present.
 
 Read the actual file content when the claim affects behavior, architecture, risk, commands, deployment, auth, routing, or change surfaces. Do not label a claim as _independently verified from source/config_ based on path existence alone when the file is cheap to inspect and its content would materially affect the map.
 
-#### Small source-of-truth file read rule
+### Small source-of-truth file read rule
 
 If a small file appears to define vocabulary or source-of-truth tokens used throughout the project, read enough of it to verify the vocabulary rather than inheriting the vocabulary from docs.
 
@@ -324,7 +225,7 @@ Use a partial read when that is sufficient. Label the resulting claims with the 
 <!-- shared-rule:end:read-depth-heuristic -->
 
 <!-- shared-rule:start:cheap-artifact-glob-rule -->
-### Cheap artifact glob rule
+## Cheap artifact glob rule
 
 Before leaving an open question about the existence or scope of static assets, scripts, generated outputs, documentation, tests, migrations, or config files, resolve it with a cheap path glob.
 
@@ -343,7 +244,7 @@ Do not deeply read all matched files by default. Use the glob to resolve existen
 <!-- shared-rule:end:cheap-artifact-glob-rule -->
 
 <!-- shared-rule:start:open-question-quality-rule -->
-### Open question quality rule
+## Open question quality rule
 
 Do not leave an open question in `OPEN_QUESTIONS.md` if it can be resolved with one cheap path glob or one small-file read.
 
@@ -357,8 +258,30 @@ Leave a question open only when resolving it would require:
 If a glob or small read can close the question, close it and label the basis.
 <!-- shared-rule:end:open-question-quality-rule -->
 
+## Supported orientation package
+
+A full supported package always contains:
+
+- `docs/ai/ORIENTATION_STATE.json`
+- `docs/ai/CODEBASE_MAP.md`
+- `docs/ai/CHANGE_SURFACES.md`
+- `docs/ai/OPEN_QUESTIONS.md`
+
+`ORIENTATION_STATE.json` is the single freshness and provenance record. It
+records the format, producer and Orient version, package-wide source revision
+and ref where available, tree condition, expected artifact inventory,
+reconciliation mode, and compact scoped coverage where applicable. Keep it a
+compact current-state record, not telemetry or an append-only diary.
+
+The Markdown artifacts do not carry `Last refreshed:` lines. `OPEN_QUESTIONS.md`
+always exists; when no material questions remain, state that explicitly.
+
+In target repos, these files should be committed to version control. They are authored narrative that improves across sessions, not regenerable cache - do not add them to `.gitignore` in target repos.
+
+Before staging, format all created/updated files if the project has a discoverable formatter that covers Markdown (e.g., Prettier, markdownlint). If a formatter is missing, unavailable, not configured for Markdown, or its invocation would fail, skip formatting, note this clearly in the orientation report, and continue. Do not treat missing formatter support as an orientation failure.
+
 <!-- shared-rule:start:change-surfaces-mapping-guidance -->
-### CHANGE_SURFACES mapping guidance
+## CHANGE_SURFACES mapping guidance
 
 When populating `docs/ai/CHANGE_SURFACES.md`, include entries for these change types in addition to the standard surfaces (routes, styling, schema, tests, config):
 
@@ -370,31 +293,38 @@ Do not create separate `docs/ai/` files for smoke-check lists or handoff notes -
 <!-- shared-rule:end:change-surfaces-mapping-guidance -->
 
 <!-- shared-rule:start:no-date-only-churn-rule -->
-### No-date-only-churn rule
+## No-date-only-churn rule
 
-Do not rewrite a generated `docs/ai/` file solely to update a date, timestamp, or freshness marker.
-
-- If a file has no substantive content changes after verification, leave it unchanged.
-- Report it as **verified current** in the orientation report - not as "refreshed" or "updated".
-- Only update the `Last refreshed:` date when file content changes for a substantive reason.
-- If the project has an existing documented convention requiring date refreshes on every orientation pass, follow that convention - but only if it is explicitly documented in `CLAUDE.md`, `AGENTS.md`, or project docs.
+Do not rewrite the package solely to change a date, timestamp, or freshness
+marker. Freshness belongs in `ORIENTATION_STATE.json`, and a normal exact-current
+reuse leaves every artifact unchanged.
 <!-- shared-rule:end:no-date-only-churn-rule -->
 
-<!-- shared-rule:start:cross-file-consistency-rule -->
-### Cross-file consistency rule
+## Staleness and update rule
 
-The three `docs/ai/` files must remain coherent with each other. After any update, verify:
+The docs/ai files are orientation aids, not ground truth. Always verify against source code before editing.
+
+When re-running orientation on a repo that already has docs/ai/ files, read them to understand what was previously recorded - but treat their structural claims as hypotheses requiring source verification, the same way the docs-as-hypotheses rule applies to CLAUDE.md and README.md. Do not accept prior orientation claims as discovery input for the new analysis pass; verify them against source before carrying them forward.
+
+After any structural change, check whether the package needs reconciliation.
+Update only relevant content unless a full reconciliation is requested or
+required by unsafe provenance comparison.
+
+<!-- shared-rule:start:cross-file-consistency-rule -->
+## Cross-file consistency rule
+
+The four `docs/ai/` artifacts must remain coherent with each other. After any update, verify:
 
 - **Resolved questions**: if `OPEN_QUESTIONS.md` marks a question resolved, remove or update any stale "unknown" or "needs investigation" language in `CODEBASE_MAP.md` and `CHANGE_SURFACES.md` that referred to the same item.
 - **New change surfaces**: if a change surface is added to `CHANGE_SURFACES.md`, check whether `CODEBASE_MAP.md` should mention the associated area or file.
 - **New map uncertainty**: if a claim in `CODEBASE_MAP.md` becomes uncertain, check whether the corresponding open question exists in `OPEN_QUESTIONS.md`; add or update it if not.
 - **Contradictions**: do not let one file say "unknown" or "unresolved" while another says "resolved" or "confirmed" - unless the distinction is explicitly explained.
 
-Apply this as a final consistency pass after refreshing any of the three files.
+Apply this as a final consistency pass after reconciling any package artifact.
 <!-- shared-rule:end:cross-file-consistency-rule -->
 
 <!-- shared-rule:start:orientation-completion-rule -->
-### Orientation completion rule
+## Orientation completion rule
 
 Before finishing orientation, classify every unresolved open question as one of:
 
@@ -424,19 +354,19 @@ For Relevant-but-non-blocking and Background questions: record them in `OPEN_QUE
 <!-- shared-rule:end:orientation-completion-rule -->
 
 <!-- shared-rule:start:orientation-report-discipline -->
-### Orientation report discipline
+## Orientation report discipline
 
 The final orientation report must distinguish between docs that changed and docs that did not. Label each `docs/ai/` file with one of:
 
 - **Created**: file did not exist; was created this pass
-- **Substantively updated**: content changed; `Last refreshed` date updated
+- **Substantively updated**: content and manifest provenance changed
 - **Verified current / unchanged**: content inspected and confirmed accurate; file not rewritten
 - **Proposed only**: dry-run mode; change proposed but not written
 - **Skipped**: file not inspected this pass; state why
 
 Do not label a file as "updated" or "refreshed" if only its date changed. A file with no substantive changes must be reported as **verified current / unchanged**.
 
-#### Agent handoff summary
+### Agent handoff summary
 
 When orientation is requested before an agent handoff, append a compact **Handoff summary** block to the orientation report:
 
@@ -449,34 +379,19 @@ Keep it under 150 words. Do not create a separate `docs/ai/` file for it.
 <!-- shared-rule:end:orientation-report-discipline -->
 
 <!-- shared-rule:start:project-local-specialization-rule -->
-### Project-local specialization rule
+## Project-local runtime mutation boundary
 
-After the first orientation pass, if the repo has important project-specific namespaces, service folders, command groups, admin surfaces, workflow directories, generated-output locations, or deployment conventions that were not in the generic probe list, update the repo-local Claude Code skill at `.claude/skills/codebase-orient/SKILL.md` with those project-specific discovery paths.
+Do not create, update, specialize, migrate, or preserve
+`.claude/skills/codebase-orient/SKILL.md` during orientation. A repo-local
+installed skill is runtime material, not Orient state. Existing specialized
+copies are legacy local state with no automatic migration or overlay contract.
 
-This applies only when a repo-local skill exists at `.claude/skills/codebase-orient/SKILL.md` or is being generated during this session. If no such skill exists and the user has not requested skill installation, skip this step. Codex installs (`.agents/skills/codebase-orient/`) are handled by the source repo's install scripts, not by this rule.
-
-Before writing the local specialization:
-- Verify each proposed path exists with a glob or read.
-- Briefly state why each path matters (e.g., "domain workflow folder", "admin resource directory").
-
-Do not backport concrete project-specific paths to the public skill unless they are broadly reusable across many projects.
-
-The project-specific paths added here are the thin, customisable layer of the repo-local skill. The canonical rules above are the stable layer that applies across all repos. Keep them visually separated - project-specific additions belong at the end of the file, clearly marked as project-local.
-
-Examples of paths that qualify for local specialization:
-- framework-adjacent service namespaces
-- custom domain workflow folders
-- admin page or resource directories
-- manually-run tooling directories
-- import/export pipeline directories
-- deployment or release directories
-- generated asset conventions
-
-If the skill is running in dry-run/report-only mode, report the proposed local specialization but do not write it.
+Report useful project-specific paths in the supported `docs/ai/` package. Do
+not invent a replacement overlay system.
 <!-- shared-rule:end:project-local-specialization-rule -->
 
 <!-- shared-rule:start:hidden-risk-reporting-rule -->
-### Hidden-risk reporting rule
+## Hidden-risk reporting rule
 
 Be concise by default, but go deeper when depth changes the decision.
 
@@ -508,7 +423,7 @@ If a hidden-risk item affects reproducibility, future installs, runtime behavior
 <!-- shared-rule:end:hidden-risk-reporting-rule -->
 
 <!-- shared-rule:start:source-of-truth-drift-detection-rule -->
-### Source-of-truth drift detection rule
+## Source-of-truth drift detection rule
 
 When multiple copies or layers exist, explicitly map them before declaring the system current.
 
@@ -538,66 +453,3 @@ If two copies differ, do not just update the currently active copy. Report the d
 - update all authoritative/durable copies, or
 - clearly mark which copy remains stale and what consequence that has.
 <!-- shared-rule:end:source-of-truth-drift-detection-rule -->
-
----
-
-## Changelog
-
-> **Version scheme note:** The version number in this file's frontmatter tracks the bootstrap skill's own content changes. It is independent from the repository release tag. The repository `CHANGELOG.md` records release history and relevant bootstrap-skill changes.
-
-### 0.2.4 - 2026-05-24
-
-- Added explicit shared-rule markers for automated drift validation of the embedded shared-rule snapshot.
-- Aligned the embedded shared-rule wording with the canonical `skills/codebase-orient/SKILL.md` shared-rule content.
-- Future bootstrap-generated project-local skill content now uses the synchronized shared-rule blocks.
-- No installer behavior change.
-
-### 0.2.3 - 2026-05-24
-
-- Replaced the stale concrete repository-version reference in the version-scheme note with durable repository changelog wording.
-- No bootstrap behavior, embedded template rule, installer behavior, or runtime/output contract changed.
-
-### 0.2.2 - 2026-05-21
-
-- Clarify authority boundaries: canonical skill vs bootstrap vs repo-local specialization vs generated docs/ai cache.
-- Added non-canonical cache framing note after "What this skill creates or refreshes" table.
-- Fixed `Last refreshed:` contradiction in idempotency rule - now explicitly defers to no-date-only-churn rule.
-- Added thin-overlay framing to project-local specialization rule in embedded template.
-- Added SvelteKit subdirectory note and critical server-side route files callout to bootstrap discovery probes, matching canonical skill.
-- No installer behavior changes.
-
-### 0.2.1 - 2026-05-21
-
-Embedded template synced with repo v0.2.1:
-- Instruction-layer topology note in discovery step 1.
-- CHANGE_SURFACES mapping guidance: auth/admin/operator UX, deployment-sensitive, docs-impact surface categories.
-- Agent handoff summary format in orientation report discipline.
-
-### 0.2.0 - 2026-05-21
-
-Embedded template synced with repo v0.2.0:
-- No-date-only-churn rule.
-- Orientation report discipline (Created / Substantively updated / Verified current / Proposed only / Skipped labels).
-- Cross-file consistency rule.
-- Normal/dry-run mode (moved earlier; added "audit only" / "no writes" triggers).
-- When-to-use / when-to-skip guidance.
-- Token-aware orientation cache guidance.
-- Read-depth heuristic: path-existence vs content-read subsection; small source-of-truth file read rule.
-- Cheap artifact glob rule.
-- Open question quality rule.
-- Project-local specialization rule (explicit `.claude/skills/codebase-orient/SKILL.md` path; Codex delegation noted).
-- Formatter fallback guidance.
-- Confidence labels: full 9 claim-origin distinctions.
-
-### 0.1.1
-
-- User-level Claude Code install scripts added to the repo: `scripts/install-bootstrap-user.ps1` and `scripts/install-bootstrap-user.sh`.
-- README updated with bootstrap install instructions and "which skill?" guidance.
-- No project-local bootstrap install scripts. No Codex bootstrap install support.
-
-### 0.1.0
-
-- Initial tracked version. Based on the installed `~/.claude/skills/install-codebase-orient/SKILL.md` at 2026-05-21, with three additions: `version` field in frontmatter, source callout block, and this changelog section.
-- Added `version` field to frontmatter.
-- Added source callout block noting Claude Code-only scope and Codex delegation.
-- Embedded downstream template includes all canonical rules from `skills/codebase-orient/SKILL.md` as of codebase-orient-skill v0.1.1: docs-as-hypotheses rule, orientation completion rule, normal/dry-run mode, confidence labels (all 9 origins), hidden-risk reporting rule, source-of-truth drift detection rule, CI/deployment precision rule, read-depth heuristic, cheap artifact glob rule, open question quality rule, project-local specialization rule.

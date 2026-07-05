@@ -1,15 +1,15 @@
 ---
 name: codebase-orient
-description: 'Use to orient Claude before broad or unfamiliar repo work. Good triggers: new or unfamiliar repo, new session, before multi-file changes, refactors, planning, or agent handoff, after route/schema/auth/deploy/config changes, when docs/ai/ is missing or stale, when repo structure or change surfaces are unclear, when the agent would otherwise spend significant context rediscovering the codebase. Skip for tiny single-file known fixes. Produces docs/ai/CODEBASE_MAP.md, CHANGE_SURFACES.md, OPEN_QUESTIONS.md. Trigger phrases: scan, orient, understand, map, review, audit, survey, familiarize, plan changes, where is X, how does this work, before I start.'
+description: 'Use to orient Claude before broad or unfamiliar repo work. Good triggers: new or unfamiliar repo, new session, before multi-file changes, refactors, planning, or agent handoff, after route/schema/auth/deploy/config changes, when docs/ai/ is missing or stale, when repo structure or change surfaces are unclear, when the agent would otherwise spend significant context rediscovering the codebase. Skip for tiny single-file known fixes. Produces a provenance-backed four-artifact docs/ai package. Trigger phrases: scan, orient, understand, map, review, audit, survey, familiarize, plan changes, where is X, how does this work, before I start.'
 ---
 
 # Skill: codebase-orient
 
 ## Purpose
 
-Orient Claude to the current state of this repo before non-trivial work. Produces or refreshes `docs/ai/CODEBASE_MAP.md`, `docs/ai/CHANGE_SURFACES.md`, and `docs/ai/OPEN_QUESTIONS.md`.
-
-> **Customization note:** The `docs/ai/` output location is a convention. Adapt it to your project's documentation structure.
+Orient Claude to the current state of this repo before non-trivial work. It
+creates or reconciles a fixed, provenance-backed four-artifact package in
+`docs/ai/`. Source code and project configuration remain authoritative.
 
 <!-- shared-rule:start:when-to-use-this-skill -->
 ## When to use this skill
@@ -62,7 +62,9 @@ Do not save tokens by skipping orientation and then guessing at structure. If br
 **Normal mode** (default - use when the user does not specify):
 
 - Resolve small task-relevant uncertainties automatically by reading source files
-- Apply `docs/ai/` updates without requesting approval
+- Create a full package on first use in a clean repository
+- Reuse an exact-current clean package without rewriting it
+- Treat an unspecific request to refresh or reconcile as a full reconciliation
 - Report what changed at the end
 
 **Dry-run / report-only mode** (use when the user says "dry-run", "report only", "don't write", "propose changes first", "audit only", "no writes", or similar):
@@ -73,6 +75,25 @@ Do not save tokens by skipping orientation and then guessing at structure. If br
 
 If mode is not specified, default to Normal mode.
 <!-- shared-rule:end:normal-mode-vs-dry-run-mode -->
+
+## Lifecycle and write safety
+
+- **Explicit refresh:** Refresh or reconcile only when the user explicitly asks
+  after an exact-current package is found.
+- **Scoped refresh:** Follow an explicit user scope and its direct dependencies.
+  Record scoped coverage without advancing or claiming a package-wide full
+  snapshot. Do not create a partial supported package before a full package
+  exists.
+- **Legacy adoption:** Markdown artifacts without `ORIENTATION_STATE.json` are
+  legacy material. Inspect them, but obtain explicit approval before writing a
+  manifest or changing them. Reconcile from source after approval.
+- **Dirty tree:** Before writing state that represents uncommitted work, ask
+  whether to write a dirty snapshot or report only. Record the tree condition;
+  keep it marked dirty until a clean refresh replaces it.
+- **No usable Git history:** Perform a full reconciliation and record that
+  revision comparison is unavailable.
+- **Manual edits:** Orient owns the package. Do not promise merge or preservation
+  behavior for manually edited Orient state.
 
 <!-- shared-rule:start:confidence-labels -->
 ## Confidence labels
@@ -234,17 +255,25 @@ Leave a question open only when resolving it would require:
 If a glob or small read can close the question, close it and label the basis.
 <!-- shared-rule:end:open-question-quality-rule -->
 
-## Output files
+## Supported orientation package
 
-After orientation, create or refresh:
+A full supported package always contains:
 
+- `docs/ai/ORIENTATION_STATE.json`
 - `docs/ai/CODEBASE_MAP.md`
 - `docs/ai/CHANGE_SURFACES.md`
 - `docs/ai/OPEN_QUESTIONS.md`
 
-In target repos, these files should be committed to version control. They are authored narrative that improves across sessions, not regenerable cache - do not add them to `.gitignore` in target repos.
+`ORIENTATION_STATE.json` is the single freshness and provenance record. It
+records the format, producer and Orient version, package-wide source revision
+and ref where available, tree condition, expected artifact inventory,
+reconciliation mode, and compact scoped coverage where applicable. Keep it a
+compact current-state record, not telemetry or an append-only diary.
 
-Add or update `Last refreshed: <date>` at the top of each file **only when its content changes for a substantive reason**. Do not update the date solely because orientation ran again. A file that is verified current and unchanged should be left as-is.
+The Markdown artifacts do not carry `Last refreshed:` lines. `OPEN_QUESTIONS.md`
+always exists; when no material questions remain, state that explicitly.
+
+In target repos, these files should be committed to version control. They are authored narrative that improves across sessions, not regenerable cache - do not add them to `.gitignore` in target repos.
 
 Before staging, format all created/updated files if the project has a discoverable formatter that covers Markdown (e.g., Prettier, markdownlint). If a formatter is missing, unavailable, not configured for Markdown, or its invocation would fail, skip formatting, note this clearly in the orientation report, and continue. Do not treat missing formatter support as an orientation failure.
 
@@ -263,12 +292,9 @@ Do not create separate `docs/ai/` files for smoke-check lists or handoff notes -
 <!-- shared-rule:start:no-date-only-churn-rule -->
 ## No-date-only-churn rule
 
-Do not rewrite a generated `docs/ai/` file solely to update a date, timestamp, or freshness marker.
-
-- If a file has no substantive content changes after verification, leave it unchanged.
-- Report it as **verified current** in the orientation report - not as "refreshed" or "updated".
-- Only update the `Last refreshed:` date when file content changes for a substantive reason.
-- If the project has an existing documented convention requiring date refreshes on every orientation pass, follow that convention - but only if it is explicitly documented in `CLAUDE.md`, `AGENTS.md`, or project docs.
+Do not rewrite the package solely to change a date, timestamp, or freshness
+marker. Freshness belongs in `ORIENTATION_STATE.json`, and a normal exact-current
+reuse leaves every artifact unchanged.
 <!-- shared-rule:end:no-date-only-churn-rule -->
 
 ## Staleness and update rule
@@ -277,19 +303,21 @@ The docs/ai files are orientation aids, not ground truth. Always verify against 
 
 When re-running orientation on a repo that already has docs/ai/ files, read them to understand what was previously recorded - but treat their structural claims as hypotheses requiring source verification, the same way the docs-as-hypotheses rule applies to CLAUDE.md and README.md. Do not accept prior orientation claims as discovery input for the new analysis pass; verify them against source before carrying them forward.
 
-After any structural change, check whether the three docs/ai files need updates. Update only the relevant sections. Do not rewrite the whole map unless the architecture changed significantly.
+After any structural change, check whether the package needs reconciliation.
+Update only relevant content unless a full reconciliation is requested or
+required by unsafe provenance comparison.
 
 <!-- shared-rule:start:cross-file-consistency-rule -->
 ## Cross-file consistency rule
 
-The three `docs/ai/` files must remain coherent with each other. After any update, verify:
+The four `docs/ai/` artifacts must remain coherent with each other. After any update, verify:
 
 - **Resolved questions**: if `OPEN_QUESTIONS.md` marks a question resolved, remove or update any stale "unknown" or "needs investigation" language in `CODEBASE_MAP.md` and `CHANGE_SURFACES.md` that referred to the same item.
 - **New change surfaces**: if a change surface is added to `CHANGE_SURFACES.md`, check whether `CODEBASE_MAP.md` should mention the associated area or file.
 - **New map uncertainty**: if a claim in `CODEBASE_MAP.md` becomes uncertain, check whether the corresponding open question exists in `OPEN_QUESTIONS.md`; add or update it if not.
 - **Contradictions**: do not let one file say "unknown" or "unresolved" while another says "resolved" or "confirmed" - unless the distinction is explicitly explained.
 
-Apply this as a final consistency pass after refreshing any of the three files.
+Apply this as a final consistency pass after reconciling any package artifact.
 <!-- shared-rule:end:cross-file-consistency-rule -->
 
 <!-- shared-rule:start:orientation-completion-rule -->
@@ -328,7 +356,7 @@ For Relevant-but-non-blocking and Background questions: record them in `OPEN_QUE
 The final orientation report must distinguish between docs that changed and docs that did not. Label each `docs/ai/` file with one of:
 
 - **Created**: file did not exist; was created this pass
-- **Substantively updated**: content changed; `Last refreshed` date updated
+- **Substantively updated**: content and manifest provenance changed
 - **Verified current / unchanged**: content inspected and confirmed accurate; file not rewritten
 - **Proposed only**: dry-run mode; change proposed but not written
 - **Skipped**: file not inspected this pass; state why
@@ -348,30 +376,15 @@ Keep it under 150 words. Do not create a separate `docs/ai/` file for it.
 <!-- shared-rule:end:orientation-report-discipline -->
 
 <!-- shared-rule:start:project-local-specialization-rule -->
-## Project-local specialization rule
+## Project-local runtime mutation boundary
 
-After the first orientation pass, if the repo has important project-specific namespaces, service folders, command groups, admin surfaces, workflow directories, generated-output locations, or deployment conventions that were not in the generic probe list, update the repo-local Claude Code skill at `.claude/skills/codebase-orient/SKILL.md` with those project-specific discovery paths.
+Do not create, update, specialize, migrate, or preserve
+`.claude/skills/codebase-orient/SKILL.md` during orientation. A repo-local
+installed skill is runtime material, not Orient state. Existing specialized
+copies are legacy local state with no automatic migration or overlay contract.
 
-This applies only when a repo-local skill exists at `.claude/skills/codebase-orient/SKILL.md` or is being generated during this session. If no such skill exists and the user has not requested skill installation, skip this step. Codex installs (`.agents/skills/codebase-orient/`) are handled by the source repo's install scripts, not by this rule.
-
-Before writing the local specialization:
-- Verify each proposed path exists with a glob or read.
-- Briefly state why each path matters (e.g., "domain workflow folder", "admin resource directory").
-
-Do not backport concrete project-specific paths to the public skill unless they are broadly reusable across many projects.
-
-The project-specific paths added here are the thin, customisable layer of the repo-local skill. The canonical rules above are the stable layer that applies across all repos. Keep them visually separated - project-specific additions belong at the end of the file, clearly marked as project-local.
-
-Examples of paths that qualify for local specialization:
-- framework-adjacent service namespaces
-- custom domain workflow folders
-- admin page or resource directories
-- manually-run tooling directories
-- import/export pipeline directories
-- deployment or release directories
-- generated asset conventions
-
-If the skill is running in dry-run/report-only mode, report the proposed local specialization but do not write it.
+Report useful project-specific paths in the supported `docs/ai/` package. Do
+not invent a replacement overlay system.
 <!-- shared-rule:end:project-local-specialization-rule -->
 
 <!-- shared-rule:start:hidden-risk-reporting-rule -->
