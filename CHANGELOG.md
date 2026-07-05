@@ -2,7 +2,9 @@
 
 ## Unreleased
 
-No changes yet.
+- Run the Bash installer suite on Ubuntu and the PowerShell installer suite on
+  both Ubuntu and Windows through a dedicated `installer-tests` GitHub Actions
+  workflow. The existing shared-rule drift workflow remains separate.
 
 ## 1.1.0 - 2026-07-05
 
