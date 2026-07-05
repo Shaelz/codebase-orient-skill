@@ -13,7 +13,7 @@ const casesPath = path.join(repoRoot, "evals", "codebase-orient-behavioral-cases
 const canonicalSkillDir = path.join(repoRoot, "skills", "codebase-orient");
 const canonicalSkillPath = path.join(canonicalSkillDir, "SKILL.md");
 const defaultOutputRoot = path.join(path.dirname(repoRoot), "codebase-orient-behavioral-eval-artifacts");
-const caseArgKeys = new Set(["case-id", "codex-path", "output-root", "inspect-artifact-root", "grade-artifact-root", "timeout-ms"]);
+const caseArgKeys = new Set(["case-id", "codex-path", "model", "output-root", "inspect-artifact-root", "grade-artifact-root", "timeout-ms"]);
 
 main().catch((error) => {
   const message = error instanceof Error ? error.stack || error.message : String(error);
@@ -75,6 +75,7 @@ function parseArgs(argv) {
     help: false,
     caseId: null,
     codexPath: null,
+    model: null,
     outputRoot: defaultOutputRoot,
     inspectArtifactRoot: null,
     gradeArtifactRoot: null,
@@ -96,6 +97,9 @@ function parseArgs(argv) {
         break;
       case "--codex-path":
         args.codexPath = requireValue(argv, ++index, token);
+        break;
+      case "--model":
+        args.model = requireValue(argv, ++index, token);
         break;
       case "--output-root":
         args.outputRoot = requireValue(argv, ++index, token);
@@ -139,7 +143,7 @@ function getUsage() {
     "  node scripts/run-behavioral-evals.mjs --list-cases",
     "  node scripts/run-behavioral-evals.mjs --inspect-artifact-root <path> [--case-id <id>]",
     "  node scripts/run-behavioral-evals.mjs --grade-artifact-root <path> [--case-id <id>]",
-    "  node scripts/run-behavioral-evals.mjs --case-id <id> [--codex-path <path>] [--output-root <path>] [--timeout-ms <ms>]",
+    "  node scripts/run-behavioral-evals.mjs --case-id <id> [--codex-path <path>] [--model <model>] [--output-root <path>] [--timeout-ms <ms>]",
   ].join(os.EOL);
 }
 
@@ -218,7 +222,10 @@ async function runLiveCase(args) {
     throw new Error(`Unknown case id: ${args.caseId}`);
   }
   if (selectedCase.execution !== "single") {
-    throw new Error(`This Node vertical slice currently supports single-execution cases only. Requested: ${selectedCase.execution}`);
+    if (selectedCase.execution === "two-pass-rerun" || selectedCase.execution === "two-pass-source-drift") {
+      return runTwoPassLiveCase(args, selectedCase);
+    }
+    throw new Error(`Unsupported case execution type: ${selectedCase.execution}`);
   }
 
   const codexPath = await findCodexPath(args.codexPath);
@@ -234,7 +241,7 @@ async function runLiveCase(args) {
 
   await fsp.mkdir(passRoot, { recursive: true });
   await createFixtureRepo(selectedCase.fixture, fixtureRoot);
-  const testedSkill = await prepareIsolatedSkillHome(isolatedHomeRoot);
+  const testedSkill = await prepareIsolatedSkillHome(isolatedHomeRoot, fixtureRoot);
 
   if (!testedSkill.hashes_match) {
     throw new Error("Isolated skill copy hash does not match canonical SKILL.md hash.");
@@ -292,6 +299,7 @@ async function runLiveCase(args) {
       isolatedHomeRoot,
       passRoot,
       timeoutMs: args.timeoutMs,
+      model: args.model,
     });
   } catch (error) {
     const runnerFailure = {
@@ -366,6 +374,152 @@ async function runLiveCase(args) {
     artifact_metadata_path: metadataPath,
     completion: executionResult.completion,
     child_exit_code: executionResult.exitCode,
+  };
+}
+
+async function runTwoPassLiveCase(args, selectedCase) {
+  const codexPath = await findCodexPath(args.codexPath);
+  const outputRoot = path.resolve(args.outputRoot);
+  await fsp.mkdir(outputRoot, { recursive: true });
+
+  const runRoot = path.join(outputRoot, formatTimestamp(new Date()));
+  const caseRoot = path.join(runRoot, selectedCase.id);
+  const fixtureRoot = path.join(caseRoot, "fixture");
+  const isolatedHomeRoot = path.join(caseRoot, "home");
+  await createFixtureRepo(selectedCase.fixture, fixtureRoot);
+  const testedSkill = await prepareIsolatedSkillHome(isolatedHomeRoot, fixtureRoot);
+  if (!testedSkill.hashes_match) {
+    throw new Error("Isolated skill copy hash does not match canonical SKILL.md hash.");
+  }
+
+  const initialSnapshots = {
+    head_sha: await getHeadShaOrNull(fixtureRoot),
+    git_status: await getGitStatus(fixtureRoot),
+    non_docs_ai_surface: await snapshotSurface(fixtureRoot),
+    docs_ai: await snapshotDocsAi(fixtureRoot),
+  };
+
+  const passResults = [];
+  for (let passNumber = 1; passNumber <= 2; passNumber += 1) {
+    if (passNumber === 2 && selectedCase.execution === "two-pass-source-drift") {
+      await fsp.appendFile(path.join(fixtureRoot, "README.md"), "\nSource drift added by the evaluation harness.\n", "utf8");
+    }
+
+    const before = {
+      head_sha: await getHeadShaOrNull(fixtureRoot),
+      git_status: await getGitStatus(fixtureRoot),
+      non_docs_ai_surface: await snapshotSurface(fixtureRoot),
+      docs_ai: await snapshotDocsAi(fixtureRoot),
+    };
+    const passRoot = path.join(caseRoot, `pass-${passNumber}`);
+    await fsp.mkdir(passRoot, { recursive: true });
+    const startedAt = new Date();
+    const executionResult = await invokeCodexExec({
+      codexPath,
+      fixtureRoot,
+      prompt: selectedCase.prompt,
+      sandbox: selectedCase.sandbox,
+      isolatedHomeRoot,
+      passRoot,
+      timeoutMs: args.timeoutMs,
+      model: args.model,
+    });
+    const completedAt = new Date();
+    const after = {
+      head_sha: await getHeadShaOrNull(fixtureRoot),
+      git_status: await getGitStatus(fixtureRoot),
+      non_docs_ai_surface: await snapshotSurface(fixtureRoot),
+      docs_ai: await snapshotDocsAi(fixtureRoot),
+    };
+    const trace = await parseJsonlTrace(executionResult.tracePath);
+    passResults.push({
+      name: `pass-${passNumber}`,
+      started_at: startedAt.toISOString(),
+      completed_at: completedAt.toISOString(),
+      duration_ms: completedAt.getTime() - startedAt.getTime(),
+      child_exit_code: executionResult.exitCode,
+      completion: executionResult.completion,
+      paths: {
+        trace_jsonl: executionResult.tracePath,
+        stderr_txt: executionResult.stderrPath,
+        final_message_txt: executionResult.finalMessagePath,
+      },
+      trace: {
+        invalid_jsonl_lines: trace.invalidLines,
+        evidence: extractTraceEvidence(trace.events),
+      },
+      snapshots: { before, after },
+    });
+  }
+
+  const firstDocs = passResults[0].snapshots.after.docs_ai;
+  const secondDocs = passResults[1].snapshots.after.docs_ai;
+  const docsChangesOnSecondPass = compareSnapshotKeys(firstDocs, secondDocs);
+  const secondPassSurfaceChanges = compareSnapshotKeys(
+    passResults[1].snapshots.before.non_docs_ai_surface,
+    passResults[1].snapshots.after.non_docs_ai_surface,
+  );
+  const requiredArtifacts = [
+    "docs/ai/ORIENTATION_STATE.json",
+    "docs/ai/CODEBASE_MAP.md",
+    "docs/ai/CHANGE_SURFACES.md",
+    "docs/ai/OPEN_QUESTIONS.md",
+  ];
+  const firstPassCreatedFullPackage = requiredArtifacts.every((file) => file in firstDocs);
+  const behaviorSatisfied = selectedCase.execution === "two-pass-rerun"
+    ? docsChangesOnSecondPass.length === 0
+    : docsChangesOnSecondPass.length > 0;
+  const processesCompleted = passResults.every((pass) => pass.child_exit_code === 0 && pass.completion === "completed");
+  const success = processesCompleted && firstPassCreatedFullPackage && behaviorSatisfied && secondPassSurfaceChanges.length === 0;
+
+  const metadata = {
+    case_id: selectedCase.id,
+    category: selectedCase.category,
+    execution: selectedCase.execution,
+    sandbox: selectedCase.sandbox,
+    prompt: selectedCase.prompt,
+    notes: selectedCase.notes,
+    artifact_root: runRoot,
+    case_root: caseRoot,
+    fixture_root: fixtureRoot,
+    tested_skill: testedSkill,
+    snapshots: { initial: initialSnapshots },
+    runs: passResults,
+  };
+  await writeJson(path.join(caseRoot, "artifact-metadata.json"), metadata);
+
+  const summary = {
+    success,
+    mode: "live-two-pass-case",
+    case_id: selectedCase.id,
+    execution: selectedCase.execution,
+    deterministic_checks: {
+      processes_completed: processesCompleted,
+      first_pass_created_full_package: firstPassCreatedFullPackage,
+      docs_changes_on_second_pass: docsChangesOnSecondPass,
+      expected_second_pass_docs_change: selectedCase.execution === "two-pass-source-drift",
+      second_pass_non_docs_ai_changes: secondPassSurfaceChanges,
+    },
+    runs: passResults.map((pass) => ({
+      name: pass.name,
+      child_exit_code: pass.child_exit_code,
+      completion: pass.completion,
+      trace_path: pass.paths.trace_jsonl,
+      stderr_path: pass.paths.stderr_txt,
+      final_message_path: pass.paths.final_message_txt,
+      proxy_evidence: pass.trace.evidence,
+    })),
+  };
+  await writeJson(path.join(caseRoot, "summary.json"), summary);
+
+  return {
+    success,
+    mode: "live-two-pass-case",
+    case_id: selectedCase.id,
+    run_root: runRoot,
+    case_root: caseRoot,
+    summary_path: path.join(caseRoot, "summary.json"),
+    artifact_metadata_path: path.join(caseRoot, "artifact-metadata.json"),
   };
 }
 
@@ -573,21 +727,27 @@ async function writeRunnerFailure({
   await writeJson(path.join(caseRoot, failureFileName), runnerFailure);
 }
 
-async function prepareIsolatedSkillHome(homeRoot) {
+async function prepareIsolatedSkillHome(homeRoot, fixtureRoot) {
   await resetDirectory(homeRoot);
   const isolatedSkillDir = path.join(homeRoot, ".agents", "skills", "codebase-orient");
   await copyDirectory(canonicalSkillDir, isolatedSkillDir);
+  const fixtureSkillDir = path.join(fixtureRoot, ".agents", "skills", "codebase-orient");
+  await copyDirectory(canonicalSkillDir, fixtureSkillDir);
 
   const canonicalHash = await sha256File(canonicalSkillPath);
   const isolatedSkillPath = path.join(isolatedSkillDir, "SKILL.md");
   const isolatedHash = await sha256File(isolatedSkillPath);
+  const fixtureSkillPath = path.join(fixtureSkillDir, "SKILL.md");
+  const fixtureHash = await sha256File(fixtureSkillPath);
 
   return {
     canonical_source_path: canonicalSkillPath,
     canonical_sha256: canonicalHash,
     isolated_target_path: isolatedSkillPath,
     isolated_sha256: isolatedHash,
-    hashes_match: canonicalHash === isolatedHash,
+    fixture_target_path: fixtureSkillPath,
+    fixture_sha256: fixtureHash,
+    hashes_match: canonicalHash === isolatedHash && canonicalHash === fixtureHash,
   };
 }
 
@@ -620,6 +780,7 @@ async function invokeCodexExec({
   isolatedHomeRoot,
   passRoot,
   timeoutMs,
+  model,
 }) {
   const tracePath = path.join(passRoot, "trace.jsonl");
   const stderrPath = path.join(passRoot, "stderr.txt");
@@ -643,8 +804,11 @@ async function invokeCodexExec({
     fixtureRoot,
     "--output-last-message",
     finalMessagePath,
-    prompt,
   ];
+  if (model) {
+    commandArgs.push("--model", model);
+  }
+  commandArgs.push(prompt);
 
   const child = spawn(codexPath, commandArgs, {
     cwd: repoRoot,
