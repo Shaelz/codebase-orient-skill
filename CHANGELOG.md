@@ -2,7 +2,15 @@
 
 ## Unreleased
 
-**Orient v1.1 implementation:**
+No changes yet.
+
+## 1.1.0 - 2026-07-05
+
+First release after `v1.0.0`. Installer replacement, `docs/ai/` lifecycle
+rework, and behavioral-eval hardening, plus incremental skill wording
+improvements carried over from post-v1 maintenance.
+
+**Installer replacement:**
 
 - Add one canonical, static package inventory for reusable Claude, reusable
   Codex, and Claude bootstrap installation, with LF-normalized SHA-256 content
@@ -11,18 +19,8 @@
   staged clean reinstall (`--clean` / `-Clean`) behavior across Bash and
   PowerShell installers. Conflicting flags and managed path type conflicts
   fail; overlay preserves and reports extra files.
-- Establish the fixed `docs/ai/` package with `ORIENTATION_STATE.json`,
-  manifest-backed freshness and provenance, full and scoped reconciliation,
-  exact-current reuse, legacy adoption approval, dirty-tree handling, and
-  no-Git behavior.
-- Retire automatic generation and mutation of project-local
-  `.claude/skills/codebase-orient/SKILL.md` without adding an overlay or
-  migration subsystem.
-- Extend the existing behavioral-evaluation runner with the authored
-  no-date-only-churn and source-drift two-pass cases, an optional model
-  override, and stronger tested-skill isolation evidence.
 - Add installer behavior tests covering both managed packages, including a
-  new Bash test suite (`scripts/test-installers.sh`) mirroring the existing
+  Bash test suite (`scripts/test-installers.sh`) mirroring the existing
   PowerShell coverage.
 - Fix a Bash installer defect where a successful normal install or `--clean`
   reinstall printed a success message but exited with status 1, because the
@@ -37,6 +35,22 @@
   correctly. Fixed by using explicit `if`/`fi` instead of `&&` for both the
   trap cleanup and the post-replace backup removal. Caught by the new Bash
   test suite.
+
+**`docs/ai/` lifecycle rework:**
+
+- Establish the fixed `docs/ai/` package with `ORIENTATION_STATE.json`,
+  manifest-backed freshness and provenance, full and scoped reconciliation,
+  exact-current reuse, legacy adoption approval, dirty-tree handling, and
+  no-Git behavior.
+- Retire automatic generation and mutation of project-local
+  `.claude/skills/codebase-orient/SKILL.md` without adding an overlay or
+  migration subsystem.
+
+**Behavioral-eval hardening:**
+
+- Extend the existing behavioral-evaluation runner with the authored
+  no-date-only-churn and source-drift two-pass cases and an optional model
+  override.
 - Fix the behavioral-evaluation runner's Codex sandbox isolation: `CODEX_HOME`
   was left pointing at the real user's `.codex` directory even though `HOME`
   and `USERPROFILE` were overridden to a disposable sandbox, and the
@@ -47,9 +61,19 @@
   authenticate, so the runner now seeds it with a copy of the real
   `auth.json` only - no other real Codex state (skills, session history,
   config) is copied in.
-
-These changes remain unreleased. They do not select a release version, create a
-tag, or imply publication.
+- Validation status for the two named two-pass cases: the isolation and
+  authentication fix above was confirmed against a real `codex exec` run
+  (the observed failure moved from a missing-directory error, to `401
+  Unauthorized`, to a real account usage-limit response, then to a real
+  completed run once the account quota reset). A full live pass/fail verdict
+  for either case is still not available: in the completed run, the Codex
+  session reported itself as read-only despite the case requesting
+  `workspace-write`, so pass 1 correctly proposed the package instead of
+  writing it, per the skill's own dry-run fallback rule, rather than
+  exercising the intended write-then-rerun-unchanged check. This is recorded
+  as a known Codex CLI environment limitation, not an Orient skill defect;
+  unlike `v1.0.0`, this release does not carry an independent
+  human-through-agent validation pass.
 
 **Orientation skill improvements (canonical + bootstrap):**
 
@@ -60,14 +84,15 @@ tag, or imply publication.
 - Clarify that docs/ai files should be committed in target repos: the output files section now states explicitly that these files are authored narrative that improves across sessions and should not be gitignored in target repos.
 - Flag release validation records and gate scripts as a hidden-risk surface: the hidden-risk-reporting-rule now includes release validation records and gate scripts in its checklist, and instructs orient to note in CHANGE_SURFACES that file changes after a validated candidate require a re-check before tagging.
 
-The earlier entries below were post-v1 maintenance hardening only and made no
-installer behavior change at the time.
+**Post-v1 maintenance hardening (no installer behavior change at the time):**
 
 - Add a deterministic shared-rule drift guard for canonical `skills/codebase-orient/SKILL.md` vs the bootstrap embedded shared-rule snapshot in `skills/install-codebase-orient/SKILL.md`, including explicit shared-block markers, a validation script, and a GitHub Actions check that now guards those shared blocks against future accidental drift.
 - Align the bootstrap embedded shared-rule snapshot to canonical wording so future bootstrap-generated project-local skills receive the synchronized shared-rule content.
 - Freeze the former `docs/V1_RELEASE_PLAN.md` contents as `docs/releases/v1.0-validation-record.md` and keep `docs/V1_RELEASE_PLAN.md` as a short compatibility pointer now that `v1.0.0` has shipped.
 - Add an initial local/manual Codex behavioral eval scaffold: an inspectable prompt corpus plus a PowerShell wrapper over a Node runner that uses isolated disposable fixtures, stores traces outside the repo by default, and currently emits evidence summaries for one validated single-case vertical slice with proxy-only invocation evidence from local `codex exec --json` traces.
 - Clarify that the reusable canonical skill currently has an explicit tuned framework-probe section for SvelteKit, while other frameworks still rely on the generic discovery order unless later live-fire or eval evidence justifies dedicated tuned probes.
+
+---
 
 ## 1.0.0 - 2026-05-24
 
