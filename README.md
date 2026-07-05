@@ -5,7 +5,7 @@
 Instead of asking the model to vaguely "understand the project", this skill tells it what to read first, what uncertainty to label, what hidden risks to surface, and what orientation artifacts to create or refresh. It is for developers who want better repo context before refactors, multi-file changes, handoffs, or work in an unfamiliar area.
 
 > [!NOTE]
-> Installing a skill copies skill files into your tool's skill directory only. Running `codebase-orient` instructs the agent not to edit application code, refactor, or commit. In normal mode it may create or refresh `docs/ai/CODEBASE_MAP.md`, `docs/ai/CHANGE_SURFACES.md`, and `docs/ai/OPEN_QUESTIONS.md`. In dry-run mode it reports those proposed changes without writing them. On Claude Code project-local installs, an orientation pass may also add verified project-specific discovery paths to `.claude/skills/codebase-orient/SKILL.md`.
+> Installing a skill copies skill files into your tool's skill directory only. Running `codebase-orient` instructs the agent not to edit application code, refactor, or commit. In normal mode it creates or reconciles the fixed four-artifact `docs/ai/` package, including `ORIENTATION_STATE.json`. In dry-run mode it reports proposed changes without writing them. Orientation never generates or mutates a project-local runtime `SKILL.md`.
 
 ## Quickstart
 
@@ -36,7 +36,7 @@ The manual commands below remain the inspectable install contract that the agent
 |---|---|---|
 | Claude Code | User-level `codebase-orient` | Copies the skill to `~/.claude/skills/codebase-orient/` |
 | Codex | User-level `codebase-orient` | Copies the skill to `~/.agents/skills/codebase-orient/` |
-| Claude Code, but you want a project-local skill generated inside each repo | User-level `install-codebase-orient` bootstrap skill | Installs a separate bootstrap skill at `~/.claude/skills/install-codebase-orient/` |
+| Claude Code, and you want a dedicated first-pass bootstrap entry point | User-level `install-codebase-orient` bootstrap skill | Installs a separate bootstrap skill at `~/.claude/skills/install-codebase-orient/` |
 
 ### Install the reusable skill
 
@@ -45,7 +45,7 @@ If you want a **project-local** install instead, or the **Claude Code bootstrap*
 If the install target already exists, stop and choose intentionally:
 
 - Overlay refresh: rerun with `-Force` in PowerShell or `--force` in bash.
-- Clean reinstall: delete the installed target first, then rerun without `-Force` or `--force`.
+- Clean reinstall: rerun with `-Clean` in PowerShell or `--clean` in bash.
 - Project-local install: use this when you intentionally want repo-scoped installation or testing.
 - Agents acting on your behalf should ask before overwriting an existing installation.
 
@@ -108,7 +108,7 @@ In Codex CLI or the IDE extension, run `/skills` or type `$` to mention/select `
 ### What to expect after the first run
 
 - The agent reads high-signal files first, then maps routes, entry points, services, schema, tests, deployment/config, and instruction files.
-- The target repo may gain or refresh `docs/ai/CODEBASE_MAP.md`, `docs/ai/CHANGE_SURFACES.md`, and `docs/ai/OPEN_QUESTIONS.md`.
+- The target repo may gain or reconcile `docs/ai/ORIENTATION_STATE.json`, `docs/ai/CODEBASE_MAP.md`, `docs/ai/CHANGE_SURFACES.md`, and `docs/ai/OPEN_QUESTIONS.md`.
 - Those `docs/ai/` files are orientation aids, not the source of truth. Source code and project config stay authoritative.
 - The skill should not edit source code, refactor, or commit during orientation.
 
@@ -118,7 +118,7 @@ In Codex CLI or the IDE extension, run `/skills` or type `$` to mention/select `
 |---|---|---|
 | User-level `codebase-orient` | You want one reusable skill available across projects in the same tool | `~/.claude/skills/codebase-orient/` or `~/.agents/skills/codebase-orient/` |
 | Project-local `codebase-orient` | You want the skill available only inside one repo | `.claude/skills/codebase-orient/` or `.agents/skills/codebase-orient/` |
-| User-level `install-codebase-orient` bootstrap skill | You use Claude Code and want a first-pass setup that generates a project-local Claude skill plus orientation docs in the target repo | `~/.claude/skills/install-codebase-orient/` |
+| User-level `install-codebase-orient` bootstrap skill | You use Claude Code and want a dedicated first-pass entry point for the fixed orientation package | `~/.claude/skills/install-codebase-orient/` |
 
 ## Alternate install paths
 
@@ -158,7 +158,9 @@ This copies the skill into `.agents/skills/codebase-orient/` in the current repo
 <details>
 <summary>Claude Code bootstrap install: <code>install-codebase-orient</code></summary>
 
-This is a different skill from `codebase-orient`. Install it only if you specifically want Claude Code to generate a project-local `.claude/skills/codebase-orient/SKILL.md` inside each target repo.
+This is a different skill from `codebase-orient`. Install it only if you want a
+dedicated Claude Code first-pass entry point. It creates orientation state, not
+a project-local runtime skill.
 
 ```powershell
 .\scripts\install-bootstrap-user.ps1
@@ -174,14 +176,9 @@ First use:
 /install-codebase-orient
 ```
 
-Expected result in the target repo:
-
-- `.claude/skills/codebase-orient/SKILL.md`
-- `docs/ai/CODEBASE_MAP.md`
-- `docs/ai/CHANGE_SURFACES.md`
-- `docs/ai/OPEN_QUESTIONS.md`
-
-Repository evidence for the bootstrap skill also says it may append a minimal orientation pointer to an existing `CLAUDE.md`.
+Expected result in the target repo is the fixed four-artifact `docs/ai/`
+package. The bootstrap no longer creates or changes
+`.claude/skills/codebase-orient/SKILL.md`.
 
 Codex does not have a bootstrap installer in this repo.
 
@@ -219,9 +216,17 @@ Run the validated one-case vertical slice:
 powershell -ExecutionPolicy Bypass -File .\scripts\run-behavioral-evals.ps1 --case-id explicit-dry-run-unfamiliar
 ```
 
-The current vertical slice executes one selected `single` case per invocation. `explicit-dry-run-unfamiliar` is the one fresh end-to-end case validated so far. The corpus also contains additional designed cases, including two-pass scenarios, that are not yet all executed or supported by the current vertical slice. No representative multi-case subset command is currently implemented.
+The runner executes one selected case per invocation. It preserves single-pass
+execution and supports the authored `behavior-no-date-only-churn` and
+`behavior-stale-docs-source-drift` two-pass cases. Use `--model <model>` when
+the local Codex default is unavailable to the current account. No
+representative multi-case subset command is implemented.
 
-The runner keeps disposable fixtures and raw traces outside the repository by default. It isolates the skill under test into a temporary `USERPROFILE\.agents\skills\codebase-orient` home so the eval uses the repo's current canonical skill content instead of a stale user-level install. The current vertical slice emits a structured evidence summary for maintainer review; it is not yet a representative multi-case or automatic pass/fail gate.
+The runner keeps disposable fixtures and raw traces outside the repository by
+default. It copies the canonical skill into disposable user-level and
+project-local locations and records content hashes. Runtime skill precedence
+remains observable evidence: if Codex selects another installed copy, the trace
+must be treated as an isolation failure rather than a behavior result.
 
 Observable limits are intentional and documented:
 
@@ -259,7 +264,7 @@ Run codebase-orient in dry-run mode. Report proposed docs/ai changes before writ
 - `skills/codebase-orient/SKILL.md` in this repo is the canonical reusable skill source.
 - `skills/install-codebase-orient/SKILL.md` is the separate Claude Code bootstrap skill source.
 - A repo-local installed skill such as `.claude/skills/codebase-orient/SKILL.md` or `.agents/skills/codebase-orient/SKILL.md` is the local runtime copy.
-- `docs/ai/*` files are refreshable orientation artifacts, not permanent source of truth.
+- `docs/ai/*` files are Orient-owned, provenance-backed orientation state, not permanent source of truth.
 
 That distinction matters because the generated `docs/ai/` files can go stale, while source code and project config remain authoritative.
 
@@ -271,27 +276,30 @@ The skill may be auto-invoked when the model recognizes an orientation request, 
 
 ### Reinstall behavior
 
-All install scripts refuse to overwrite an existing target unless you rerun them with `-Force` in PowerShell or `--force` in bash.
+All install scripts validate their source package before mutation and refuse an
+existing target unless an explicit reinstall mode is selected.
 
 That overwrite is an **overlay install**:
 
 - current source files are copied over the existing target;
 - files that existed in an older install but were removed from the source package are **not** pruned automatically.
 
-For a clean exact-sync reinstall, delete the target directory first and then run the install script without `-Force` or `--force`.
+For a staged clean reinstall, use `-Clean` in PowerShell or `--clean` in bash.
+Conflicting overlay and clean flags are rejected.
 
 ### Codex lifecycle limits
 
 This repo supports Codex user-level and project-local installs of the reusable `codebase-orient` skill.
 
-Repository evidence does **not** support these two Claude Code bootstrap behaviors for Codex:
+Codex does not include the Claude-only `install-codebase-orient` bootstrap
+entry point. Codex uses the reusable `codebase-orient` skill directly.
 
-- the `install-codebase-orient` bootstrap skill;
-- post-orientation project-local specialization of `.claude/skills/codebase-orient/SKILL.md`.
+### Project-local runtime mutation retired
 
-### Claude Code project-local specialization
-
-When a Claude Code project-local skill exists at `.claude/skills/codebase-orient/SKILL.md`, an orientation pass may extend it with verified project-specific discovery paths found during that pass. Only paths confirmed to exist and relevant to the project are added; canonical skill rules are not overwritten. Project-specific additions are kept visually separated at the end of the file. This is the only additional write that orientation may perform beyond the `docs/ai/` files described above. In dry-run mode, proposed additions are reported but not written. Codex project-local installs do not use this behavior.
+Orientation does not generate, specialize, migrate, or preserve
+`.claude/skills/codebase-orient/SKILL.md`. Existing specialized copies are
+legacy local state. Useful project-specific paths belong in the supported
+`docs/ai/` package; no replacement overlay system is provided.
 
 ### Project-local `.gitignore` snippets
 

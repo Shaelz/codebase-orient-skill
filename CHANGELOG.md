@@ -2,6 +2,30 @@
 
 ## Unreleased
 
+**Orient v1.1 implementation:**
+
+- Add one canonical, static package inventory for reusable Claude, reusable
+  Codex, and Claude bootstrap installation, with LF-normalized SHA-256 content
+  validation before and after copy.
+- Add explicit normal install, overlay reinstall (`--force` / `-Force`), and
+  staged clean reinstall (`--clean` / `-Clean`) behavior across Bash and
+  PowerShell installers. Conflicting flags and managed path type conflicts
+  fail; overlay preserves and reports extra files.
+- Establish the fixed `docs/ai/` package with `ORIENTATION_STATE.json`,
+  manifest-backed freshness and provenance, full and scoped reconciliation,
+  exact-current reuse, legacy adoption approval, dirty-tree handling, and
+  no-Git behavior.
+- Retire automatic generation and mutation of project-local
+  `.claude/skills/codebase-orient/SKILL.md` without adding an overlay or
+  migration subsystem.
+- Extend the existing behavioral-evaluation runner with the authored
+  no-date-only-churn and source-drift two-pass cases, an optional model
+  override, and stronger tested-skill isolation evidence.
+- Add installer behavior tests covering both managed packages.
+
+These changes remain unreleased. They do not select a release version, create a
+tag, or imply publication.
+
 **Orientation skill improvements (canonical + bootstrap):**
 
 - Treat existing docs/ai output as hypotheses on re-run: the staleness rule now explicitly applies the docs-as-hypotheses discipline to prior orientation output, preventing stale structural claims from being accepted as discovery input on subsequent passes.
@@ -11,7 +35,8 @@
 - Clarify that docs/ai files should be committed in target repos: the output files section now states explicitly that these files are authored narrative that improves across sessions and should not be gitignored in target repos.
 - Flag release validation records and gate scripts as a hidden-risk surface: the hidden-risk-reporting-rule now includes release validation records and gate scripts in its checklist, and instructs orient to note in CHANGE_SURFACES that file changes after a validated candidate require a re-check before tagging.
 
-Post-v1 maintenance hardening only. No installer behavior change.
+The earlier entries below were post-v1 maintenance hardening only and made no
+installer behavior change at the time.
 
 - Add a deterministic shared-rule drift guard for canonical `skills/codebase-orient/SKILL.md` vs the bootstrap embedded shared-rule snapshot in `skills/install-codebase-orient/SKILL.md`, including explicit shared-block markers, a validation script, and a GitHub Actions check that now guards those shared blocks against future accidental drift.
 - Align the bootstrap embedded shared-rule snapshot to canonical wording so future bootstrap-generated project-local skills receive the synchronized shared-rule content.
